@@ -107,7 +107,7 @@
       <section>
         <h2 class="section-heading">الخدمات</h2>
         <div class="services-grid">
-          <div class="svc-item" v-for="service in services" :key="service.label">
+          <div class="svc-item" v-for="service in services" :key="service.label" @click="service.route && goTo(service.route)">
             <span class="material-symbols-outlined svc-icon filled">{{ service.icon }}</span>
             <span class="svc-label">{{ service.label }}</span>
           </div>
@@ -231,7 +231,7 @@ const services = [
   { icon: 'store', label: 'الماركات' },
   { icon: 'location_on', label: 'الفروع' },
   { icon: 'support_agent', label: 'الوكلاء' },
-  { icon: 'calculate', label: 'حاسبة التقسيط' },
+  { icon: 'calculate', label: 'حاسبة التقسيط', route: '/calculator' },
   { icon: 'more_horiz', label: 'المزيد' }
 ]
 
@@ -258,6 +258,7 @@ const navItems = [
 .main-content {
   flex: 1;
   overflow-y: auto;
+  overscroll-behavior-y: contain;
   padding: 16px 16px 90px;
   display: flex;
   flex-direction: column;

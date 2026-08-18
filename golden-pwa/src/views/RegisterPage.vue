@@ -180,7 +180,7 @@ const register = () => {
   height: 100dvh;
   background: var(--bg);
   overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: contain;
 }
 
 .register-container {
