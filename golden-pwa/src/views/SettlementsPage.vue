@@ -88,7 +88,7 @@ const invoices = [
 const navItems = [
   { icon: 'home', label: 'الرئيسية', route: '/home' },
   { icon: 'shopping_bag', label: 'المتجر', route: '/store' },
-  { icon: 'account_balance_wallet', label: 'تسوياتي', route: null },
+  { icon: 'account_balance_wallet', label: 'أقساطي', route: null },
   { icon: 'notifications', label: 'الإشعارات', badge: true, route: null },
   { icon: 'person', label: 'حسابي', route: '/account' }
 ]
