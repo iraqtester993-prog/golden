@@ -1,7 +1,6 @@
 <template>
   <div class="register-screen">
     <div class="register-container">
-      <!-- Header -->
       <div class="reg-header">
         <button class="back-btn" @click="$router.back()">
           <span class="material-symbols-outlined">arrow_forward</span>
@@ -9,9 +8,7 @@
         <h1 class="reg-title">إنشاء حساب</h1>
       </div>
 
-      <!-- Form -->
       <div class="form-area">
-        <!-- Personal Info -->
         <div class="input-group">
           <span class="material-symbols-outlined input-icon">person</span>
           <input type="text" placeholder="الاسم الكامل" class="input-field" v-model="form.fullName" />
@@ -35,7 +32,6 @@
           </button>
         </div>
 
-        <!-- Type Selector -->
         <div class="type-selector">
           <button class="type-btn" :class="{ active: form.type === 'employee' }" @click="form.type = 'employee'">
             <span class="material-symbols-outlined">badge</span>
@@ -47,7 +43,6 @@
           </button>
         </div>
 
-        <!-- Employee Fields -->
         <template v-if="form.type === 'employee'">
           <div class="input-group">
             <span class="material-symbols-outlined input-icon">domain</span>
@@ -59,7 +54,6 @@
           </div>
         </template>
 
-        <!-- Merchant Fields -->
         <template v-if="form.type === 'merchant'">
           <div class="input-group">
             <span class="material-symbols-outlined input-icon">business</span>
@@ -67,7 +61,6 @@
           </div>
         </template>
 
-        <!-- File Uploads - National ID (Front & Back) -->
         <div class="upload-section">
           <h3 class="upload-title">البطاقة الوطنية</h3>
           <div class="upload-row">
@@ -86,7 +79,6 @@
           </div>
         </div>
 
-        <!-- Residence Card -->
         <div class="upload-section">
           <h3 class="upload-title">بطاقة السكن</h3>
           <div class="upload-row">
@@ -99,7 +91,6 @@
           </div>
         </div>
 
-        <!-- Department ID - Employee only -->
         <div class="upload-section" v-if="form.type === 'employee'">
           <h3 class="upload-title">هوية الدائرة</h3>
           <div class="upload-row">
@@ -162,64 +153,65 @@ const register = () => {
 <style scoped>
 .register-screen {
   width: 100%;
-  min-height: 100dvh;
-  background: #0a0f1d;
+  height: 100dvh;
+  background: var(--bg);
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .register-container {
   width: 100%;
   max-width: 400px;
   margin: 0 auto;
-  padding: 16px 20px 40px;
+  padding: 12px 20px 40px;
 }
 
 .reg-header {
   display: flex;
   align-items: center;
   gap: 12px;
-  margin-bottom: 28px;
+  margin-bottom: 24px;
   padding-top: 8px;
 }
 
 .back-btn {
   background: none;
   border: none;
-  color: #eae1d4;
+  color: var(--on-surface);
   cursor: pointer;
   padding: 8px;
   display: flex;
 }
 
 .reg-title {
-  font-size: 22px;
+  font-size: 20px;
   font-weight: 700;
-  color: #eae1d4;
+  color: var(--on-surface);
 }
 
 .form-area {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 12px;
 }
 
 .input-group {
   display: flex;
   align-items: center;
-  background: #141b2d;
-  border: 1px solid #4d4635;
-  border-radius: 14px;
-  padding: 0 16px;
-  height: 52px;
+  background: var(--surface-container);
+  border: 1px solid var(--outline-variant);
+  border-radius: 12px;
+  padding: 0 14px;
+  height: 50px;
   transition: border-color 0.3s;
 }
 
 .input-group:focus-within {
-  border-color: #f2ca50;
+  border-color: var(--primary);
 }
 
 .input-icon {
-  color: #99907c;
+  color: var(--on-surface-variant);
   font-size: 20px;
   margin-left: 10px;
 }
@@ -229,30 +221,29 @@ const register = () => {
   background: transparent;
   border: none;
   outline: none;
-  color: #eae1d4;
+  color: var(--on-surface);
   font-size: 14px;
   font-family: 'Noto Kufi Arabic', sans-serif;
   direction: rtl;
 }
 
 .input-field::placeholder {
-  color: #99907c;
+  color: var(--on-surface-variant);
 }
 
 .eye-btn {
   background: none;
   border: none;
-  color: #99907c;
+  color: var(--on-surface-variant);
   cursor: pointer;
   padding: 4px;
   display: flex;
 }
 
-/* Type Selector */
 .type-selector {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 12px;
+  gap: 10px;
 }
 
 .type-btn {
@@ -260,39 +251,37 @@ const register = () => {
   flex-direction: column;
   align-items: center;
   gap: 6px;
-  padding: 16px 8px;
-  background: #141b2d;
-  border: 2px solid #4d4635;
-  border-radius: 14px;
-  color: #99907c;
-  font-size: 14px;
+  padding: 14px 8px;
+  background: var(--surface-container);
+  border: 2px solid var(--outline-variant);
+  border-radius: 12px;
+  color: var(--on-surface-variant);
+  font-size: 13px;
   font-family: 'Noto Kufi Arabic', sans-serif;
   cursor: pointer;
   transition: all 0.3s;
 }
 
 .type-btn .material-symbols-outlined {
-  font-size: 28px;
+  font-size: 26px;
 }
 
 .type-btn.active {
-  border-color: #f2ca50;
-  color: #f2ca50;
-  background: rgba(242, 202, 80, 0.08);
+  border-color: var(--primary);
+  color: var(--primary);
 }
 
-/* Upload Section */
 .upload-section {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
   margin-top: 4px;
 }
 
 .upload-title {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 600;
-  color: #d0c5af;
+  color: var(--on-surface-variant);
 }
 
 .upload-row {
@@ -308,13 +297,13 @@ const register = () => {
   align-items: center;
   justify-content: center;
   gap: 6px;
-  padding: 20px 8px;
-  background: #141b2d;
-  border: 2px dashed #4d4635;
-  border-radius: 14px;
+  padding: 16px 8px;
+  background: var(--surface-container);
+  border: 2px dashed var(--outline-variant);
+  border-radius: 12px;
   cursor: pointer;
   transition: all 0.3s;
-  min-height: 100px;
+  min-height: 90px;
 }
 
 .upload-box.full {
@@ -322,13 +311,12 @@ const register = () => {
 }
 
 .upload-box:active {
-  border-color: #f2ca50;
+  border-color: var(--primary);
 }
 
 .upload-box.uploaded {
-  border-color: #34d399;
+  border-color: var(--success);
   border-style: solid;
-  background: rgba(52, 211, 153, 0.06);
 }
 
 .file-input {
@@ -336,41 +324,40 @@ const register = () => {
 }
 
 .upload-icon {
-  font-size: 32px;
-  color: #99907c;
+  font-size: 28px;
+  color: var(--on-surface-variant);
 }
 
 .upload-box.uploaded .upload-icon {
-  color: #34d399;
+  color: var(--success);
 }
 
 .upload-label {
-  font-size: 12px;
-  color: #99907c;
+  font-size: 11px;
+  color: var(--on-surface-variant);
   text-align: center;
 }
 
 .upload-box.uploaded .upload-label {
-  color: #34d399;
+  color: var(--success);
 }
 
 .check-upload {
   position: absolute;
   top: 8px;
   left: 8px;
-  color: #34d399;
+  color: var(--success);
   font-size: 20px;
 }
 
-/* Register Button */
 .register-btn {
   width: 100%;
-  height: 56px;
-  background: linear-gradient(135deg, #d4af37, #f2ca50);
+  height: 52px;
+  background: linear-gradient(135deg, var(--primary-container), var(--primary));
   border: none;
-  border-radius: 14px;
+  border-radius: 12px;
   color: #0a0f1d;
-  font-size: 17px;
+  font-size: 16px;
   font-weight: 700;
   font-family: 'Noto Kufi Arabic', sans-serif;
   cursor: pointer;
@@ -392,14 +379,14 @@ const register = () => {
   align-items: center;
   gap: 8px;
   font-size: 14px;
-  color: #99907c;
+  color: var(--on-surface-variant);
   margin-top: 4px;
 }
 
 .gold-link {
   background: none;
   border: none;
-  color: #f2ca50;
+  color: var(--primary);
   font-size: 14px;
   font-weight: 600;
   font-family: 'Noto Kufi Arabic', sans-serif;

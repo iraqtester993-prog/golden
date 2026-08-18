@@ -10,10 +10,8 @@
 html, body {
   width: 100%;
   height: 100%;
-  overflow: hidden;
   font-family: 'Noto Kufi Arabic', sans-serif;
-  background: #0a0f1d;
-  color: #eae1d4;
+  overflow: hidden;
 }
 
 #app {
@@ -25,17 +23,45 @@ html, body {
   display: none;
 }
 
+/* Dark Mode (default) */
 :root {
-  --primary: #f2ca50;
-  --primary-container: #d4af37;
-  --background: #0a0f1d;
+  --bg: #0a0f1d;
   --surface: #0a0f1d;
   --surface-container: #141b2d;
   --surface-variant: #38342b;
+  --surface-container-high: #1e2943;
   --on-surface: #eae1d4;
   --on-surface-variant: #d0c5af;
   --outline: #99907c;
   --outline-variant: #4d4635;
+  --primary: #f2ca50;
+  --primary-container: #d4af37;
   --gold-light: #f2ca50;
   --accent-gold: #d4af37;
+  --error: #ff6b6b;
+  --success: #34d399;
+}
+
+/* Light Mode */
+html:not(.dark) {
+  --bg: #faf8f5;
+  --surface: #ffffff;
+  --surface-container: #f3f0eb;
+  --surface-variant: #e8e3dc;
+  --surface-container-high: #e0dbd3;
+  --on-surface: #1a1512;
+  --on-surface-variant: #5a5347;
+  --outline: #99907c;
+  --outline-variant: #c9c2b6;
+  --primary: #b8930a;
+  --primary-container: #c9a020;
+  --gold-light: #b8930a;
+  --accent-gold: #c9a020;
+  --error: #dc2626;
+  --success: #16a34a;
+}
+
+html:not(.dark) body {
+  background: #faf8f5;
+  color: #1a1512;
 }

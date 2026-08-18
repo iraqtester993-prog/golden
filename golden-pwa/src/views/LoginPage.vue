@@ -54,7 +54,7 @@ const login = () => {
 .login-screen {
   width: 100%;
   height: 100dvh;
-  background: #0a0f1d;
+  background: var(--bg);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -79,8 +79,8 @@ const login = () => {
 }
 
 .logo-area {
-  width: 160px;
-  height: 160px;
+  width: 150px;
+  height: 150px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -102,8 +102,8 @@ const login = () => {
 .input-group {
   display: flex;
   align-items: center;
-  background: #141b2d;
-  border: 1px solid #4d4635;
+  background: var(--surface-container);
+  border: 1px solid var(--outline-variant);
   border-radius: 14px;
   padding: 0 16px;
   height: 56px;
@@ -111,11 +111,11 @@ const login = () => {
 }
 
 .input-group:focus-within {
-  border-color: #f2ca50;
+  border-color: var(--primary);
 }
 
 .input-icon {
-  color: #99907c;
+  color: var(--on-surface-variant);
   font-size: 22px;
   margin-left: 12px;
 }
@@ -125,20 +125,20 @@ const login = () => {
   background: transparent;
   border: none;
   outline: none;
-  color: #eae1d4;
+  color: var(--on-surface);
   font-size: 15px;
   font-family: 'Noto Kufi Arabic', sans-serif;
   direction: rtl;
 }
 
 .input-field::placeholder {
-  color: #99907c;
+  color: var(--on-surface-variant);
 }
 
 .eye-btn {
   background: none;
   border: none;
-  color: #99907c;
+  color: var(--on-surface-variant);
   cursor: pointer;
   padding: 4px;
   display: flex;
@@ -147,7 +147,7 @@ const login = () => {
 .forgot-pass {
   background: none;
   border: none;
-  color: #f2ca50;
+  color: var(--primary);
   font-size: 13px;
   font-family: 'Noto Kufi Arabic', sans-serif;
   text-align: left;
@@ -159,7 +159,7 @@ const login = () => {
 .login-btn {
   width: 100%;
   height: 56px;
-  background: linear-gradient(135deg, #d4af37, #f2ca50);
+  background: linear-gradient(135deg, var(--primary-container), var(--primary));
   border: none;
   border-radius: 14px;
   color: #0a0f1d;
@@ -186,13 +186,13 @@ const login = () => {
   align-items: center;
   gap: 8px;
   font-size: 14px;
-  color: #99907c;
+  color: var(--on-surface-variant);
 }
 
 .gold-link {
   background: none;
   border: none;
-  color: #f2ca50;
+  color: var(--primary);
   font-size: 14px;
   font-weight: 600;
   font-family: 'Noto Kufi Arabic', sans-serif;
