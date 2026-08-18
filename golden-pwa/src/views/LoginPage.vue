@@ -3,51 +3,47 @@
     <div class="login-container">
       <div class="top-section">
         <div class="logo-area">
-          <img :src="logo" alt="Golden Group" class="login-logo" />
+          <img :src="logo" alt="العصر الذهبي" class="login-logo" />
         </div>
-        <h1 class="brand-name">GOLDEN GROUP</h1>
-        <p class="brand-sub">العصر الذهبي</p>
       </div>
 
       <div class="form-area">
         <div class="input-group">
-          <span class="material-symbols-outlined input-icon">person</span>
-          <input type="text" placeholder="رقم الهاتف أو البريد" class="input-field" />
+          <span class="material-symbols-outlined input-icon">phone</span>
+          <input type="tel" placeholder="رقم الهاتف" class="input-field" v-model="phone" />
         </div>
         <div class="input-group">
           <span class="material-symbols-outlined input-icon">lock</span>
-          <input type="password" placeholder="كلمة المرور" class="input-field" />
+          <input :type="showPass ? 'text' : 'password'" placeholder="كلمة المرور" class="input-field" v-model="password" />
+          <button class="eye-btn" @click="showPass = !showPass">
+            <span class="material-symbols-outlined">{{ showPass ? 'visibility' : 'visibility_off' }}</span>
+          </button>
         </div>
+
+        <button class="forgot-pass">نسيت كلمة المرور؟</button>
 
         <button class="login-btn" @click="login">
           <span>تسجيل الدخول</span>
-          <span class="material-symbols-outlined">arrow_forward</span>
         </button>
 
-        <div class="divider">
-          <span class="line"></span>
-          <span class="or-text">أو</span>
-          <span class="line"></span>
+        <div class="register-link">
+          <span>ليس لديك حساب؟</span>
+          <button class="gold-link" @click="$router.push('/register')">إنشاء حساب</button>
         </div>
-
-        <button class="guest-btn" @click="login">
-          <span class="material-symbols-outlined">login</span>
-          <span>دخول كضيف</span>
-        </button>
-      </div>
-
-      <div class="bottom-text">
-        <p>بتسجيل الدخول أنت توافق على <span class="gold-link">الشروط والأحكام</span></p>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
+import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import logo from '../assets/logo.png'
 
 const router = useRouter()
+const phone = ref('')
+const password = ref('')
+const showPass = ref(false)
 
 const login = () => {
   router.push('/home')
@@ -71,24 +67,23 @@ const login = () => {
   height: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  padding: 60px 28px 40px;
+  justify-content: center;
+  padding: 40px 28px;
+  gap: 40px;
 }
 
 .top-section {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
 }
 
 .logo-area {
-  width: 120px;
-  height: 120px;
+  width: 160px;
+  height: 160px;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 8px;
 }
 
 .login-logo {
@@ -96,18 +91,6 @@ const login = () => {
   height: 100%;
   object-fit: contain;
   mix-blend-mode: screen;
-}
-
-.brand-name {
-  font-size: 26px;
-  font-weight: 700;
-  color: #f2ca50;
-  letter-spacing: 2px;
-}
-
-.brand-sub {
-  font-size: 14px;
-  color: #d0c5af;
 }
 
 .form-area {
@@ -152,6 +135,27 @@ const login = () => {
   color: #99907c;
 }
 
+.eye-btn {
+  background: none;
+  border: none;
+  color: #99907c;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+}
+
+.forgot-pass {
+  background: none;
+  border: none;
+  color: #f2ca50;
+  font-size: 13px;
+  font-family: 'Noto Kufi Arabic', sans-serif;
+  text-align: left;
+  cursor: pointer;
+  padding: 0;
+  align-self: flex-start;
+}
+
 .login-btn {
   width: 100%;
   height: 56px;
@@ -176,57 +180,22 @@ const login = () => {
   transform: scale(0.97);
 }
 
-.divider {
+.register-link {
   display: flex;
-  align-items: center;
-  gap: 12px;
-  margin: 4px 0;
-}
-
-.line {
-  flex: 1;
-  height: 1px;
-  background: #4d4635;
-}
-
-.or-text {
-  color: #99907c;
-  font-size: 13px;
-}
-
-.guest-btn {
-  width: 100%;
-  height: 52px;
-  background: transparent;
-  border: 1px solid #4d4635;
-  border-radius: 14px;
-  color: #eae1d4;
-  font-size: 15px;
-  font-weight: 500;
-  font-family: 'Noto Kufi Arabic', sans-serif;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
   justify-content: center;
+  align-items: center;
   gap: 8px;
-  transition: border-color 0.3s, background 0.3s;
-}
-
-.guest-btn:active {
-  background: rgba(242, 202, 80, 0.08);
-  border-color: #d4af37;
-}
-
-.bottom-text {
-  text-align: center;
-}
-
-.bottom-text p {
-  font-size: 12px;
+  font-size: 14px;
   color: #99907c;
 }
 
 .gold-link {
+  background: none;
+  border: none;
   color: #f2ca50;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: 'Noto Kufi Arabic', sans-serif;
+  cursor: pointer;
 }
 </style>
