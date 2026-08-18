@@ -14,39 +14,42 @@
     </header>
 
     <main class="main-content">
+      <!-- Installment Card -->
       <section class="glass-card installment-card">
         <div class="card-header">
           <h2 class="section-title">أقساطي</h2>
           <div class="invoice-badge">
             <span>فاتورة #10235</span>
-            <span class="material-symbols-outlined text-sm">keyboard_arrow_down</span>
+            <span class="material-symbols-outlined badge-arrow">keyboard_arrow_down</span>
           </div>
         </div>
+
+        <div class="amount-highlight">
+          <span class="amount-label">المبلغ المتبقي</span>
+          <div class="amount-row">
+            <span class="amount-big">4,250,000</span>
+            <span class="amount-currency">د.ع</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill" :style="{ width: '66%' }"></div>
+          </div>
+          <div class="progress-labels">
+            <span>سددت 8,250,000</span>
+            <span>الكلي 12,500,000</span>
+          </div>
+        </div>
+
         <div class="stats-grid">
           <div class="stat-item border-right">
-            <span class="stat-label">المبلغ المتبقي</span>
-            <div class="stat-value-row">
-              <span class="stat-value gold">4,250,000</span>
-              <span class="stat-unit">د.ع</span>
-            </div>
-          </div>
-          <div class="stat-item">
-            <span class="stat-label">المبلغ الكلي</span>
-            <div class="stat-value-row">
-              <span class="stat-value">12,500,000</span>
-              <span class="stat-unit">د.ع</span>
-            </div>
-          </div>
-        </div>
-        <div class="stats-grid top-border">
-          <div class="stat-item border-right">
+            <span class="material-symbols-outlined stat-icon">payments</span>
             <span class="stat-label">الأقساط المتبقية</span>
             <div class="stat-value-row">
-              <span class="stat-value">17</span>
+              <span class="stat-value gold">17</span>
               <span class="stat-unit">قسط</span>
             </div>
           </div>
           <div class="stat-item">
+            <span class="material-symbols-outlined stat-icon">receipt_long</span>
             <span class="stat-label">الأقساط الكلية</span>
             <div class="stat-value-row">
               <span class="stat-value">24</span>
@@ -54,15 +57,26 @@
             </div>
           </div>
         </div>
-        <div class="date-bar">
-          <div class="date-info">
-            <span class="material-symbols-outlined text-sm gold">calendar_today</span>
-            <span>تاريخ القسط 2024/06/25</span>
+
+        <div class="date-row">
+          <div class="date-box">
+            <span class="material-symbols-outlined date-icon">event</span>
+            <div class="date-text">
+              <span class="date-label">القسط القادم</span>
+              <span class="date-value">2026/09/01</span>
+            </div>
           </div>
-          <span class="date-badge">بعد 8 أيام</span>
+          <div class="duration-box">
+            <span class="material-symbols-outlined date-icon">schedule</span>
+            <div class="date-text">
+              <span class="date-label">المدة المتبقية</span>
+              <span class="date-value">17 شهر</span>
+            </div>
+          </div>
         </div>
       </section>
 
+      <!-- Quick Actions -->
       <section class="quick-actions">
         <button class="action-item" v-for="action in quickActions" :key="action.label">
           <span class="material-symbols-outlined action-icon filled">{{ action.icon }}</span>
@@ -70,24 +84,27 @@
         </button>
       </section>
 
-      <section class="promo-banner">
-        <div class="promo-bg" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAUXdp7ZiRF1rEzp-RxdZBnHzrvUZVKSx_blCYzj8riquymEg4fw_9T6ZYfMPYSjz3x27Q7zE1AUhn13h3fYzedr6v4oMzMTvRVH1sfCH4B-QBJdjJL9-Xp58iSzdRBBadQIM3mzqUhidIunR7bHcFzhksCn9uMCu2s8x61ZH7c74fkpc4rfTLOSU1dQ0Yf2agEhN6xZJh2Wp8eXO-ZaiTDtEvljjothEJc40u2Et_cjter4FTGvc6l')"></div>
-        <div class="promo-overlay"></div>
-        <div class="promo-content">
-          <h3 class="promo-title">عروض حصرية</h3>
-          <p class="promo-sub gold">على السيارات</p>
-          <button class="promo-btn">تسوق الآن</button>
-        </div>
-        <div class="promo-dots">
-          <span class="dot active"></span><span class="dot"></span><span class="dot"></span>
+      <!-- Image Slider -->
+      <section class="slider-section">
+        <div class="slider-container" ref="sliderRef">
+          <div class="slider-track" :style="{ transform: `translateX(${currentSlide * 100}%)` }">
+            <div class="slide" v-for="(slide, i) in slides" :key="i">
+              <img :src="slide" class="slide-img" />
+            </div>
+          </div>
+          <div class="slider-dots">
+            <span
+              v-for="(_, i) in slides"
+              :key="i"
+              class="slider-dot"
+              :class="{ active: currentSlide === i }"
+              @click="currentSlide = i"
+            ></span>
+          </div>
         </div>
       </section>
 
-      <div class="search-bar">
-        <span class="material-symbols-outlined search-icon">search</span>
-        <input type="text" placeholder="ابحث عن منتج أو خدمة..." class="search-input" />
-      </div>
-
+      <!-- Services Grid -->
       <section>
         <h2 class="section-title mb-4">الخدمات</h2>
         <div class="services-grid">
@@ -98,6 +115,7 @@
         </div>
       </section>
 
+      <!-- Recent Transaction -->
       <section class="transaction-section">
         <div class="transaction-header">
           <h2 class="section-title">آخر الحركات</h2>
@@ -138,7 +156,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 
 const isDark = ref(true)
 
@@ -146,6 +164,26 @@ const toggleTheme = () => {
   isDark.value = !isDark.value
   document.documentElement.classList.toggle('dark')
 }
+
+// Slider
+const currentSlide = ref(0)
+const sliderRef = ref(null)
+let slideInterval = null
+
+const slides = [
+  'https://images.unsplash.com/photo-1583121274602-3e2820c69888?w=800&h=400&fit=crop',
+  'https://images.unsplash.com/photo-1502877338535-766e1452684a?w=800&h=400&fit=crop',
+  'https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=800&h=400&fit=crop'
+]
+
+const startSlider = () => {
+  slideInterval = setInterval(() => {
+    currentSlide.value = (currentSlide.value + 1) % slides.length
+  }, 3000)
+}
+
+onMounted(() => startSlider())
+onUnmounted(() => clearInterval(slideInterval))
 
 const quickActions = [
   { icon: 'credit_score', label: 'إطفاء فاتورة' },
@@ -192,8 +230,6 @@ const navItems = [
   height: 56px;
   background: var(--bg);
   flex-shrink: 0;
-  position: sticky;
-  top: 0;
   z-index: 40;
 }
 
@@ -206,7 +242,6 @@ const navItems = [
 }
 
 .icon-btn .material-symbols-outlined { font-size: 24px; }
-
 .relative { position: relative; }
 
 .notif-badge {
@@ -225,17 +260,13 @@ const navItems = [
   justify-content: center;
 }
 
-.brand-center {
-  display: flex;
-  align-items: center;
-}
+.brand-center { display: flex; align-items: center; }
 
 .brand-title {
   font-size: 18px;
   font-weight: 700;
   color: var(--primary);
   letter-spacing: 1px;
-  line-height: 1;
 }
 
 .main-content {
@@ -276,7 +307,7 @@ const navItems = [
 .invoice-badge {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 2px;
   background: var(--bg);
   border: 1px solid var(--outline-variant);
   border-radius: 20px;
@@ -285,8 +316,66 @@ const navItems = [
   color: var(--on-surface-variant);
 }
 
-.text-sm { font-size: 16px; }
+.badge-arrow { font-size: 18px; }
 
+/* Amount Highlight */
+.amount-highlight {
+  text-align: center;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--outline-variant);
+}
+
+.amount-label {
+  font-size: 12px;
+  color: var(--on-surface-variant);
+  display: block;
+  margin-bottom: 4px;
+}
+
+.amount-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.amount-big {
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+.amount-currency {
+  font-size: 14px;
+  color: var(--on-surface-variant);
+}
+
+.progress-bar {
+  width: 100%;
+  height: 6px;
+  background: var(--outline-variant);
+  border-radius: 3px;
+  overflow: hidden;
+  margin-bottom: 6px;
+}
+
+.progress-fill {
+  height: 100%;
+  background: var(--primary);
+  border-radius: 3px;
+  transition: width 0.6s ease;
+}
+
+.progress-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 10px;
+  color: var(--on-surface-variant);
+}
+
+/* Stats Grid */
 .stats-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -294,64 +383,82 @@ const navItems = [
   margin-bottom: 16px;
 }
 
-.stats-grid.top-border {
-  border-top: 1px solid var(--outline-variant);
-  padding-top: 14px;
-  margin-bottom: 14px;
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  align-items: center;
+  text-align: center;
 }
-
-.stat-item { display: flex; flex-direction: column; gap: 4px; }
 
 .border-right {
   border-right: 1px solid var(--outline-variant);
   padding-right: 12px;
 }
 
+.stat-icon {
+  font-size: 22px;
+  color: var(--primary);
+  margin-bottom: 2px;
+}
+
 .stat-label { font-size: 11px; color: var(--on-surface-variant); }
 
-.stat-value-row { display: flex; align-items: baseline; gap: 4px; }
+.stat-value-row {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+}
 
 .stat-value {
-  font-size: 18px;
+  font-size: 22px;
   font-weight: 700;
   color: var(--on-surface);
 }
 
-.stat-value.gold {
-  font-size: 24px;
-  color: var(--primary);
+.stat-value.gold { color: var(--primary); }
+.stat-unit { font-size: 11px; color: var(--on-surface-variant); }
+
+/* Date Row */
+.date-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
 }
 
-.stat-unit { font-size: 12px; color: var(--on-surface-variant); }
-
-.date-bar {
+.date-box, .duration-box {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  gap: 8px;
   background: var(--bg);
   border: 1px solid var(--outline-variant);
   border-radius: 12px;
   padding: 10px 12px;
 }
 
-.date-info {
+.date-icon {
+  font-size: 20px;
+  color: var(--primary);
+}
+
+.date-text {
   display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 11px;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.date-label {
+  font-size: 10px;
   color: var(--on-surface-variant);
 }
 
-.gold { color: var(--primary); }
-
-.date-badge {
-  font-size: 11px;
+.date-value {
+  font-size: 12px;
+  font-weight: 600;
   color: var(--on-surface);
-  background: var(--surface-variant);
-  padding: 4px 10px;
-  border-radius: 8px;
 }
 
+/* Quick Actions */
 .quick-actions {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -372,103 +479,63 @@ const navItems = [
 }
 
 .action-item:active { border-color: var(--primary); }
-
 .action-icon { font-size: 26px; color: var(--primary); }
 .action-icon.filled { font-variation-settings: 'FILL' 1; }
 .action-label { font-size: 10px; color: var(--on-surface); text-align: center; }
 
-.promo-banner {
+/* Image Slider */
+.slider-section {
+  width: 100%;
+}
+
+.slider-container {
   position: relative;
   border-radius: 16px;
   overflow: hidden;
-  height: 140px;
   border: 1px solid var(--outline-variant);
 }
 
-.promo-bg {
-  position: absolute;
-  inset: 0;
-  background-size: cover;
-  background-position: center;
-  opacity: 0.6;
-}
-
-.promo-overlay {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to left, var(--bg), var(--bg) 30%, transparent);
-}
-
-.promo-content {
-  position: relative;
-  z-index: 2;
-  height: 100%;
+.slider-track {
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-end;
-  padding: 0 20px;
-  width: 50%;
-  margin-left: auto;
-  text-align: right;
+  transition: transform 0.5s ease;
 }
 
-.promo-title { font-size: 16px; font-weight: 700; color: var(--on-surface); margin-bottom: 4px; }
-.promo-sub { font-size: 13px; margin-bottom: 10px; }
-
-.promo-btn {
-  background: var(--primary-container);
-  color: #0a0f1d;
-  font-size: 11px;
-  font-weight: 700;
-  border: none;
-  border-radius: 20px;
-  padding: 6px 16px;
-  cursor: pointer;
-  font-family: 'Noto Kufi Arabic', sans-serif;
+.slide {
+  min-width: 100%;
 }
 
-.promo-dots {
+.slide-img {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  display: block;
+}
+
+.slider-dots {
   position: absolute;
   bottom: 8px;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
   gap: 6px;
-  z-index: 2;
 }
 
-.dot { width: 6px; height: 6px; border-radius: 50%; background: var(--surface-variant); }
-.dot.active { background: var(--primary); }
-
-.search-bar { position: relative; }
-
-.search-icon {
-  position: absolute;
-  right: 16px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: var(--on-surface-variant);
-  font-size: 20px;
+.slider-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.4);
+  cursor: pointer;
+  transition: background 0.3s;
 }
 
-.search-input {
-  width: 100%;
-  background: var(--surface-container);
-  border: 1px solid var(--outline-variant);
-  border-radius: 28px;
-  padding: 12px 44px 12px 16px;
-  color: var(--on-surface);
-  font-size: 13px;
-  font-family: 'Noto Kufi Arabic', sans-serif;
-  outline: none;
-  direction: rtl;
-  transition: border-color 0.3s;
+.slider-dot.active {
+  background: var(--primary);
+  width: 20px;
+  border-radius: 4px;
 }
 
-.search-input::placeholder { color: var(--on-surface-variant); }
-.search-input:focus { border-color: var(--primary); }
-
+/* Services Grid */
 .services-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -490,6 +557,7 @@ const navItems = [
 .service-icon.filled { font-variation-settings: 'FILL' 1; }
 .service-label { font-size: 10px; color: var(--on-surface); text-align: center; }
 
+/* Transaction */
 .transaction-section { margin-bottom: 8px; }
 
 .transaction-header {
@@ -543,6 +611,7 @@ const navItems = [
 .transaction-amount { font-size: 14px; font-weight: 700; color: var(--success); }
 .transaction-date { font-size: 11px; color: var(--on-surface-variant); }
 
+/* Bottom Nav */
 .bottom-nav {
   position: fixed;
   bottom: 0;
