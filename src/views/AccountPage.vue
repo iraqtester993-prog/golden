@@ -3,10 +3,11 @@
     <TopBar />
     <div class="page-content">
       <!-- Profile -->
-      <div class="profile-box">
+      <div class="profile-box" @click="$router.push('/profile-edit')">
         <div class="profile-photo-wrap">
           <div class="profile-photo">
-            <span class="material-symbols-outlined">person</span>
+            <img v-if="user.profilePhoto" :src="user.profilePhoto" class="profile-img" />
+            <span v-else class="material-symbols-outlined">person</span>
           </div>
           <button class="camera-btn">
             <span class="material-symbols-outlined">photo_camera</span>
@@ -18,7 +19,7 @@
 
       <!-- Menu Card -->
       <div class="card">
-        <div class="menu-row" @click="showProfileSheet = true">
+        <div class="menu-row" @click="$router.push('/profile-edit')">
           <div class="menu-left">
             <div class="menu-icon-wrap"><span class="material-symbols-outlined mi">person</span></div>
             <span class="menu-label">البيانات الشخصية</span>
@@ -89,69 +90,6 @@
       <span class="version">الإصدار 1.0.0</span>
     </div>
 
-    <!-- Profile Edit Sheet -->
-    <div v-if="showProfileSheet" class="sheet-overlay" @click.self="showProfileSheet = false">
-      <div class="sheet">
-        <div class="sheet-handle" @click="showProfileSheet = false"><div class="handle-bar"></div></div>
-        <div class="sheet-scroll">
-          <h3 class="sheet-title">البيانات الشخصية</h3>
-
-          <div class="form-group">
-            <label class="form-label">الاسم الكامل</label>
-            <input v-model="editForm.fullName" class="form-input" type="text" />
-          </div>
-          <div class="form-group">
-            <label class="form-label">رقم الهاتف</label>
-            <input v-model="editForm.phone" class="form-input" type="tel" dir="ltr" />
-          </div>
-          <div class="form-group">
-            <label class="form-label">العنوان</label>
-            <input v-model="editForm.address" class="form-input" type="text" />
-          </div>
-          <div class="form-group">
-            <label class="form-label">كلمة المرور</label>
-            <input v-model="editForm.password" class="form-input" type="password" />
-          </div>
-          <div class="form-group">
-            <label class="form-label">نوع العميل</label>
-            <div class="type-grid">
-              <button class="type-btn" :class="{ active: editForm.clientType === 'employee' }" @click="editForm.clientType = 'employee'">
-                <span class="material-symbols-outlined">badge</span>
-                <span>موظف</span>
-              </button>
-              <button class="type-btn" :class="{ active: editForm.clientType === 'merchant' }" @click="editForm.clientType = 'merchant'">
-                <span class="material-symbols-outlined">storefront</span>
-                <span>كاسب</span>
-              </button>
-            </div>
-          </div>
-
-          <template v-if="editForm.clientType === 'employee'">
-            <div class="form-group">
-              <label class="form-label">اسم الدائرة</label>
-              <input v-model="editForm.department" class="form-input" type="text" />
-            </div>
-            <div class="form-group">
-              <label class="form-label">المسمى الوظيفي</label>
-              <input v-model="editForm.jobTitle" class="form-input" type="text" />
-            </div>
-          </template>
-
-          <template v-if="editForm.clientType === 'merchant'">
-            <div class="form-group">
-              <label class="form-label">عنوان العمل</label>
-              <input v-model="editForm.workAddress" class="form-input" type="text" />
-            </div>
-          </template>
-
-          <button class="save-btn" @click="saveProfile">
-            <span class="material-symbols-outlined">save</span>
-            <span>حفظ التعديلات</span>
-          </button>
-        </div>
-      </div>
-    </div>
-
     <!-- Support Sheet -->
     <div v-if="showSupportSheet" class="sheet-overlay" @click.self="showSupportSheet = false">
       <div class="sheet">
@@ -196,19 +134,17 @@
 </template>
 
 <script setup>
-import { ref, reactive, onMounted } from 'vue'
+import { ref, reactive, onMounted, onActivated } from 'vue'
 import { useRouter } from 'vue-router'
 import TopBar from '../components/TopBar.vue'
 
 const router = useRouter()
 const goTo = (r) => { if (r) router.push(r) }
 
-const showProfileSheet = ref(false)
 const showSupportSheet = ref(false)
 const toast = ref(null)
 
-const user = ref({ fullName: '', phone: '', address: '', clientType: 'employee', department: '', jobTitle: '', workAddress: '' })
-const editForm = reactive({ fullName: '', phone: '', address: '', password: '', clientType: 'employee', department: '', jobTitle: '', workAddress: '' })
+const user = ref({ fullName: '', phone: '', profilePhoto: null })
 const supportForm = reactive({ subject: '', message: '' })
 
 const showToast = (msg, type = 'success') => {
@@ -216,20 +152,13 @@ const showToast = (msg, type = 'success') => {
   setTimeout(() => { toast.value = null }, 2500)
 }
 
-onMounted(() => {
+const loadUser = () => {
   const saved = JSON.parse(localStorage.getItem('golden_user') || '{}')
   user.value = { ...user.value, ...saved }
-  Object.assign(editForm, { ...user.value, password: '' })
-})
-
-const saveProfile = () => {
-  const data = { ...editForm }
-  if (!data.password) delete data.password
-  localStorage.setItem('golden_user', JSON.stringify(data))
-  user.value = { ...data }
-  showProfileSheet.value = false
-  showToast('تم حفظ التعديلات بنجاح')
 }
+
+onMounted(loadUser)
+onActivated(loadUser)
 
 const sendSupport = () => {
   const messages = JSON.parse(localStorage.getItem('golden_support') || '[]')
@@ -262,9 +191,10 @@ const navItems = [
 .page-content { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; overscroll-behavior-y: contain; padding: 12px 16px 100px; display: flex; flex-direction: column; gap: 12px; align-items: stretch; }
 .page-content > * { flex-shrink: 0; }
 
-.profile-box { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 10px 0; }
+.profile-box { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 10px 0; cursor: pointer; }
 .profile-photo-wrap { position: relative; }
-.profile-photo { width: 90px; height: 90px; border-radius: 50%; background: var(--surface-container); border: 2px solid var(--outline-variant); display: flex; align-items: center; justify-content: center; }
+.profile-photo { width: 90px; height: 90px; border-radius: 50%; background: var(--surface-container); border: 2px solid var(--outline-variant); display: flex; align-items: center; justify-content: center; overflow: hidden; }
+.profile-img { width: 100%; height: 100%; object-fit: cover; }
 .profile-photo .material-symbols-outlined { font-size: 40px; color: var(--on-surface-variant); }
 .camera-btn { position: absolute; bottom: 0; right: -4px; width: 30px; height: 30px; border-radius: 50%; background: var(--primary); border: 2px solid var(--bg); display: flex; align-items: center; justify-content: center; cursor: pointer; }
 .camera-btn .material-symbols-outlined { font-size: 16px; color: #0a0f1d; }
@@ -314,10 +244,6 @@ const navItems = [
 .form-input:focus { border-color: var(--primary); }
 .form-textarea { width: 100%; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--outline-variant); background: var(--surface-container); color: var(--on-surface); font-size: 14px; font-family: inherit; outline: none; resize: vertical; }
 .form-textarea:focus { border-color: var(--primary); }
-.type-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-.type-btn { display: flex; align-items: center; justify-content: center; gap: 6px; padding: 12px; border-radius: 12px; background: var(--surface-container); border: 2px solid var(--outline-variant); font-size: 14px; font-weight: 600; color: var(--on-surface-variant); cursor: pointer; font-family: inherit; }
-.type-btn .material-symbols-outlined { font-size: 20px; }
-.type-btn.active { border-color: var(--primary); background: rgba(242, 202, 80, 0.08); color: var(--primary); }
 .save-btn { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 14px; border-radius: 14px; background: var(--primary); border: none; color: #0a0f1d; font-size: 15px; font-weight: 700; font-family: inherit; cursor: pointer; margin-top: 8px; }
 .save-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 .save-btn .material-symbols-outlined { font-size: 20px; }

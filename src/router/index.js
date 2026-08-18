@@ -45,6 +45,11 @@ const routes = [
     path: '/favorites',
     name: 'Favorites',
     component: () => import('../views/FavoritesPage.vue')
+  },
+  {
+    path: '/profile-edit',
+    name: 'ProfileEdit',
+    component: () => import('../views/ProfileEditPage.vue')
   }
 ]
 
