@@ -8,9 +8,9 @@
         <span class="material-symbols-outlined empty-icon">receipt_long</span>
         <span class="empty-text">لا توجد طلبات بعد</span>
         <span class="empty-sub">قم بتقديم طلب تقسيط وستظهر هنا</span>
-        <button class="empty-btn" @click="$router.push('/calculator')">
-          <span class="material-symbols-outlined">calculate</span>
-          <span>حاسبة التقسيط</span>
+        <button class="empty-btn" @click="$router.push('/settlements')">
+          <span class="material-symbols-outlined">account_balance_wallet</span>
+          <span>تسديد قسط</span>
         </button>
       </div>
 
