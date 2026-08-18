@@ -55,16 +55,16 @@ const login = () => {
   width: 100%;
   height: 100dvh;
   background: var(--bg);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .login-container {
   width: 100%;
   max-width: 400px;
-  height: 100%;
+  min-height: 100dvh;
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -79,8 +79,8 @@ const login = () => {
 }
 
 .logo-area {
-  width: 150px;
-  height: 150px;
+  width: 160px;
+  height: 160px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -90,7 +90,6 @@ const login = () => {
   width: 100%;
   height: 100%;
   object-fit: contain;
-  mix-blend-mode: screen;
 }
 
 .form-area {
