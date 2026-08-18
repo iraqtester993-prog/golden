@@ -6,44 +6,76 @@
       <!-- Search -->
       <div class="search-bar">
         <span class="material-symbols-outlined search-icon">search</span>
-        <input
-          v-model="searchQuery"
-          class="search-input"
-          placeholder="ابحث عن منتج..."
-          type="text"
-        />
+        <input v-model="searchQuery" class="search-input" placeholder="ابحث عن منتج..." type="text" />
         <span v-if="searchQuery" class="material-symbols-outlined clear-icon" @click="searchQuery = ''">close</span>
       </div>
 
-      <!-- Product Selected State -->
-      <template v-if="selectedProduct">
-        <!-- Selected Product Card -->
-        <div class="product-card">
-          <img :src="selectedProduct.img" class="product-img" />
-          <div class="product-info">
-            <h3 class="product-name">{{ selectedProduct.name }}</h3>
-            <span class="product-spec">{{ selectedProduct.spec }}</span>
-            <div class="product-price-row">
-              <span class="product-price-label">سعر المنتج</span>
-              <span class="product-price">{{ selectedProduct.price }} د.ع</span>
-            </div>
-          </div>
-          <button class="change-btn" @click="selectedProduct = null">
-            <span class="material-symbols-outlined">swap_horiz</span>
-          </button>
-        </div>
+      <!-- Mode Toggle -->
+      <div class="mode-toggle">
+        <button class="mode-btn" :class="{ active: mode === 'single' }" @click="switchMode('single')">
+          <span class="material-symbols-outlined">radio_button_checked</span>
+          <span>منتج واحد</span>
+        </button>
+        <button class="mode-btn" :class="{ active: mode === 'multi' }" @click="switchMode('multi')">
+          <span class="material-symbols-outlined">checklist</span>
+          <span>منتجات متعددة</span>
+        </button>
+      </div>
 
+      <!-- Selected Products Summary -->
+      <div v-if="selectedProducts.length > 0" class="selected-summary">
+        <div class="summary-header">
+          <span class="summary-title">المنتجات المختارة ({{ selectedProducts.length }})</span>
+          <button class="clear-all" @click="selectedProducts = []">مسح الكل</button>
+        </div>
+        <div class="selected-list">
+          <div v-for="(p, i) in selectedProducts" :key="p.name" class="selected-chip">
+            <span class="chip-name">{{ p.name }}</span>
+            <span class="chip-price">{{ p.price }} د.ع</span>
+            <button class="chip-remove" @click="removeProduct(i)">
+              <span class="material-symbols-outlined">close</span>
+            </button>
+          </div>
+        </div>
+        <div class="total-row">
+          <span class="total-label">المبلغ الإجمالي</span>
+          <span class="total-value">{{ formatNum(totalSelectedPrice) }} د.ع</span>
+        </div>
+      </div>
+
+      <!-- Product List -->
+      <div class="products-grid">
+        <div
+          v-for="p in filteredProducts"
+          :key="p.name"
+          class="product-select-card"
+          :class="{ selected: isSelected(p) }"
+          @click="toggleProduct(p)"
+        >
+          <img :src="p.img" class="product-select-img" />
+          <div class="product-select-info">
+            <span class="product-select-name">{{ p.name }}</span>
+            <span class="product-select-spec">{{ p.spec }}</span>
+            <span class="product-select-price">{{ p.price }} د.ع</span>
+          </div>
+          <div v-if="isSelected(p)" class="check-circle">
+            <span class="material-symbols-outlined">check</span>
+          </div>
+          <span v-else class="material-symbols-outlined select-arrow">add_circle</span>
+        </div>
+        <div v-if="filteredProducts.length === 0" class="empty-state">
+          <span class="material-symbols-outlined empty-icon">search_off</span>
+          <span class="empty-text">لا توجد نتائج</span>
+        </div>
+      </div>
+
+      <!-- Calculator Section (shown when products selected) -->
+      <template v-if="selectedProducts.length > 0">
         <!-- Down Payment -->
         <div class="section">
           <h3 class="section-title">المبلغ المقدم (اختياري)</h3>
           <div class="input-wrap">
-            <input
-              v-model="downPayment"
-              class="amount-input"
-              type="number"
-              placeholder="0"
-              min="0"
-            />
+            <input v-model="downPayment" class="amount-input" type="number" placeholder="0" min="0" />
             <span class="input-unit">د.ع</span>
           </div>
           <div v-if="downPayment > 0" class="after-down">
@@ -70,7 +102,7 @@
 
         <!-- Result -->
         <div class="result-card" v-if="selectedMonths > 0">
-          <div class="result-row">
+          <div class="result-row highlight">
             <span class="result-label">القسط الشهري</span>
             <div class="result-value-wrap">
               <span class="result-value">{{ formatNum(monthlyInstallment) }}</span>
@@ -80,47 +112,19 @@
           <div class="result-divider"></div>
           <div class="result-row">
             <span class="result-label">إجمالي المبلغ</span>
-            <div class="result-value-wrap">
-              <span class="result-value-sm">{{ formatNum(totalAmount) }} د.ع</span>
-            </div>
+            <span class="result-value-sm">{{ formatNum(totalAmount) }} د.ع</span>
           </div>
           <div class="result-row">
             <span class="result-label">عدد الأقساط</span>
-            <div class="result-value-wrap">
-              <span class="result-value-sm">{{ selectedMonths }} قسط</span>
-            </div>
+            <span class="result-value-sm">{{ selectedMonths }} قسط</span>
           </div>
         </div>
 
-        <!-- Submit Button -->
+        <!-- Submit -->
         <button class="submit-btn" :disabled="!selectedMonths || !netAmount" @click="submitRequest">
           <span class="material-symbols-outlined">send</span>
           <span>تقديم طلب تقسيط</span>
         </button>
-      </template>
-
-      <!-- Product Selection State -->
-      <template v-else>
-        <div class="products-grid">
-          <div
-            v-for="p in filteredProducts"
-            :key="p.name"
-            class="product-select-card"
-            @click="selectProduct(p)"
-          >
-            <img :src="p.img" class="product-select-img" />
-            <div class="product-select-info">
-              <span class="product-select-name">{{ p.name }}</span>
-              <span class="product-select-spec">{{ p.spec }}</span>
-              <span class="product-select-price">{{ p.price }} د.ع</span>
-            </div>
-            <span class="material-symbols-outlined select-arrow">chevron_left</span>
-          </div>
-          <div v-if="filteredProducts.length === 0" class="empty-state">
-            <span class="material-symbols-outlined empty-icon">search_off</span>
-            <span class="empty-text">لا توجد نتائج</span>
-          </div>
-        </div>
       </template>
     </div>
 
@@ -136,15 +140,17 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref, computed, onMounted } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
 import TopBar from '../components/TopBar.vue'
 
 const router = useRouter()
-const goTo = (route) => { if (route) router.push(route) }
+const route = useRoute()
+const goTo = (r) => { if (r) router.push(r) }
 
 const searchQuery = ref('')
-const selectedProduct = ref(null)
+const mode = ref('single')
+const selectedProducts = ref([])
 const downPayment = ref('')
 const selectedMonths = ref(null)
 const durations = [10, 16, 18, 24, 36]
@@ -164,16 +170,48 @@ const filteredProducts = computed(() => {
   return products.filter(p => p.name.toLowerCase().includes(q) || p.spec.toLowerCase().includes(q))
 })
 
-const selectProduct = (p) => {
-  selectedProduct.value = p
+const isSelected = (p) => selectedProducts.value.some(s => s.name === p.name)
+
+const toggleProduct = (p) => {
+  if (mode.value === 'single') {
+    if (isSelected(p)) {
+      selectedProducts.value = []
+    } else {
+      selectedProducts.value = [p]
+    }
+  } else {
+    if (isSelected(p)) {
+      selectedProducts.value = selectedProducts.value.filter(s => s.name !== p.name)
+    } else {
+      selectedProducts.value.push(p)
+    }
+  }
   downPayment.value = ''
   selectedMonths.value = null
 }
 
+const removeProduct = (i) => {
+  selectedProducts.value.splice(i, 1)
+  downPayment.value = ''
+  selectedMonths.value = null
+}
+
+const switchMode = (m) => {
+  mode.value = m
+  if (m === 'single' && selectedProducts.value.length > 1) {
+    selectedProducts.value = [selectedProducts.value[0]]
+  }
+  downPayment.value = ''
+  selectedMonths.value = null
+}
+
+const totalSelectedPrice = computed(() => {
+  return selectedProducts.value.reduce((sum, p) => sum + p.priceRaw, 0)
+})
+
 const netAmount = computed(() => {
-  if (!selectedProduct.value) return 0
   const down = Number(downPayment.value) || 0
-  return Math.max(0, selectedProduct.value.priceRaw - down)
+  return Math.max(0, totalSelectedPrice.value - down)
 })
 
 const monthlyInstallment = computed(() => {
@@ -192,6 +230,19 @@ const submitRequest = () => {
   alert('تم تقديم طلب التقسيط بنجاح!')
   router.push('/home')
 }
+
+onMounted(() => {
+  if (route.query.product) {
+    try {
+      const p = JSON.parse(route.query.product)
+      const found = products.find(pr => pr.name === p.name)
+      if (found) {
+        selectedProducts.value = [found]
+        mode.value = 'single'
+      }
+    } catch (e) { /* ignore */ }
+  }
+})
 
 const navItems = [
   { icon: 'home', label: 'الرئيسية', route: '/home' },
@@ -213,20 +264,39 @@ const navItems = [
 .search-input::placeholder { color: var(--on-surface-variant); }
 .clear-icon { font-size: 18px; color: var(--on-surface-variant); cursor: pointer; }
 
-.product-card { display: flex; align-items: center; gap: 12px; background: var(--surface-container); border: 1px solid var(--outline-variant); border-radius: 16px; padding: 12px; position: relative; }
-.product-img { width: 72px; height: 72px; border-radius: 12px; object-fit: cover; flex-shrink: 0; }
-.product-info { flex: 1; min-width: 0; }
-.product-name { font-size: 15px; font-weight: 700; color: var(--on-surface); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.product-spec { font-size: 12px; color: var(--on-surface-variant); display: block; margin-top: 2px; }
-.product-price-row { display: flex; align-items: center; gap: 6px; margin-top: 6px; }
-.product-price-label { font-size: 11px; color: var(--on-surface-variant); }
-.product-price { font-size: 14px; font-weight: 700; color: var(--primary); }
-.change-btn { width: 36px; height: 36px; border-radius: 10px; background: var(--surface-variant); border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; }
-.change-btn .material-symbols-outlined { font-size: 20px; color: var(--on-surface-variant); }
+.mode-toggle { display: flex; gap: 8px; }
+.mode-btn { flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px; padding: 10px; border-radius: 12px; background: var(--surface-container); border: 2px solid var(--outline-variant); color: var(--on-surface-variant); font-size: 13px; font-weight: 600; font-family: inherit; cursor: pointer; transition: all 0.2s; }
+.mode-btn.active { border-color: var(--primary); color: var(--primary); background: rgba(242, 202, 80, 0.06); }
+.mode-btn .material-symbols-outlined { font-size: 20px; }
+
+.selected-summary { background: var(--surface-container); border: 1px solid var(--outline-variant); border-radius: 16px; padding: 14px; }
+.summary-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+.summary-title { font-size: 13px; font-weight: 600; color: var(--on-surface); }
+.clear-all { font-size: 12px; color: var(--error); background: none; border: none; cursor: pointer; font-family: inherit; }
+.selected-list { display: flex; flex-direction: column; gap: 6px; }
+.selected-chip { display: flex; align-items: center; gap: 8px; padding: 8px 10px; border-radius: 10px; background: var(--bg); border: 1px solid var(--outline-variant); }
+.chip-name { flex: 1; font-size: 12px; font-weight: 600; color: var(--on-surface); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.chip-price { font-size: 12px; color: var(--primary); font-weight: 600; white-space: nowrap; }
+.chip-remove { width: 22px; height: 22px; border-radius: 50%; background: rgba(239,68,68,0.1); border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; }
+.chip-remove .material-symbols-outlined { font-size: 14px; color: var(--error); }
+.total-row { display: flex; align-items: center; justify-content: space-between; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--outline-variant); }
+.total-label { font-size: 13px; color: var(--on-surface-variant); }
+.total-value { font-size: 15px; font-weight: 700; color: var(--primary); }
+
+.products-grid { display: flex; flex-direction: column; gap: 10px; }
+.product-select-card { display: flex; align-items: center; gap: 12px; background: var(--surface-container); border: 2px solid var(--outline-variant); border-radius: 16px; padding: 12px; cursor: pointer; transition: all 0.2s; }
+.product-select-card.selected { border-color: var(--primary); }
+.product-select-img { width: 64px; height: 64px; border-radius: 12px; object-fit: cover; flex-shrink: 0; }
+.product-select-info { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.product-select-name { font-size: 14px; font-weight: 700; color: var(--on-surface); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.product-select-spec { font-size: 12px; color: var(--on-surface-variant); }
+.product-select-price { font-size: 14px; font-weight: 700; color: var(--primary); margin-top: 2px; }
+.select-arrow { font-size: 24px; color: var(--on-surface-variant); flex-shrink: 0; }
+.check-circle { width: 28px; height: 28px; border-radius: 50%; background: var(--primary); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.check-circle .material-symbols-outlined { font-size: 18px; color: #0a0f1d; }
 
 .section { background: var(--surface-container); border: 1px solid var(--outline-variant); border-radius: 16px; padding: 16px; }
 .section-title { font-size: 14px; font-weight: 600; color: var(--on-surface); margin-bottom: 12px; }
-
 .input-wrap { display: flex; align-items: center; gap: 8px; background: var(--bg); border: 1px solid var(--outline-variant); border-radius: 12px; padding: 0 14px; height: 48px; }
 .amount-input { flex: 1; background: none; border: none; outline: none; color: var(--on-surface); font-size: 16px; font-weight: 600; font-family: inherit; direction: ltr; text-align: right; }
 .amount-input::placeholder { color: var(--on-surface-variant); font-weight: 400; }
@@ -243,6 +313,7 @@ const navItems = [
 
 .result-card { background: linear-gradient(135deg, rgba(242, 202, 80, 0.08), rgba(242, 202, 80, 0.03)); border: 1px solid var(--primary); border-radius: 16px; padding: 16px; }
 .result-row { display: flex; align-items: center; justify-content: space-between; padding: 4px 0; }
+.result-row.highlight { padding: 0; }
 .result-label { font-size: 13px; color: var(--on-surface-variant); }
 .result-value-wrap { display: flex; align-items: baseline; gap: 4px; }
 .result-value { font-size: 28px; font-weight: 800; color: var(--primary); }
@@ -253,16 +324,6 @@ const navItems = [
 .submit-btn { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 16px; border-radius: 14px; background: var(--primary); border: none; color: #0a0f1d; font-size: 16px; font-weight: 700; font-family: inherit; cursor: pointer; transition: opacity 0.2s; }
 .submit-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 .submit-btn .material-symbols-outlined { font-size: 22px; }
-
-.products-grid { display: flex; flex-direction: column; gap: 10px; }
-.product-select-card { display: flex; align-items: center; gap: 12px; background: var(--surface-container); border: 1px solid var(--outline-variant); border-radius: 16px; padding: 12px; cursor: pointer; transition: border-color 0.2s; }
-.product-select-card:active { border-color: var(--primary); }
-.product-select-img { width: 64px; height: 64px; border-radius: 12px; object-fit: cover; flex-shrink: 0; }
-.product-select-info { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
-.product-select-name { font-size: 14px; font-weight: 700; color: var(--on-surface); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.product-select-spec { font-size: 12px; color: var(--on-surface-variant); }
-.product-select-price { font-size: 14px; font-weight: 700; color: var(--primary); margin-top: 2px; }
-.select-arrow { font-size: 22px; color: var(--on-surface-variant); flex-shrink: 0; }
 
 .empty-state { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 40px 0; }
 .empty-icon { font-size: 48px; color: var(--on-surface-variant); opacity: 0.4; }
