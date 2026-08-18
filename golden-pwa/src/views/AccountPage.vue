@@ -30,6 +30,20 @@
         </button>
       </section>
 
+      <!-- Support Card -->
+      <section class="support-card">
+        <div class="support-left">
+          <div class="support-icon-wrap">
+            <span class="material-symbols-outlined">headset_mic</span>
+          </div>
+          <div class="support-text">
+            <h3 class="support-title">مركز الدعم الفني</h3>
+            <span class="support-sub">نحن هنا لمساعدتك</span>
+          </div>
+        </div>
+        <span class="material-symbols-outlined menu-arrow">chevron_left</span>
+      </section>
+
       <!-- Social Card -->
       <section class="social-card">
         <span class="social-title">تابعنا على</span>
@@ -48,6 +62,26 @@
           </a>
         </div>
       </section>
+
+      <!-- Terms & Privacy -->
+      <section class="links-section">
+        <button class="link-item">
+          <span class="material-symbols-outlined link-icon">description</span>
+          <span class="link-label">الشروط والأحكام</span>
+        </button>
+        <button class="link-item">
+          <span class="material-symbols-outlined link-icon">lock</span>
+          <span class="link-label">سياسة الخصوصية</span>
+        </button>
+      </section>
+
+      <!-- Logout -->
+      <button class="logout-btn" @click="goTo('/')">
+        <span class="material-symbols-outlined">logout</span>
+        <span>تسجيل الخروج</span>
+      </button>
+
+      <span class="version">الإصدار 1.0.0</span>
     </main>
 
     <nav class="bottom-nav">
@@ -73,8 +107,7 @@ const goTo = (route) => { if (route) router.push(route) }
 const menuItems = [
   { icon: 'person', label: 'البيانات الشخصية' },
   { icon: 'shopping_bag', label: 'طلباتي' },
-  { icon: 'favorite', label: 'المفضلة' },
-  { icon: 'headset_mic', label: 'مركز الدعم الفني' }
+  { icon: 'favorite', label: 'المفضلة' }
 ]
 
 const navItems = [
@@ -92,7 +125,7 @@ const navItems = [
 .page-content {
   flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch;
   padding: 12px 16px 100px;
-  display: flex; flex-direction: column; gap: 16px;
+  display: flex; flex-direction: column; gap: 14px;
 }
 
 /* Profile */
@@ -148,6 +181,30 @@ const navItems = [
 .menu-label { font-size: 14px; color: var(--on-surface); }
 .menu-arrow { font-size: 20px; color: var(--on-surface-variant); }
 
+/* Support Card */
+.support-card {
+  background: linear-gradient(135deg, #0a1628, #0f1d35);
+  border: 1px solid var(--outline-variant); border-radius: 16px;
+  padding: 16px; display: flex; align-items: center; justify-content: space-between;
+  cursor: pointer; transition: all 0.2s;
+}
+
+.support-card:active { transform: scale(0.98); }
+
+.support-left { display: flex; align-items: center; gap: 12px; }
+
+.support-icon-wrap {
+  width: 46px; height: 46px; border-radius: 12px;
+  background: rgba(99, 179, 237, 0.15);
+  display: flex; align-items: center; justify-content: center;
+}
+
+.support-icon-wrap .material-symbols-outlined { font-size: 24px; color: #63b3ed; }
+
+.support-text { display: flex; flex-direction: column; gap: 2px; }
+.support-title { font-size: 15px; font-weight: 700; color: var(--on-surface); }
+.support-sub { font-size: 12px; color: var(--on-surface-variant); }
+
 /* Social Card */
 .social-card {
   background: var(--surface-container); border: 1px solid var(--outline-variant);
@@ -171,7 +228,43 @@ const navItems = [
 .facebook { background: rgba(24, 119, 242, 0.15); color: #1877F2; }
 .instagram { background: linear-gradient(135deg, rgba(225, 48, 108, 0.15), rgba(131, 58, 180, 0.15)); color: #E1306C; }
 .whatsapp { background: rgba(37, 211, 102, 0.15); color: #25D366; }
-.tiktok { background: rgba(0, 0, 0, 0.15); color: #fff; }
+.tiktok { background: rgba(255, 255, 255, 0.1); color: #fff; }
+
+/* Links */
+.links-section {
+  background: var(--surface-container); border: 1px solid var(--outline-variant);
+  border-radius: 16px; overflow: hidden;
+}
+
+.link-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 14px 16px; background: none; border: none;
+  border-bottom: 1px solid var(--outline-variant);
+  cursor: pointer; width: 100%; font-family: 'Noto Kufi Arabic', sans-serif;
+}
+
+.link-item:last-child { border-bottom: none; }
+.link-item:active { background: var(--surface-variant); }
+
+.link-icon { font-size: 20px; color: var(--on-surface-variant); }
+.link-label { font-size: 14px; color: var(--on-surface); }
+
+/* Logout */
+.logout-btn {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  width: 100%; padding: 14px; border-radius: 14px;
+  background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.2);
+  color: #ef4444; font-size: 15px; font-weight: 600;
+  font-family: 'Noto Kufi Arabic', sans-serif; cursor: pointer;
+  transition: all 0.2s;
+}
+
+.logout-btn:active { background: rgba(239, 68, 68, 0.2); }
+
+.logout-btn .material-symbols-outlined { font-size: 22px; }
+
+/* Version */
+.version { text-align: center; font-size: 11px; color: var(--on-surface-variant); opacity: 0.5; padding: 4px 0; }
 
 /* Bottom Nav */
 .bottom-nav {
