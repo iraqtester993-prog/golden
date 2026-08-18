@@ -99,11 +99,11 @@ const currentSlide = ref(0)
 const goTo = (route) => { if (route) router.push(route) }
 
 const categories = [
-  { img: 'https://img.icons8.com/3d-fluency/94/car.png', label: 'سيارات' },
-  { img: 'https://img.icons8.com/3d-fluency/94/air-conditioner.png', label: 'مكيفات' },
-  { img: 'https://img.icons8.com/3d-fluency/94/truck.png', label: 'شاحنات' },
-  { img: 'https://img.icons8.com/3d-fluency/94/washing-machine.png', label: 'أجهزة منزلية' },
-  { img: 'https://img.icons8.com/3d-fluency/94/iphone-x.png', label: 'هواتف' }
+  { img: 'https://images.unsplash.com/photo-1549317661-bd32c8ce0afa?w=200&h=200&fit=crop', label: 'سيارات' },
+  { img: 'https://images.unsplash.com/photo-1631545806609-206480c4ca4d?w=200&h=200&fit=crop', label: 'مكيفات' },
+  { img: 'https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?w=200&h=200&fit=crop', label: 'شاحنات' },
+  { img: 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=200&h=200&fit=crop', label: 'أجهزة منزلية' },
+  { img: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=200&h=200&fit=crop', label: 'هواتف' }
 ]
 
 const slides = [
@@ -139,7 +139,7 @@ const navItems = [
 .page { width: 100%; height: 100dvh; background: var(--bg); display: flex; flex-direction: column; overflow: hidden; }
 
 .page-content {
-  flex: 1; overflow-y: auto; padding: 0 16px 90px;
+  flex: 1; overflow-y: auto; padding: 12px 16px 90px;
   display: flex; flex-direction: column; gap: 12px;
 }
 
@@ -181,15 +181,15 @@ const navItems = [
 }
 
 .cat-icon-wrap {
-  width: 60px; height: 60px; border-radius: 16px;
-  background: var(--surface-container); border: 1px solid var(--outline-variant);
+  width: 62px; height: 62px; border-radius: 50%;
+  background: var(--surface-container); border: 2px solid var(--outline-variant);
   display: flex; align-items: center; justify-content: center;
   transition: all 0.2s; overflow: hidden;
 }
 
 .cat-item.active .cat-icon-wrap { border-color: var(--primary); background: rgba(242, 202, 80, 0.1); }
 
-.cat-img { width: 40px; height: 40px; object-fit: contain; }
+.cat-img { width: 62px; height: 62px; object-fit: cover; border-radius: 50%; }
 
 .cat-label { font-size: 11px; color: var(--on-surface-variant); white-space: nowrap; font-weight: 500; }
 .cat-item.active .cat-label { color: var(--primary); font-weight: 700; }
