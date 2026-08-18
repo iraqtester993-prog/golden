@@ -17,11 +17,17 @@
       <!-- Orders List -->
       <template v-else>
         <!-- Tabs -->
-        <div class="tabs">
-          <button class="tab" :class="{ active: activeTab === 'all' }" @click="activeTab = 'all'">الكل</button>
-          <button class="tab" :class="{ active: activeTab === 'active' }" @click="activeTab = 'active'">قيد التنفيذ</button>
-          <button class="tab" :class="{ active: activeTab === 'done' }" @click="activeTab = 'done'">مكتملة</button>
-          <button class="tab" :class="{ active: activeTab === 'cancelled' }" @click="activeTab = 'cancelled'">ملغاة</button>
+        <div class="tabs-wrap">
+          <div class="tabs">
+            <button class="tab" :class="{ active: activeTab === 'all' }" @click="activeTab = 'all'">الكل</button>
+            <button class="tab" :class="{ active: activeTab === 'pending' }" @click="activeTab = 'pending'">قيد المراجعة</button>
+            <button class="tab" :class="{ active: activeTab === 'inquiry' }" @click="activeTab = 'inquiry'">استعلام</button>
+          </div>
+          <div class="tabs">
+            <button class="tab" :class="{ active: activeTab === 'approved' }" @click="activeTab = 'approved'">تم الموافقة</button>
+            <button class="tab" :class="{ active: activeTab === 'shipping' }" @click="activeTab = 'shipping'">قيد التوصيل</button>
+            <button class="tab" :class="{ active: activeTab === 'delivered' }" @click="activeTab = 'delivered'">تم التسليم</button>
+          </div>
         </div>
 
         <div class="orders-list">
@@ -286,10 +292,7 @@ const saveOrders = () => {
 
 const filteredOrders = computed(() => {
   if (activeTab.value === 'all') return orders.value
-  if (activeTab.value === 'active') return orders.value.filter(o => ['pending', 'inquiry', 'approved', 'shipping'].includes(o.status))
-  if (activeTab.value === 'done') return orders.value.filter(o => o.status === 'delivered')
-  if (activeTab.value === 'cancelled') return orders.value.filter(o => o.status === 'cancelled')
-  return orders.value
+  return orders.value.filter(o => o.status === activeTab.value)
 })
 
 const openDetail = (order) => { detailOrder.value = order }
@@ -376,8 +379,9 @@ const navItems = [
 .empty-btn .material-symbols-outlined { font-size: 20px; }
 
 /* Tabs */
-.tabs { display: flex; border-bottom: 1px solid var(--outline-variant); }
-.tab { flex: 1; background: none; border: none; border-bottom: 2px solid transparent; padding: 10px 0; font-size: 13px; font-weight: 600; color: var(--on-surface-variant); cursor: pointer; font-family: inherit; transition: all 0.2s; }
+.tabs-wrap { display: flex; flex-direction: column; gap: 0; }
+.tabs { display: flex; }
+.tab { flex: 1; background: none; border: none; border-bottom: 2px solid transparent; padding: 10px 0; font-size: 12px; font-weight: 600; color: var(--on-surface-variant); cursor: pointer; font-family: inherit; transition: all 0.2s; white-space: nowrap; }
 .tab.active { color: var(--primary); border-bottom-color: var(--primary); }
 
 /* Orders List */

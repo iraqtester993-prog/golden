@@ -170,6 +170,12 @@ const handleFile = (event, field) => {
 }
 
 const register = () => {
+  localStorage.setItem('golden_user', JSON.stringify({
+    fullName: form.fullName,
+    phone: form.phone,
+    address: form.address,
+    clientType: form.type
+  }))
   router.push('/home')
 }
 </script>

@@ -148,8 +148,8 @@
 
         <!-- Submit -->
         <button class="submit-btn" :disabled="!selectedMonths || !netAmount" @click="goToStep3">
-          <span class="material-symbols-outlined">person_add</span>
-          <span>إكمال البيانات</span>
+          <span class="material-symbols-outlined">calculate</span>
+          <span>تقديم طلب أقساط</span>
         </button>
       </template>
 
@@ -460,6 +460,14 @@ const submitRequest = () => {
 }
 
 onMounted(() => {
+  const user = JSON.parse(localStorage.getItem('golden_user') || 'null')
+  if (user) {
+    fullName.value = user.fullName || ''
+    phone.value = user.phone || ''
+    address.value = user.address || ''
+    clientType.value = user.clientType || 'employee'
+  }
+
   if (route.query.product) {
     try {
       const p = JSON.parse(route.query.product)
