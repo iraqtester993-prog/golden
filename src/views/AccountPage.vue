@@ -25,9 +25,9 @@
           </div>
           <span class="material-symbols-outlined arrow">chevron_left</span>
         </div>
-        <div class="menu-row">
+        <div class="menu-row" @click="$router.push('/orders')">
           <div class="menu-left">
-            <div class="menu-icon-wrap"><span class="material-symbols-outlined mi">shopping_bag</span></div>
+            <div class="menu-icon-wrap"><span class="material-symbols-outlined mi">receipt_long</span></div>
             <span class="menu-label">طلباتي</span>
           </div>
           <span class="material-symbols-outlined arrow">chevron_left</span>
@@ -111,7 +111,7 @@ const navItems = [
   { icon: 'home', label: 'الرئيسية', route: '/home' },
   { icon: 'shopping_bag', label: 'المتجر', route: '/store' },
   { icon: 'account_balance_wallet', label: 'أقساطي', route: '/settlements' },
-  { icon: 'notifications', label: 'طلباتي', badge: true, route: null },
+  { icon: 'receipt_long', label: 'طلباتي', badge: true, route: '/orders' },
   { icon: 'person', label: 'حسابي', route: null }
 ]
 </script>

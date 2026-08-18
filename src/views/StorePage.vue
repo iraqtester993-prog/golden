@@ -218,7 +218,7 @@ const navItems = [
   { icon: 'home', label: 'الرئيسية', route: '/home' },
   { icon: 'shopping_bag', label: 'المتجر', route: null },
   { icon: 'account_balance_wallet', label: 'أقساطي', route: '/settlements' },
-  { icon: 'notifications', label: 'طلباتي', badge: true, route: null },
+  { icon: 'receipt_long', label: 'طلباتي', badge: true, route: '/orders' },
   { icon: 'person', label: 'حسابي', route: '/account' }
 ]
 </script>
