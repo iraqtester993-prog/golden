@@ -6,12 +6,13 @@
       <!-- Installment Card -->
       <section class="card-wrap">
         <div class="card-header">
-            <h2 class="card-title">أقساطي</h2>
-            <div class="card-header-right">
-              <button class="export-btn">تصدير الفاتورة</button>
-              <div class="invoice-pill" @click="showInvoices = !showInvoices">
-              <span>فاتورة #{{ selectedInvoice.id }}</span>
+            <div class="invoice-pill" @click="showInvoices = !showInvoices">
+              <span>اختر الفاتورة</span>
               <span class="material-symbols-outlined pill-arrow" :class="{ rotated: showInvoices }">keyboard_arrow_down</span>
+            </div>
+            <h2 class="card-title">أقساطي</h2>
+            <div class="invoice-num-pill">
+              <span>#{{ selectedInvoice.id }}</span>
             </div>
             <!-- Invoice Dropdown -->
             <div class="invoice-dropdown" v-if="showInvoices">
@@ -29,7 +30,6 @@
                 <span class="inv-remaining">{{ inv.remaining }} د.ع</span>
               </div>
             </div>
-          </div>
           </div>
 
           <div class="stats-grid">
@@ -283,27 +283,31 @@ const navItems = [
   position: relative;
 }
 
-.card-header-right { display: flex; align-items: center; gap: 10px; }
-
-.export-btn {
-  background: var(--surface-variant); border: 1px solid var(--outline-variant);
-  border-radius: 8px; padding: 4px 10px; font-size: 11px; font-weight: 600;
-  color: var(--on-surface-variant); cursor: pointer;
-  font-family: 'Noto Kufi Arabic', sans-serif; white-space: nowrap;
-}
-
-.card-title { font-size: 18px; font-weight: 700; color: var(--on-surface); }
+.card-title { font-size: 16px; font-weight: 700; color: var(--primary); text-align: center; flex: 1; }
 
 .invoice-pill {
   display: flex;
   align-items: center;
   gap: 6px;
-  background: var(--surface-container);
+  background: var(--bg);
   border: 1px solid var(--outline-variant);
   border-radius: 20px;
-  padding: 4px 14px;
-  font-size: 12px;
+  padding: 4px 12px;
+  font-size: 11px;
   color: var(--on-surface-variant);
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+
+.invoice-pill:active { border-color: var(--primary); }
+
+.invoice-num-pill {
+  background: var(--surface-variant);
+  border-radius: 20px;
+  padding: 4px 10px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--on-surface);
 }
 
 .pill-arrow { font-size: 18px; color: var(--primary); transition: transform 0.3s; }
