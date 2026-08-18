@@ -16,9 +16,7 @@
     <main class="main-content">
       <!-- Installment Card -->
       <section class="card-wrap">
-        <div class="card-gradient"></div>
-        <div class="card-inner">
-          <div class="card-header">
+        <div class="card-header">
             <h2 class="card-title">أقساطي</h2>
             <div class="invoice-pill">
               <span>فاتورة #10235</span>
@@ -67,7 +65,6 @@
             </div>
             <span class="date-badge">بعد 8 أيام</span>
           </div>
-        </div>
       </section>
 
       <!-- Quick Actions -->
@@ -257,23 +254,12 @@ const navItems = [
   border-radius: 16px;
   overflow: hidden;
   border: 1px solid var(--outline-variant);
-}
-
-.card-gradient {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, rgba(10,15,29,0.4), rgba(30,41,67,0.4));
-  z-index: 0;
-}
-
-.card-inner {
-  position: relative;
-  z-index: 1;
   padding: 20px;
   background: rgba(20, 27, 45, 0.7);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
 }
+
 
 .card-header {
   display: flex;
