@@ -258,6 +258,7 @@ const navItems = [
 .main-content {
   flex: 1;
   overflow-y: auto;
+  overscroll-behavior-y: contain;
   padding: 16px 16px 90px;
   display: flex;
   flex-direction: column;

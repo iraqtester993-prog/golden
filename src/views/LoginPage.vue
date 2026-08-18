@@ -57,7 +57,7 @@ const login = () => {
   background: var(--bg);
   overflow-x: hidden;
   overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: contain;
 }
 
 .login-container {

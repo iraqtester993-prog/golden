@@ -345,10 +345,10 @@ const navItems = [
 </script>
 
 <style scoped>
-.page { width: 100%; height: 100dvh; background: var(--bg); display: flex; flex-direction: column; overflow: hidden; }
+.page { width: 100%; height: 100dvh; background: var(--bg); display: flex; flex-direction: column; overflow: hidden; overscroll-behavior: none; }
 
 .page-content {
-  flex: 1; overflow-y: auto; padding: 12px 16px 90px;
+  flex: 1; overflow-y: auto; overscroll-behavior-y: contain; padding: 12px 16px 90px;
   display: flex; flex-direction: column; gap: 14px;
 }
 

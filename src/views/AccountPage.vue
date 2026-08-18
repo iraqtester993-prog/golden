@@ -117,9 +117,9 @@ const navItems = [
 </script>
 
 <style scoped>
-.page { width: 100%; height: 100dvh; background: var(--bg); display: flex; flex-direction: column; overflow: hidden; }
+.page { width: 100%; height: 100dvh; background: var(--bg); display: flex; flex-direction: column; overflow: hidden; overscroll-behavior: none; }
 
-.page-content { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 12px 16px 100px; display: flex; flex-direction: column; gap: 12px; }
+.page-content { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; overscroll-behavior-y: contain; padding: 12px 16px 100px; display: flex; flex-direction: column; gap: 12px; }
 
 .profile-box { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 10px 0; }
 .profile-photo-wrap { position: relative; }
