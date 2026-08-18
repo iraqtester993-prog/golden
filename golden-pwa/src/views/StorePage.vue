@@ -5,18 +5,18 @@
     <main class="page-content">
       <!-- Search -->
       <div class="search-bar">
-        <span class="material-symbols-outlined search-icon">search</span>
-        <input type="text" placeholder="ابحث عن منتج..." class="search-input" />
         <button class="filter-btn">
           <span class="material-symbols-outlined">tune</span>
         </button>
+        <input type="text" placeholder="ابحث عن منتج..." class="search-input" />
+        <span class="material-symbols-outlined search-icon">search</span>
       </div>
 
       <!-- Categories -->
       <section class="categories">
         <button class="cat-item" v-for="cat in categories" :key="cat.label" :class="{ active: activeCat === cat.label }" @click="activeCat = cat.label">
           <div class="cat-icon-wrap">
-            <span class="material-symbols-outlined cat-icon">{{ cat.icon }}</span>
+            <img :src="cat.img" class="cat-img" />
           </div>
           <span class="cat-label">{{ cat.label }}</span>
         </button>
@@ -25,14 +25,9 @@
       <!-- Promo Banner -->
       <section class="promo-banner">
         <div class="promo-content">
-          <div class="promo-text">
-            <span class="promo-title">خصومات تصل إلى</span>
-            <span class="promo-percent">30%</span>
-          </div>
+          <span class="promo-title">خصومات تصل إلى</span>
+          <span class="promo-percent">30%</span>
           <button class="promo-btn">تسوق الآن</button>
-        </div>
-        <div class="promo-img-area">
-          <span class="material-symbols-outlined promo-gift">redeem</span>
         </div>
       </section>
 
@@ -94,11 +89,11 @@ const activeTab = ref('popular')
 const goTo = (route) => { if (route) router.push(route) }
 
 const categories = [
-  { icon: 'directions_car', label: 'سيارات' },
-  { icon: 'ac_unit', label: 'مكيفات' },
-  { icon: 'local_shipping', label: 'شاحنات' },
-  { icon: 'kitchen', label: 'أجهزة منزلية' },
-  { icon: 'phone_iphone', label: 'هواتف' }
+  { img: 'https://img.icons8.com/3d-fluency/94/car.png', label: 'سيارات' },
+  { img: 'https://img.icons8.com/3d-fluency/94/air-conditioner.png', label: 'مكيفات' },
+  { img: 'https://img.icons8.com/3d-fluency/94/truck.png', label: 'شاحنات' },
+  { img: 'https://img.icons8.com/3d-fluency/94/washing-machine.png', label: 'أجهزة منزلية' },
+  { img: 'https://img.icons8.com/3d-fluency/94/iphone-x.png', label: 'هواتف' }
 ]
 
 const products = [
@@ -121,7 +116,7 @@ const navItems = [
 
 .page-content {
   flex: 1; overflow-y: auto; padding: 0 16px 90px;
-  display: flex; flex-direction: column; gap: 16px;
+  display: flex; flex-direction: column; gap: 14px;
 }
 
 /* Search */
@@ -149,7 +144,7 @@ const navItems = [
 
 /* Categories */
 .categories {
-  display: flex; gap: 12px; overflow-x: auto; padding: 4px 0;
+  display: flex; gap: 14px; overflow-x: auto; padding: 4px 0;
   -ms-overflow-style: none; scrollbar-width: none;
 }
 
@@ -157,49 +152,43 @@ const navItems = [
 
 .cat-item {
   display: flex; flex-direction: column; align-items: center; gap: 6px;
-  background: none; border: none; cursor: pointer; min-width: 60px;
+  background: none; border: none; cursor: pointer; min-width: 70px;
 }
 
 .cat-icon-wrap {
-  width: 52px; height: 52px; border-radius: 14px;
+  width: 64px; height: 64px; border-radius: 16px;
   background: var(--surface-container); border: 1px solid var(--outline-variant);
   display: flex; align-items: center; justify-content: center;
-  transition: all 0.2s;
+  transition: all 0.2s; overflow: hidden;
 }
 
-.cat-item.active .cat-icon-wrap { background: var(--primary); border-color: var(--primary); }
+.cat-item.active .cat-icon-wrap { border-color: var(--primary); background: rgba(242, 202, 80, 0.1); }
 
-.cat-icon { font-size: 24px; color: var(--on-surface-variant); }
-.cat-item.active .cat-icon { color: #0a0f1d; }
+.cat-img { width: 44px; height: 44px; object-fit: contain; }
 
-.cat-label { font-size: 10px; color: var(--on-surface-variant); white-space: nowrap; }
-.cat-item.active .cat-label { color: var(--primary); font-weight: 600; }
+.cat-label { font-size: 11px; color: var(--on-surface-variant); white-space: nowrap; font-weight: 500; }
+.cat-item.active .cat-label { color: var(--primary); font-weight: 700; }
 
 /* Promo Banner */
 .promo-banner {
   background: linear-gradient(135deg, #1a1207, #2a1f0f);
   border: 1px solid var(--outline-variant); border-radius: 16px;
-  padding: 20px; display: flex; justify-content: space-between; align-items: center;
-  overflow: hidden; position: relative;
+  padding: 20px; position: relative; overflow: hidden; min-height: 100px;
+  display: flex; align-items: center;
 }
 
-.promo-content { display: flex; flex-direction: column; gap: 10px; z-index: 1; }
-.promo-text { display: flex; flex-direction: column; }
+.promo-content { display: flex; flex-direction: column; gap: 6px; z-index: 1; }
 .promo-title { font-size: 14px; color: var(--on-surface-variant); }
-.promo-percent { font-size: 32px; font-weight: 700; color: var(--primary); }
+.promo-percent { font-size: 36px; font-weight: 700; color: var(--primary); line-height: 1; }
 
 .promo-btn {
   background: var(--primary); color: #0a0f1d; border: none; border-radius: 10px;
   padding: 8px 20px; font-size: 13px; font-weight: 700;
-  font-family: 'Noto Kufi Arabic', sans-serif; cursor: pointer; width: fit-content;
+  font-family: 'Noto Kufi Arabic', sans-serif; cursor: pointer; width: fit-content; margin-top: 4px;
 }
 
-.promo-img-area { position: absolute; left: 20px; top: 50%; transform: translateY(-50%); }
-
-.promo-gift { font-size: 60px; color: rgba(242, 202, 80, 0.2); }
-
 /* Tabs */
-.tabs { display: flex; gap: 0; border-bottom: 1px solid var(--outline-variant); }
+.tabs { display: flex; border-bottom: 1px solid var(--outline-variant); }
 
 .tab {
   flex: 1; background: none; border: none; border-bottom: 2px solid transparent;
@@ -211,7 +200,7 @@ const navItems = [
 .tab.active { color: var(--primary); border-bottom-color: var(--primary); }
 
 /* Products */
-.products-list { display: flex; flex-direction: column; gap: 14px; }
+.products-list { display: flex; flex-direction: column; gap: 12px; }
 
 .product-card {
   display: flex; gap: 12px; background: var(--surface-container);
