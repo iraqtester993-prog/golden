@@ -109,7 +109,7 @@
         <div class="sheet-actions">
           <button class="action-cash">شراء نقد</button>
           <button class="action-installment">شراء بالقسط</button>
-          <button class="action-calc">حساب الأقساط</button>
+          <button class="action-calc" @click="goTo('/calculator')">حساب الأقساط</button>
         </div>
       </div>
     </div>
