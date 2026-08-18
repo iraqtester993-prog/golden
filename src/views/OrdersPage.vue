@@ -114,24 +114,41 @@
             </h3>
             <div class="detail-row"><span class="detail-key">رقم الطلب</span><span class="detail-val">#{{ detailOrder.id }}</span></div>
             <div class="detail-row"><span class="detail-key">تاريخ التقديم</span><span class="detail-val">{{ detailOrder.date }}</span></div>
-            <div class="detail-row"><span class="detail-key">المنتجات</span><span class="detail-val">{{ detailOrder.products.length }} منتجات</span></div>
+            <div class="detail-row"><span class="detail-key">نوع الطلب</span><span class="detail-val">{{ detailOrder.type === 'close_invoice' ? 'إطفاء فاتورة' : 'طلب أقساط' }}</span></div>
+            <div v-if="detailOrder.type !== 'close_invoice'" class="detail-row"><span class="detail-key">المنتجات</span><span class="detail-val">{{ detailOrder.products?.length || 0 }} منتجات</span></div>
           </div>
 
-          <!-- Products -->
-          <div class="detail-section">
-            <h3 class="detail-heading">
-              <span class="material-symbols-outlined">shopping_bag</span>
-              المنتجات
-            </h3>
-            <div v-for="(p, i) in detailOrder.products" :key="i" class="detail-product-row">
-              <img :src="p.img" class="detail-product-img" />
-              <div class="detail-product-info">
-                <span class="detail-product-name">{{ p.name }}</span>
-                <span class="detail-product-spec">{{ p.spec }}</span>
-              </div>
-              <span class="detail-product-price">{{ p.price }} د.ع</span>
+          <!-- Close Invoice Info -->
+          <template v-if="detailOrder.type === 'close_invoice'">
+            <div class="detail-section">
+              <h3 class="detail-heading">
+                <span class="material-symbols-outlined">receipt_long</span>
+                تفاصيل الفاتورة
+              </h3>
+              <div class="detail-row"><span class="detail-key">اسم الفاتورة</span><span class="detail-val">{{ detailOrder.invoiceName }}</span></div>
+              <div class="detail-row"><span class="detail-key">رقم الفاتورة</span><span class="detail-val">#{{ detailOrder.invoiceId }}</span></div>
+              <div class="detail-row"><span class="detail-key">المبلغ المتبقي</span><span class="detail-val">{{ detailOrder.remaining }} د.ع</span></div>
+              <div class="detail-row"><span class="detail-key">عدد الأقساط المتبقية</span><span class="detail-val">{{ detailOrder.installmentsLeft }} قسط</span></div>
             </div>
-          </div>
+          </template>
+
+          <!-- Products (regular orders only) -->
+          <template v-else>
+            <div class="detail-section">
+              <h3 class="detail-heading">
+                <span class="material-symbols-outlined">shopping_bag</span>
+                المنتجات
+              </h3>
+              <div v-for="(p, i) in detailOrder.products" :key="i" class="detail-product-row">
+                <img :src="p.img" class="detail-product-img" />
+                <div class="detail-product-info">
+                  <span class="detail-product-name">{{ p.name }}</span>
+                  <span class="detail-product-spec">{{ p.spec }}</span>
+                </div>
+                <span class="detail-product-price">{{ p.price }} د.ع</span>
+              </div>
+            </div>
+          </template>
 
           <!-- Personal Info -->
           <div class="detail-section">
@@ -141,24 +158,26 @@
             </h3>
             <div class="detail-row"><span class="detail-key">الاسم الكامل</span><span class="detail-val">{{ detailOrder.fullName }}</span></div>
             <div class="detail-row"><span class="detail-key">رقم الهاتف</span><span class="detail-val" dir="ltr">{{ detailOrder.phone }}</span></div>
-            <div class="detail-row"><span class="detail-key">العنوان</span><span class="detail-val">{{ detailOrder.address }}</span></div>
-            <div class="detail-row"><span class="detail-key">الراتب الشهري</span><span class="detail-val">{{ formatNum(detailOrder.salary) }} د.ع</span></div>
-            <div class="detail-row"><span class="detail-key">نوع العميل</span><span class="detail-val">{{ detailOrder.clientType === 'employee' ? 'موظف' : 'تاجر' }}</span></div>
+            <div v-if="detailOrder.address" class="detail-row"><span class="detail-key">العنوان</span><span class="detail-val">{{ detailOrder.address }}</span></div>
+            <div v-if="detailOrder.salary" class="detail-row"><span class="detail-key">الراتب الشهري</span><span class="detail-val">{{ formatNum(detailOrder.salary) }} د.ع</span></div>
+            <div v-if="detailOrder.clientType" class="detail-row"><span class="detail-key">نوع العميل</span><span class="detail-val">{{ detailOrder.clientType === 'employee' ? 'موظف' : 'تاجر' }}</span></div>
           </div>
 
-          <!-- Payment Details -->
-          <div class="detail-section">
-            <h3 class="detail-heading">
-              <span class="material-symbols-outlined">payments</span>
-              تفاصيل الدفع
-            </h3>
-            <div class="detail-row"><span class="detail-key">إجمالي المنتجات</span><span class="detail-val">{{ formatNum(detailOrder.totalPrice) }} د.ع</span></div>
-            <div class="detail-row" v-if="detailOrder.downPayment > 0"><span class="detail-key">المبلغ المقدم</span><span class="detail-val">{{ formatNum(detailOrder.downPayment) }} د.ع</span></div>
-            <div class="detail-row"><span class="detail-key">المبلغ الصافي</span><span class="detail-val">{{ formatNum(detailOrder.netAmount) }} د.ع</span></div>
-            <div class="detail-row"><span class="detail-key">مدة التقسيط</span><span class="detail-val">{{ detailOrder.months }} شهر</span></div>
-            <div class="detail-row highlight"><span class="detail-key">القسط الشهري</span><span class="detail-val">{{ formatNum(detailOrder.monthlyInstallment) }} د.ع</span></div>
-            <div class="detail-row"><span class="detail-key">الإجمالي الكلي</span><span class="detail-val">{{ formatNum(detailOrder.totalAmount) }} د.ع</span></div>
-          </div>
+          <!-- Payment Details (regular orders only) -->
+          <template v-if="detailOrder.type !== 'close_invoice'">
+            <div class="detail-section">
+              <h3 class="detail-heading">
+                <span class="material-symbols-outlined">payments</span>
+                تفاصيل الدفع
+              </h3>
+              <div class="detail-row"><span class="detail-key">إجمالي المنتجات</span><span class="detail-val">{{ formatNum(detailOrder.totalPrice) }} د.ع</span></div>
+              <div class="detail-row" v-if="detailOrder.downPayment > 0"><span class="detail-key">المبلغ المقدم</span><span class="detail-val">{{ formatNum(detailOrder.downPayment) }} د.ع</span></div>
+              <div class="detail-row"><span class="detail-key">المبلغ الصافي</span><span class="detail-val">{{ formatNum(detailOrder.netAmount) }} د.ع</span></div>
+              <div class="detail-row"><span class="detail-key">مدة التقسيط</span><span class="detail-val">{{ detailOrder.months }} شهر</span></div>
+              <div class="detail-row highlight"><span class="detail-key">القسط الشهري</span><span class="detail-val">{{ formatNum(detailOrder.monthlyInstallment) }} د.ع</span></div>
+              <div class="detail-row"><span class="detail-key">الإجمالي الكلي</span><span class="detail-val">{{ formatNum(detailOrder.totalAmount) }} د.ع</span></div>
+            </div>
+          </template>
 
           <!-- Owner Notes -->
           <div v-if="detailOrder.ownerNote" class="detail-section owner-note-section">
