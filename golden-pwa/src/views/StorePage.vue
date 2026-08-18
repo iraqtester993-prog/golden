@@ -168,8 +168,9 @@ const navItems = [
 
 /* Categories */
 .categories {
-  display: flex; gap: 14px; overflow-x: auto; padding: 4px 0;
+  display: flex; gap: 12px; overflow-x: auto; padding: 4px 0;
   -ms-overflow-style: none; scrollbar-width: none;
+  flex-shrink: 0;
 }
 
 .categories::-webkit-scrollbar { display: none; }
@@ -180,7 +181,7 @@ const navItems = [
 }
 
 .cat-icon-wrap {
-  width: 64px; height: 64px; border-radius: 16px;
+  width: 60px; height: 60px; border-radius: 16px;
   background: var(--surface-container); border: 1px solid var(--outline-variant);
   display: flex; align-items: center; justify-content: center;
   transition: all 0.2s; overflow: hidden;
@@ -188,17 +189,17 @@ const navItems = [
 
 .cat-item.active .cat-icon-wrap { border-color: var(--primary); background: rgba(242, 202, 80, 0.1); }
 
-.cat-img { width: 44px; height: 44px; object-fit: contain; }
+.cat-img { width: 40px; height: 40px; object-fit: contain; }
 
 .cat-label { font-size: 11px; color: var(--on-surface-variant); white-space: nowrap; font-weight: 500; }
 .cat-item.active .cat-label { color: var(--primary); font-weight: 700; }
 
 /* Slider */
-.slider-section { position: relative; }
+.slider-section { position: relative; flex-shrink: 0; }
 
 .slider-container {
   width: 100%; border-radius: 16px; overflow: hidden; position: relative;
-  aspect-ratio: 2 / 1; border: 1px solid var(--outline-variant);
+  height: 160px; border: 1px solid var(--outline-variant);
 }
 
 .slider-track {
