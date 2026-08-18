@@ -9,6 +9,21 @@
       </div>
 
       <div class="form-area">
+        <!-- Profile Photo -->
+        <div class="profile-photo-section">
+          <label class="profile-photo-label">
+            <input type="file" accept="image/*" class="file-input" @change="handleProfilePhoto" />
+            <div class="profile-circle" :class="{ uploaded: profilePreview }">
+              <img v-if="profilePreview" :src="profilePreview" class="profile-img" />
+              <span v-else class="material-symbols-outlined profile-icon">person</span>
+              <div class="camera-badge">
+                <span class="material-symbols-outlined">photo_camera</span>
+              </div>
+            </div>
+          </label>
+          <span class="profile-hint">أضف صورة个人ية</span>
+        </div>
+
         <div class="input-group">
           <span class="material-symbols-outlined input-icon">person</span>
           <input type="text" placeholder="الاسم الكامل" class="input-field" v-model="form.fullName" />
@@ -122,6 +137,7 @@ import { useRouter } from 'vue-router'
 
 const router = useRouter()
 const showPass = ref(false)
+const profilePreview = ref(null)
 
 const form = reactive({
   fullName: '',
@@ -137,6 +153,14 @@ const form = reactive({
   residenceCard: null,
   departmentId: null
 })
+
+const handleProfilePhoto = (event) => {
+  const file = event.target.files[0]
+  if (file) {
+    form.profilePhoto = file
+    profilePreview.value = URL.createObjectURL(file)
+  }
+}
 
 const handleFile = (event, field) => {
   const file = event.target.files[0]
@@ -194,6 +218,70 @@ const register = () => {
   flex-direction: column;
   gap: 12px;
 }
+
+/* Profile Photo */
+.profile-photo-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+.profile-photo-label { cursor: pointer; }
+
+.profile-circle {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  background: var(--surface-container);
+  border: 2px dashed var(--outline-variant);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition: border-color 0.3s;
+  overflow: hidden;
+}
+
+.profile-circle.uploaded { border-style: solid; border-color: var(--primary); }
+
+.profile-circle:active { border-color: var(--primary); }
+
+.profile-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.profile-icon {
+  font-size: 36px;
+  color: var(--on-surface-variant);
+}
+
+.camera-badge {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+}
+
+.camera-badge .material-symbols-outlined {
+  font-size: 18px;
+  color: var(--primary);
+}
+
+.profile-hint {
+  font-size: 11px;
+  color: var(--on-surface-variant);
+}
+
+.file-input { display: none; }
 
 .input-group {
   display: flex;
