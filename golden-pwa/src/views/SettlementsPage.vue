@@ -339,7 +339,7 @@ const navItems = [
   { icon: 'home', label: 'الرئيسية', route: '/home' },
   { icon: 'shopping_bag', label: 'المتجر', route: '/store' },
   { icon: 'account_balance_wallet', label: 'أقساطي', route: null },
-  { icon: 'notifications', label: 'الإشعارات', badge: true, route: null },
+  { icon: 'notifications', label: 'طلباتي', badge: true, route: null },
   { icon: 'person', label: 'حسابي', route: '/account' }
 ]
 </script>
@@ -353,25 +353,25 @@ const navItems = [
 }
 
 /* Summary Card */
-.summary-card {
-  background: linear-gradient(135deg, #1a1207, #2a1f0f);
+-summary-card {
+  background: linear-gradient(135deg, #0a1628, #0f1d35);
   border: 1px solid var(--outline-variant); border-radius: 16px;
   padding: 20px; display: flex; align-items: center; gap: 16px;
 }
 
 .summary-icon {
   width: 50px; height: 50px; border-radius: 14px;
-  background: rgba(242, 202, 80, 0.15);
+  background: rgba(99, 179, 237, 0.15);
   display: flex; align-items: center; justify-content: center;
 }
 
-.summary-icon .material-symbols-outlined { font-size: 26px; color: var(--primary); }
+.summary-icon .material-symbols-outlined { font-size: 26px; color: #63b3ed; }
 
 .summary-text { display: flex; flex-direction: column; gap: 4px; }
 .summary-label { font-size: 12px; color: var(--on-surface-variant); }
 
 .summary-amount { display: flex; align-items: baseline; gap: 6px; }
-.summary-num { font-size: 24px; font-weight: 700; color: var(--primary); }
+.summary-num { font-size: 24px; font-weight: 700; color: #63b3ed; }
 .summary-currency { font-size: 14px; color: var(--on-surface-variant); }
 
 /* Tabs */

@@ -239,7 +239,7 @@ const navItems = [
   { icon: 'home', label: 'الرئيسية', route: null },
   { icon: 'shopping_bag', label: 'المتجر', route: '/store' },
   { icon: 'account_balance_wallet', label: 'أقساطي', route: '/settlements' },
-  { icon: 'notifications', label: 'الإشعارات', badge: true, route: null },
+  { icon: 'notifications', label: 'طلباتي', badge: true, route: null },
   { icon: 'person', label: 'حسابي', route: '/account' }
 ]
 </script>
