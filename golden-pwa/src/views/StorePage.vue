@@ -22,12 +22,21 @@
         </button>
       </section>
 
-      <!-- Promo Banner -->
-      <section class="promo-banner">
-        <div class="promo-content">
-          <span class="promo-title">خصومات تصل إلى</span>
-          <span class="promo-percent">30%</span>
-          <button class="promo-btn">تسوق الآن</button>
+      <!-- Image Slider -->
+      <section class="slider-section">
+        <div class="slider-container">
+          <div class="slider-track" :style="{ transform: `translateX(${currentSlide * 100}%)` }">
+            <div class="slide" v-for="(slide, i) in slides" :key="i">
+              <img :src="slide.img" class="slide-img" />
+              <div class="slide-overlay">
+                <span class="slide-title">{{ slide.title }}</span>
+                <span class="slide-sub">{{ slide.sub }}</span>
+              </div>
+            </div>
+          </div>
+          <div class="slider-dots">
+            <span v-for="(_, i) in slides" :key="i" class="dot" :class="{ active: currentSlide === i }" @click="currentSlide = i"></span>
+          </div>
         </div>
       </section>
 
@@ -78,13 +87,14 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 import TopBar from '../components/TopBar.vue'
 
 const router = useRouter()
 const activeCat = ref('هواتف')
 const activeTab = ref('popular')
+const currentSlide = ref(0)
 
 const goTo = (route) => { if (route) router.push(route) }
 
@@ -95,6 +105,20 @@ const categories = [
   { img: 'https://img.icons8.com/3d-fluency/94/washing-machine.png', label: 'أجهزة منزلية' },
   { img: 'https://img.icons8.com/3d-fluency/94/iphone-x.png', label: 'هواتف' }
 ]
+
+const slides = [
+  { img: 'https://images.unsplash.com/photo-1546868871-af0de0ae72be?w=800&h=400&fit=crop', title: 'عروض نهاية الأسبوع', sub: 'خصومات تصل إلى 50%' },
+  { img: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=800&h=400&fit=crop', title: 'إلكترونيات مميزة', sub: 'أحدث الأجهزة بأسعار منافسة' },
+  { img: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800&h=400&fit=crop', title: 'أثاث منزلي عصري', sub: 'تشكيلة واسعة من الأثاث' }
+]
+
+let sliderTimer = null
+onMounted(() => {
+  sliderTimer = setInterval(() => {
+    currentSlide.value = (currentSlide.value + 1) % slides.length
+  }, 3000)
+})
+onUnmounted(() => { if (sliderTimer) clearInterval(sliderTimer) })
 
 const products = [
   { name: 'iPhone 16 Pro Max', spec: '256GB', price: '1,850,000', rating: '4.9', reviews: '128', img: 'https://images.unsplash.com/photo-1695048133142-1a20484d2569?w=400&h=300&fit=crop' },
@@ -116,7 +140,7 @@ const navItems = [
 
 .page-content {
   flex: 1; overflow-y: auto; padding: 0 16px 90px;
-  display: flex; flex-direction: column; gap: 14px;
+  display: flex; flex-direction: column; gap: 12px;
 }
 
 /* Search */
@@ -169,23 +193,46 @@ const navItems = [
 .cat-label { font-size: 11px; color: var(--on-surface-variant); white-space: nowrap; font-weight: 500; }
 .cat-item.active .cat-label { color: var(--primary); font-weight: 700; }
 
-/* Promo Banner */
-.promo-banner {
-  background: linear-gradient(135deg, #1a1207, #2a1f0f);
-  border: 1px solid var(--outline-variant); border-radius: 16px;
-  padding: 20px; position: relative; overflow: hidden; min-height: 100px;
-  display: flex; align-items: center;
+/* Slider */
+.slider-section { position: relative; }
+
+.slider-container {
+  width: 100%; border-radius: 16px; overflow: hidden; position: relative;
+  aspect-ratio: 2 / 1; border: 1px solid var(--outline-variant);
 }
 
-.promo-content { display: flex; flex-direction: column; gap: 6px; z-index: 1; }
-.promo-title { font-size: 14px; color: var(--on-surface-variant); }
-.promo-percent { font-size: 36px; font-weight: 700; color: var(--primary); line-height: 1; }
-
-.promo-btn {
-  background: var(--primary); color: #0a0f1d; border: none; border-radius: 10px;
-  padding: 8px 20px; font-size: 13px; font-weight: 700;
-  font-family: 'Noto Kufi Arabic', sans-serif; cursor: pointer; width: fit-content; margin-top: 4px;
+.slider-track {
+  display: flex; width: 100%; height: 100%; transition: transform 0.5s ease;
 }
+
+.slide {
+  min-width: 100%; height: 100%; position: relative;
+}
+
+.slide-img {
+  width: 100%; height: 100%; object-fit: cover;
+}
+
+.slide-overlay {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  background: linear-gradient(transparent, rgba(0,0,0,0.8));
+  padding: 16px; display: flex; flex-direction: column; gap: 2px;
+}
+
+.slide-title { font-size: 16px; font-weight: 700; color: #fff; }
+.slide-sub { font-size: 12px; color: rgba(255,255,255,0.8); }
+
+.slider-dots {
+  position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%);
+  display: flex; gap: 6px;
+}
+
+.dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: rgba(255,255,255,0.4); cursor: pointer; transition: all 0.3s;
+}
+
+.dot.active { background: var(--primary); width: 16px; border-radius: 3px; }
 
 /* Tabs */
 .tabs { display: flex; border-bottom: 1px solid var(--outline-variant); }
