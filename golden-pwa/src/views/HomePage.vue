@@ -2,13 +2,11 @@
   <div class="home-screen">
     <!-- TopAppBar -->
     <header class="top-bar">
-      <button class="icon-btn">
-        <span class="material-symbols-outlined">menu</span>
+      <button class="icon-btn" @click="toggleTheme">
+        <span class="material-symbols-outlined">{{ isDark ? 'light_mode' : 'dark_mode' }}</span>
       </button>
       <div class="brand-center">
-        <span class="material-symbols-outlined diamond-icon">diamond</span>
-        <h1 class="brand-title">GOLDEN GROUP</h1>
-        <span class="brand-sub">العصر الذهبي</span>
+        <h1 class="brand-title">العصر الذهبي</h1>
       </div>
       <button class="icon-btn relative">
         <span class="material-symbols-outlined">notifications</span>
@@ -154,6 +152,15 @@
 </template>
 
 <script setup>
+import { ref } from 'vue'
+
+const isDark = ref(true)
+
+const toggleTheme = () => {
+  isDark.value = !isDark.value
+  document.documentElement.classList.toggle('dark')
+}
+
 const quickActions = [
   { icon: 'credit_score', label: 'إطفاء فاتورة', filled: true },
   { icon: 'add_circle', label: 'طلب جديد', filled: true },
@@ -237,26 +244,14 @@ const navItems = [
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 2px;
-}
-
-.diamond-icon {
-  color: #f2ca50;
-  font-size: 28px;
-  font-variation-settings: 'FILL' 1;
 }
 
 .brand-title {
-  font-size: 18px;
+  font-size: 20px;
   font-weight: 700;
   color: #f2ca50;
   letter-spacing: 1px;
   line-height: 1;
-}
-
-.brand-sub {
-  font-size: 10px;
-  color: #d0c5af;
 }
 
 /* Main Content */
