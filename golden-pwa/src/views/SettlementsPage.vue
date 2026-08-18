@@ -115,7 +115,12 @@
     <!-- Details Bottom Sheet -->
     <div v-if="selectedInv" class="overlay" @click.self="selectedInv = null">
       <div class="bottom-sheet" @click.stop>
-        <div class="sheet-handle" @click="selectedInv = null"><span class="handle-bar"></span></div>
+        <div class="sheet-handle">
+          <button class="sheet-close" @click="selectedInv = null">
+            <span class="material-symbols-outlined">close</span>
+          </button>
+          <span class="handle-bar"></span>
+        </div>
 
         <div class="sheet-scroll">
           <!-- Invoice Header -->
@@ -183,14 +188,7 @@
 
         <!-- Bottom Action -->
         <div class="sheet-actions">
-          <button class="action-pay" v-if="selectedInv.paidMonths < selectedInv.totalMonths">
-            <span class="material-symbols-outlined">payment</span>
-            دفع القسط القادم
-          </button>
-          <button class="action-done" v-else>
-            <span class="material-symbols-outlined">check_circle</span>
-            تم السداد بالكامل
-          </button>
+          <button class="action-ok" @click="selectedInv = null">حسناً</button>
         </div>
       </div>
     </div>
@@ -479,8 +477,17 @@ const navItems = [
   to { transform: translateY(0); }
 }
 
-.sheet-handle { display: flex; justify-content: center; padding: 10px 0 4px; cursor: pointer; }
+.sheet-handle { display: flex; justify-content: center; padding: 10px 0 4px; position: relative; }
 .handle-bar { width: 40px; height: 4px; background: var(--outline-variant); border-radius: 2px; }
+
+.sheet-close {
+  position: absolute; left: 16px; top: 50%; transform: translateY(-50%);
+  background: var(--surface-container); border: none; border-radius: 50%;
+  width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+}
+
+.sheet-close .material-symbols-outlined { font-size: 18px; color: var(--on-surface-variant); }
 
 .sheet-scroll { flex: 1; overflow-y: auto; padding-bottom: 80px; }
 
@@ -572,17 +579,12 @@ const navItems = [
   padding-bottom: calc(12px + env(safe-area-inset-bottom, 4px));
 }
 
-.sheet-actions button {
-  flex: 1; border: none; border-radius: 12px; padding: 12px 0;
+.action-ok {
+  width: 100%; border: none; border-radius: 12px; padding: 12px 0;
   font-size: 14px; font-weight: 700; cursor: pointer;
   font-family: 'Noto Kufi Arabic', sans-serif;
-  display: flex; align-items: center; justify-content: center; gap: 8px;
+  background: var(--primary); color: #0a0f1d;
 }
-
-.action-pay { background: var(--primary); color: #0a0f1d; }
-.action-done { background: rgba(52, 211, 153, 0.15); color: var(--success); }
-
-.action-pay .material-symbols-outlined, .action-done .material-symbols-outlined { font-size: 20px; }
 
 /* Bottom Nav */
 .bottom-nav {
