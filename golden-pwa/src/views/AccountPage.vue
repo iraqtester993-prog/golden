@@ -90,7 +90,8 @@ const navItems = [
 .page { width: 100%; height: 100dvh; background: var(--bg); display: flex; flex-direction: column; overflow: hidden; }
 
 .page-content {
-  flex: 1; overflow-y: auto; padding: 12px 16px 90px;
+  flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch;
+  padding: 12px 16px 100px;
   display: flex; flex-direction: column; gap: 16px;
 }
 
