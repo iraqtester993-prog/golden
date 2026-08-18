@@ -119,9 +119,10 @@ const navItems = [
 <style scoped>
 .page { width: 100%; height: 100dvh; background: var(--bg); display: flex; flex-direction: column; overflow: hidden; overscroll-behavior: none; }
 
-.page-content { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; overscroll-behavior-y: contain; padding: 12px 16px 100px; }
+.page-content { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; overscroll-behavior-y: contain; padding: 12px 16px 100px; display: flex; flex-direction: column; gap: 12px; align-items: stretch; }
+.page-content > * { flex-shrink: 0; }
 
-.profile-box { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 10px 0; margin-bottom: 12px; }
+.profile-box { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 10px 0; }
 .profile-photo-wrap { position: relative; }
 .profile-photo { width: 90px; height: 90px; border-radius: 50%; background: var(--surface-container); border: 2px solid var(--outline-variant); display: flex; align-items: center; justify-content: center; }
 .profile-photo .material-symbols-outlined { font-size: 40px; color: var(--on-surface-variant); }
@@ -130,7 +131,7 @@ const navItems = [
 .profile-name { font-size: 18px; font-weight: 700; color: var(--on-surface); }
 .profile-phone { font-size: 14px; color: var(--on-surface-variant); }
 
-.card { background: var(--surface-container); border: 1px solid var(--outline-variant); border-radius: 16px; overflow: hidden; margin-bottom: 12px; }
+.card { background: var(--surface-container); border: 1px solid var(--outline-variant); border-radius: 16px; overflow: hidden; }
 
 .menu-row { display: flex; align-items: center; justify-content: space-between; padding: 16px; border-bottom: 1px solid var(--outline-variant); }
 .menu-row.last { border-bottom: none; }
@@ -141,7 +142,7 @@ const navItems = [
 .menu-label { font-size: 14px; color: var(--on-surface); }
 .arrow { font-size: 20px; color: var(--on-surface-variant); }
 
-.support-card { background: var(--surface-container-high); }
+.support-card { background: var(--surface-container-high); display: flex; align-items: center; justify-content: space-between; padding: 0 16px; }
 .support-icon-wrap { width: 46px; height: 46px; border-radius: 12px; background: rgba(99, 179, 237, 0.15); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
 .support-icon-wrap .material-symbols-outlined { font-size: 24px; color: #63b3ed; }
 
