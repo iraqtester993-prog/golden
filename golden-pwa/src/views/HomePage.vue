@@ -243,21 +243,16 @@ const navItems = [
   display: flex;
   flex-direction: column;
   gap: 16px;
-  max-width: 500px;
   width: 100%;
   margin: 0 auto;
 }
 
 /* ── Installment Card ── */
 .card-wrap {
-  position: relative;
   border-radius: 16px;
-  overflow: hidden;
   border: 1px solid var(--outline-variant);
   padding: 20px;
-  background: rgba(20, 27, 45, 0.7);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  background: var(--surface-container-high);
 }
 
 
