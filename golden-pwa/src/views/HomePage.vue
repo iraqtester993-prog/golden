@@ -81,6 +81,7 @@
 
       <!-- Promo Banner -->
       <section class="promo-banner">
+        <div class="promo-bg" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAUXdp7ZiRF1rEzp-RxdZBnHzrvUZVKSx_blCYzj8riquymEg4fw_9T6ZYfMPYSjz3x27Q7zE1AUhn13h3fYzedr6v4oMzMTvRVH1sfCH4B-QBJdjJL9-Xp58iSzdRBBadQIM3mzqUhidIunR7bHcFzhksCn9uMCu2s8x61ZH7c74fkpc4rfTLOSU1dQ0Yf2agEhN6xZJh2Wp8eXO-ZaiTDtEvljjothEJc40u2Et_cjter4FTGvc6l')"></div>
         <div class="promo-overlay"></div>
         <div class="promo-content">
           <h3 class="promo-title">عروض حصرية</h3>
@@ -436,15 +437,22 @@ const navItems = [
   position: relative;
   border-radius: 16px;
   overflow: hidden;
-  height: 160px;
+  height: 144px;
   border: 1px solid #4d4635;
-  background: linear-gradient(135deg, #141b2d, #1e2943);
+}
+
+.promo-bg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  opacity: 0.6;
 }
 
 .promo-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(to left, #0a0f1d, transparent);
+  background: linear-gradient(to left, #0a0f1d, #0a0f1d 30%, transparent);
 }
 
 .promo-content {
