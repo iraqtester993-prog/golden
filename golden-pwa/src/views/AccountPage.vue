@@ -157,7 +157,7 @@ const navItems = [
 
 /* Menu */
 .menu-list {
-  background: var(--surface-container); border: 1px solid var(--outline-variant);
+  background: #1a2238; border: 1px solid rgba(255,255,255,0.08);
   border-radius: 16px; overflow: hidden;
 }
 
@@ -207,7 +207,7 @@ const navItems = [
 
 /* Social Card */
 .social-card {
-  background: var(--surface-container); border: 1px solid var(--outline-variant);
+  background: #1a2238; border: 1px solid rgba(255,255,255,0.08);
   border-radius: 16px; padding: 16px; display: flex; flex-direction: column; align-items: center; gap: 14px;
 }
 
@@ -232,7 +232,7 @@ const navItems = [
 
 /* Links */
 .links-section {
-  background: var(--surface-container); border: 1px solid var(--outline-variant);
+  background: #1a2238; border: 1px solid rgba(255,255,255,0.08);
   border-radius: 16px; overflow: hidden;
 }
 
