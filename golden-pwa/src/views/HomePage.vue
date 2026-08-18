@@ -18,9 +18,25 @@
       <section class="card-wrap">
         <div class="card-header">
             <h2 class="card-title">أقساطي</h2>
-            <div class="invoice-pill">
-              <span>فاتورة #10235</span>
-              <span class="material-symbols-outlined pill-arrow">keyboard_arrow_down</span>
+            <div class="invoice-pill" @click="showInvoices = !showInvoices">
+              <span>فاتورة #{{ selectedInvoice.id }}</span>
+              <span class="material-symbols-outlined pill-arrow" :class="{ rotated: showInvoices }">keyboard_arrow_down</span>
+            </div>
+            <!-- Invoice Dropdown -->
+            <div class="invoice-dropdown" v-if="showInvoices">
+              <div
+                class="invoice-option"
+                v-for="inv in invoices"
+                :key="inv.id"
+                :class="{ selected: selectedInvoice.id === inv.id }"
+                @click="selectInvoice(inv)"
+              >
+                <div class="inv-info">
+                  <span class="inv-name">{{ inv.name }}</span>
+                  <span class="inv-id">فاتورة #{{ inv.id }}</span>
+                </div>
+                <span class="inv-remaining">{{ inv.remaining }} د.ع</span>
+              </div>
             </div>
           </div>
 
@@ -28,14 +44,14 @@
             <div class="stat-col border-l">
               <span class="stat-label">المبلغ المتبقي</span>
               <div class="stat-row">
-                <span class="stat-num gold">250,000,000</span>
+                <span class="stat-num gold">{{ selectedInvoice.remaining }}</span>
                 <span class="stat-unit">د.ع</span>
               </div>
             </div>
             <div class="stat-col pr-2">
               <span class="stat-label">المبلغ الكلي</span>
               <div class="stat-row">
-                <span class="stat-num">150,000,000</span>
+                <span class="stat-num">{{ selectedInvoice.total }}</span>
                 <span class="stat-unit">د.ع</span>
               </div>
             </div>
@@ -45,14 +61,14 @@
             <div class="stat-col border-l">
               <span class="stat-label">عدد الأقساط المتبقية</span>
               <div class="stat-row">
-                <span class="stat-num">17</span>
+                <span class="stat-num">{{ selectedInvoice.remainingInstallments }}</span>
                 <span class="stat-unit">قسط</span>
               </div>
             </div>
             <div class="stat-col pr-2">
               <span class="stat-label">عدد الأقساط الكلية</span>
               <div class="stat-row">
-                <span class="stat-num">24</span>
+                <span class="stat-num">{{ selectedInvoice.totalInstallments }}</span>
                 <span class="stat-unit">قسط</span>
               </div>
             </div>
@@ -61,9 +77,9 @@
           <div class="date-bar">
             <div class="date-left">
               <span class="material-symbols-outlined date-icon">calendar_today</span>
-              <span>تاريخ القسط 2024/06/25</span>
+              <span>تاريخ القسط {{ selectedInvoice.nextDate }}</span>
             </div>
-            <span class="date-badge">بعد 8 أيام</span>
+            <span class="date-badge">{{ selectedInvoice.duration }}</span>
           </div>
       </section>
 
@@ -157,6 +173,48 @@ const toggleTheme = () => {
 
 const currentSlide = ref(0)
 let slideInterval = null
+
+const showInvoices = ref(false)
+
+const invoices = [
+  {
+    id: 10235,
+    name: 'سوناتا 2024',
+    remaining: '250,000,000',
+    total: '400,000,000',
+    remainingInstallments: 17,
+    totalInstallments: 24,
+    nextDate: '2026/09/01',
+    duration: 'بعد 14 يوم'
+  },
+  {
+    id: 10312,
+    name: 'كيا سبورتاج',
+    remaining: '180,000,000',
+    total: '350,000,000',
+    remainingInstallments: 12,
+    totalInstallments: 18,
+    nextDate: '2026/09/05',
+    duration: 'بعد 18 يوم'
+  },
+  {
+    id: 10478,
+    name: 'هونداي تكسس',
+    remaining: '95,000,000',
+    total: '300,000,000',
+    remainingInstallments: 8,
+    totalInstallments: 36,
+    nextDate: '2026/08/28',
+    duration: 'بعد 10 أيام'
+  }
+]
+
+const selectedInvoice = ref(invoices[0])
+
+const selectInvoice = (inv) => {
+  selectedInvoice.value = inv
+  showInvoices.value = false
+}
 
 const slides = [
   'https://images.unsplash.com/photo-1583121274602-3e2820c69888?w=800&h=400&fit=crop',
@@ -261,6 +319,7 @@ const navItems = [
   justify-content: space-between;
   align-items: center;
   margin-bottom: 24px;
+  position: relative;
 }
 
 .card-title { font-size: 18px; font-weight: 700; color: var(--on-surface); }
@@ -277,7 +336,43 @@ const navItems = [
   color: var(--on-surface-variant);
 }
 
-.pill-arrow { font-size: 18px; color: var(--primary); }
+.pill-arrow { font-size: 18px; color: var(--primary); transition: transform 0.3s; }
+.pill-arrow.rotated { transform: rotate(180deg); }
+
+/* Invoice Dropdown */
+.invoice-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  margin-top: 8px;
+  background: var(--surface-container-high);
+  border: 1px solid var(--outline-variant);
+  border-radius: 14px;
+  overflow: hidden;
+  z-index: 20;
+  max-height: 280px;
+  overflow-y: auto;
+}
+
+.invoice-option {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--outline-variant);
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.invoice-option:last-child { border-bottom: none; }
+.invoice-option:active { background: var(--surface-variant); }
+.invoice-option.selected { background: rgba(242, 202, 80, 0.1); }
+
+.inv-info { display: flex; flex-direction: column; gap: 2px; }
+.inv-name { font-size: 14px; font-weight: 600; color: var(--on-surface); }
+.inv-id { font-size: 11px; color: var(--on-surface-variant); }
+.inv-remaining { font-size: 12px; font-weight: 600; color: var(--primary); }
 
 /* Stats */
 .stats-grid {
