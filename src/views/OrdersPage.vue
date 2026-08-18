@@ -39,23 +39,43 @@
               </div>
               <span class="status-badge" :class="'status-' + order.status">{{ statusLabel(order.status) }}</span>
             </div>
-            <div class="order-products">
-              <div v-for="(p, i) in order.products.slice(0, 3)" :key="i" class="order-product-row">
-                <img :src="p.img" class="order-product-img" />
-                <div class="order-product-info">
-                  <span class="order-product-name">{{ p.name }}</span>
-                  <span class="order-product-price">{{ p.price }} د.ع</span>
+            <!-- Close Invoice Type -->
+            <template v-if="order.type === 'close_invoice'">
+              <div class="close-inv-info">
+                <span class="material-symbols-outlined" style="font-size:28px;color:var(--primary)">receipt_long</span>
+                <div>
+                  <span class="close-inv-name">طلب إطفاء فاتورة</span>
+                  <span class="close-inv-ref">{{ order.invoiceName }} (#{{ order.invoiceId }})</span>
                 </div>
               </div>
-              <div v-if="order.products.length > 3" class="order-more">+{{ order.products.length - 3 }} منتج آخر</div>
-            </div>
-            <div class="order-footer">
-              <div class="order-total">
-                <span class="order-total-label">القسط الشهري</span>
-                <span class="order-total-value">{{ formatNum(order.monthlyInstallment) }} د.ع</span>
+              <div class="order-footer">
+                <div class="order-total">
+                  <span class="order-total-label">المبلغ المتبقي</span>
+                  <span class="order-total-value">{{ order.remaining }} د.ع</span>
+                </div>
+                <span class="material-symbols-outlined order-arrow">chevron_left</span>
               </div>
-              <span class="material-symbols-outlined order-arrow">chevron_left</span>
-            </div>
+            </template>
+            <!-- Regular Installment Order -->
+            <template v-else>
+              <div class="order-products">
+                <div v-for="(p, i) in order.products.slice(0, 3)" :key="i" class="order-product-row">
+                  <img :src="p.img" class="order-product-img" />
+                  <div class="order-product-info">
+                    <span class="order-product-name">{{ p.name }}</span>
+                    <span class="order-product-price">{{ p.price }} د.ع</span>
+                  </div>
+                </div>
+                <div v-if="order.products.length > 3" class="order-more">+{{ order.products.length - 3 }} منتج آخر</div>
+              </div>
+              <div class="order-footer">
+                <div class="order-total">
+                  <span class="order-total-label">القسط الشهري</span>
+                  <span class="order-total-value">{{ formatNum(order.monthlyInstallment) }} د.ع</span>
+                </div>
+                <span class="material-symbols-outlined order-arrow">chevron_left</span>
+              </div>
+            </template>
             <!-- Owner Note Preview -->
             <div v-if="order.ownerNote" class="order-note-preview">
               <span class="material-symbols-outlined">chat</span>
@@ -403,6 +423,9 @@ const navItems = [
 .status-cancelled { background: rgba(239, 83, 80, 0.15); color: #ef5350; }
 
 /* Order Products */
+.close-inv-info { display: flex; align-items: center; gap: 12px; padding: 8px 0; }
+.close-inv-name { font-size: 14px; font-weight: 700; color: var(--on-surface); display: block; }
+.close-inv-ref { font-size: 12px; color: var(--on-surface-variant); }
 .order-products { display: flex; flex-direction: column; gap: 8px; margin-bottom: 10px; }
 .order-product-row { display: flex; align-items: center; gap: 10px; }
 .order-product-img { width: 40px; height: 40px; border-radius: 8px; object-fit: cover; flex-shrink: 0; }

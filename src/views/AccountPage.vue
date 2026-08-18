@@ -12,13 +12,13 @@
             <span class="material-symbols-outlined">photo_camera</span>
           </button>
         </div>
-        <h2 class="profile-name">أحمد محمد علي</h2>
-        <span class="profile-phone">0771 234 5678</span>
+        <h2 class="profile-name">{{ user.fullName || 'لم يتم التسجيل' }}</h2>
+        <span class="profile-phone">{{ user.phone || '' }}</span>
       </div>
 
       <!-- Menu Card -->
       <div class="card">
-        <div class="menu-row">
+        <div class="menu-row" @click="showProfileSheet = true">
           <div class="menu-left">
             <div class="menu-icon-wrap"><span class="material-symbols-outlined mi">person</span></div>
             <span class="menu-label">البيانات الشخصية</span>
@@ -32,7 +32,7 @@
           </div>
           <span class="material-symbols-outlined arrow">chevron_left</span>
         </div>
-        <div class="menu-row last">
+        <div class="menu-row" @click="$router.push('/favorites')">
           <div class="menu-left">
             <div class="menu-icon-wrap"><span class="material-symbols-outlined mi">favorite</span></div>
             <span class="menu-label">المفضلة</span>
@@ -42,7 +42,7 @@
       </div>
 
       <!-- Support Card -->
-      <div class="card support-card">
+      <div class="card support-card" @click="showSupportSheet = true">
         <div class="menu-left">
           <div class="support-icon-wrap"><span class="material-symbols-outlined">headset_mic</span></div>
           <div>
@@ -89,6 +89,99 @@
       <span class="version">الإصدار 1.0.0</span>
     </div>
 
+    <!-- Profile Edit Sheet -->
+    <div v-if="showProfileSheet" class="sheet-overlay" @click.self="showProfileSheet = false">
+      <div class="sheet">
+        <div class="sheet-handle" @click="showProfileSheet = false"><div class="handle-bar"></div></div>
+        <div class="sheet-scroll">
+          <h3 class="sheet-title">البيانات الشخصية</h3>
+
+          <div class="form-group">
+            <label class="form-label">الاسم الكامل</label>
+            <input v-model="editForm.fullName" class="form-input" type="text" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">رقم الهاتف</label>
+            <input v-model="editForm.phone" class="form-input" type="tel" dir="ltr" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">العنوان</label>
+            <input v-model="editForm.address" class="form-input" type="text" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">كلمة المرور</label>
+            <input v-model="editForm.password" class="form-input" type="password" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">نوع العميل</label>
+            <div class="type-grid">
+              <button class="type-btn" :class="{ active: editForm.clientType === 'employee' }" @click="editForm.clientType = 'employee'">
+                <span class="material-symbols-outlined">badge</span>
+                <span>موظف</span>
+              </button>
+              <button class="type-btn" :class="{ active: editForm.clientType === 'merchant' }" @click="editForm.clientType = 'merchant'">
+                <span class="material-symbols-outlined">storefront</span>
+                <span>كاسب</span>
+              </button>
+            </div>
+          </div>
+
+          <template v-if="editForm.clientType === 'employee'">
+            <div class="form-group">
+              <label class="form-label">اسم الدائرة</label>
+              <input v-model="editForm.department" class="form-input" type="text" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">المسمى الوظيفي</label>
+              <input v-model="editForm.jobTitle" class="form-input" type="text" />
+            </div>
+          </template>
+
+          <template v-if="editForm.clientType === 'merchant'">
+            <div class="form-group">
+              <label class="form-label">عنوان العمل</label>
+              <input v-model="editForm.workAddress" class="form-input" type="text" />
+            </div>
+          </template>
+
+          <button class="save-btn" @click="saveProfile">
+            <span class="material-symbols-outlined">save</span>
+            <span>حفظ التعديلات</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Support Sheet -->
+    <div v-if="showSupportSheet" class="sheet-overlay" @click.self="showSupportSheet = false">
+      <div class="sheet">
+        <div class="sheet-handle" @click="showSupportSheet = false"><div class="handle-bar"></div></div>
+        <div class="sheet-scroll">
+          <h3 class="sheet-title">مركز الدعم الفني</h3>
+          <div class="support-form">
+            <div class="form-group">
+              <label class="form-label">الموضوع</label>
+              <input v-model="supportForm.subject" class="form-input" type="text" placeholder="موضوع الرسالة" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">الرسالة</label>
+              <textarea v-model="supportForm.message" class="form-textarea" placeholder="اكتب رسالتك هنا..." rows="5"></textarea>
+            </div>
+            <button class="save-btn" :disabled="!supportForm.subject.trim() || !supportForm.message.trim()" @click="sendSupport">
+              <span class="material-symbols-outlined">send</span>
+              <span>إرسال الرسالة</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast -->
+    <div v-if="toast" class="toast" :class="'toast-' + toast.type">
+      <span class="material-symbols-outlined">{{ toast.type === 'success' ? 'check_circle' : 'info' }}</span>
+      <span>{{ toast.msg }}</span>
+    </div>
+
     <nav class="bottom-nav">
       <button class="nav-item" v-for="(item, i) in navItems" :key="item.label" :class="{ active: i === 4 }" @click="goTo(item.route)">
         <div class="nav-icon-wrap">
@@ -103,10 +196,58 @@
 </template>
 
 <script setup>
+import { ref, reactive, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import TopBar from '../components/TopBar.vue'
+
 const router = useRouter()
 const goTo = (r) => { if (r) router.push(r) }
+
+const showProfileSheet = ref(false)
+const showSupportSheet = ref(false)
+const toast = ref(null)
+
+const user = ref({ fullName: '', phone: '', address: '', clientType: 'employee', department: '', jobTitle: '', workAddress: '' })
+const editForm = reactive({ fullName: '', phone: '', address: '', password: '', clientType: 'employee', department: '', jobTitle: '', workAddress: '' })
+const supportForm = reactive({ subject: '', message: '' })
+
+const showToast = (msg, type = 'success') => {
+  toast.value = { msg, type }
+  setTimeout(() => { toast.value = null }, 2500)
+}
+
+onMounted(() => {
+  const saved = JSON.parse(localStorage.getItem('golden_user') || '{}')
+  user.value = { ...user.value, ...saved }
+  Object.assign(editForm, { ...user.value, password: '' })
+})
+
+const saveProfile = () => {
+  const data = { ...editForm }
+  if (!data.password) delete data.password
+  localStorage.setItem('golden_user', JSON.stringify(data))
+  user.value = { ...data }
+  showProfileSheet.value = false
+  showToast('تم حفظ التعديلات بنجاح')
+}
+
+const sendSupport = () => {
+  const messages = JSON.parse(localStorage.getItem('golden_support') || '[]')
+  messages.push({
+    id: messages.length + 1,
+    subject: supportForm.subject,
+    message: supportForm.message,
+    date: new Date().toLocaleDateString('ar-EG'),
+    userName: user.value.fullName,
+    userPhone: user.value.phone
+  })
+  localStorage.setItem('golden_support', JSON.stringify(messages))
+  supportForm.subject = ''
+  supportForm.message = ''
+  showSupportSheet.value = false
+  showToast('تم إرسال رسالتك بنجاح! سيتواصل معك فريق الدعم الفني')
+}
+
 const navItems = [
   { icon: 'home', label: 'الرئيسية', route: '/home' },
   { icon: 'shopping_bag', label: 'المتجر', route: '/store' },
@@ -118,7 +259,6 @@ const navItems = [
 
 <style scoped>
 .page { width: 100%; height: 100dvh; background: var(--bg); display: flex; flex-direction: column; overflow: hidden; overscroll-behavior: none; }
-
 .page-content { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; overscroll-behavior-y: contain; padding: 12px 16px 100px; display: flex; flex-direction: column; gap: 12px; align-items: stretch; }
 .page-content > * { flex-shrink: 0; }
 
@@ -132,17 +272,17 @@ const navItems = [
 .profile-phone { font-size: 14px; color: var(--on-surface-variant); }
 
 .card { background: var(--surface-container); border: 1px solid var(--outline-variant); border-radius: 16px; overflow: hidden; }
-
-.menu-row { display: flex; align-items: center; justify-content: space-between; padding: 16px; border-bottom: 1px solid var(--outline-variant); }
-.menu-row.last { border-bottom: none; }
-
+.menu-row { display: flex; align-items: center; justify-content: space-between; padding: 16px; border-bottom: 1px solid var(--outline-variant); cursor: pointer; transition: background 0.2s; }
+.menu-row:last-child { border-bottom: none; }
+.menu-row:active { background: var(--surface-variant); }
 .menu-left { display: flex; align-items: center; gap: 12px; }
 .menu-icon-wrap { width: 36px; height: 36px; border-radius: 10px; background: rgba(242, 202, 80, 0.1); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
 .mi { font-size: 20px; color: var(--primary); }
 .menu-label { font-size: 14px; color: var(--on-surface); }
 .arrow { font-size: 20px; color: var(--on-surface-variant); }
 
-.support-card { background: var(--surface-container-high); display: flex; align-items: center; justify-content: space-between; padding: 0 16px; }
+.support-card { background: var(--surface-container-high); display: flex; align-items: center; justify-content: space-between; padding: 0 16px; cursor: pointer; }
+.support-card:active { background: var(--surface-container); }
 .support-icon-wrap { width: 46px; height: 46px; border-radius: 12px; background: rgba(99, 179, 237, 0.15); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
 .support-icon-wrap .material-symbols-outlined { font-size: 24px; color: #63b3ed; }
 
@@ -158,6 +298,36 @@ const navItems = [
 .logout-btn { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 14px; border-radius: 14px; background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.2); color: var(--error); font-size: 15px; font-weight: 600; cursor: pointer; }
 .version { text-align: center; font-size: 11px; color: var(--on-surface-variant); opacity: 0.5; padding: 8px 0 16px; }
 
+/* Sheet */
+.sheet-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 100; display: flex; align-items: flex-end; justify-content: center; }
+.sheet { width: 100%; max-width: 480px; max-height: 85vh; background: var(--bg); border-radius: 20px 20px 0 0; display: flex; flex-direction: column; animation: slideUp 0.25s ease; }
+@keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+.sheet-handle { display: flex; justify-content: center; padding: 10px 0 4px; cursor: pointer; }
+.handle-bar { width: 40px; height: 4px; border-radius: 2px; background: var(--outline-variant); }
+.sheet-scroll { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 0 16px 20px; }
+.sheet-title { font-size: 18px; font-weight: 700; color: var(--on-surface); margin-bottom: 16px; text-align: center; }
+
+/* Form */
+.form-group { margin-bottom: 14px; }
+.form-label { display: block; font-size: 13px; font-weight: 600; color: var(--on-surface-variant); margin-bottom: 6px; }
+.form-input { width: 100%; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--outline-variant); background: var(--surface-container); color: var(--on-surface); font-size: 14px; font-family: inherit; outline: none; }
+.form-input:focus { border-color: var(--primary); }
+.form-textarea { width: 100%; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--outline-variant); background: var(--surface-container); color: var(--on-surface); font-size: 14px; font-family: inherit; outline: none; resize: vertical; }
+.form-textarea:focus { border-color: var(--primary); }
+.type-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.type-btn { display: flex; align-items: center; justify-content: center; gap: 6px; padding: 12px; border-radius: 12px; background: var(--surface-container); border: 2px solid var(--outline-variant); font-size: 14px; font-weight: 600; color: var(--on-surface-variant); cursor: pointer; font-family: inherit; }
+.type-btn .material-symbols-outlined { font-size: 20px; }
+.type-btn.active { border-color: var(--primary); background: rgba(242, 202, 80, 0.08); color: var(--primary); }
+.save-btn { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 14px; border-radius: 14px; background: var(--primary); border: none; color: #0a0f1d; font-size: 15px; font-weight: 700; font-family: inherit; cursor: pointer; margin-top: 8px; }
+.save-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.save-btn .material-symbols-outlined { font-size: 20px; }
+
+/* Toast */
+.toast { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 8px; padding: 12px 20px; border-radius: 14px; font-size: 13px; font-weight: 600; z-index: 200; animation: slideUp 0.2s ease; white-space: nowrap; }
+.toast-success { background: var(--primary); color: #0a0f1d; }
+.toast .material-symbols-outlined { font-size: 20px; }
+
+/* Bottom Nav */
 .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; height: 64px; background: var(--bg); border-top: 1px solid var(--outline-variant); display: flex; justify-content: space-around; align-items: center; padding-bottom: env(safe-area-inset-bottom, 4px); z-index: 50; }
 .nav-item { display: flex; flex-direction: column; align-items: center; gap: 2px; background: none; border: none; color: var(--on-surface-variant); cursor: pointer; padding: 4px 8px; }
 .nav-item.active { color: var(--primary); }
