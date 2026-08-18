@@ -1,14 +1,6 @@
 <template>
   <div class="page">
-    <header class="top-bar">
-      <button class="icon-btn" @click="$router.back()">
-        <span class="material-symbols-outlined">arrow_forward</span>
-      </button>
-      <h1 class="page-title">تسوياتي</h1>
-      <button class="icon-btn">
-        <span class="material-symbols-outlined">filter_list</span>
-      </button>
-    </header>
+    <TopBar />
 
     <main class="page-content">
       <!-- Summary Card -->
@@ -80,6 +72,7 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import TopBar from '../components/TopBar.vue'
 
 const router = useRouter()
 const activeTab = ref('current')
@@ -103,15 +96,6 @@ const navItems = [
 
 <style scoped>
 .page { width: 100%; height: 100dvh; background: var(--bg); display: flex; flex-direction: column; overflow: hidden; }
-
-.top-bar {
-  display: flex; justify-content: space-between; align-items: center;
-  padding: 0 16px; height: 56px; background: var(--bg); flex-shrink: 0; z-index: 40;
-}
-
-.icon-btn { background: none; border: none; color: var(--on-surface-variant); cursor: pointer; padding: 8px; }
-.icon-btn .material-symbols-outlined { font-size: 24px; }
-.page-title { font-size: 18px; font-weight: 700; color: var(--on-surface); }
 
 .page-content {
   flex: 1; overflow-y: auto; padding: 0 16px 90px;

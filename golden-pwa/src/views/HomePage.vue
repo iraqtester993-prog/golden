@@ -1,19 +1,6 @@
 <template>
   <div class="home-screen">
-    <header class="top-bar">
-      <button class="icon-btn" @click="toggleTheme">
-        <span class="material-symbols-outlined">{{ isDark ? 'light_mode' : 'dark_mode' }}</span>
-      </button>
-      <div class="brand-center">
-        <span class="material-symbols-outlined brand-diamond" :style="{ fontVariationSettings: `'FILL' 1` }">diamond</span>
-        <h1 class="brand-title">GOLDEN GROUP</h1>
-        <span class="brand-sub">العصر الذهبي</span>
-      </div>
-      <button class="icon-btn relative">
-        <span class="material-symbols-outlined">notifications</span>
-        <span class="notif-badge">2</span>
-      </button>
-    </header>
+    <TopBar />
 
     <main class="main-content">
       <!-- Installment Card -->
@@ -170,18 +157,10 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
+import TopBar from '../components/TopBar.vue'
 
 const router = useRouter()
 const goTo = (route) => { if (route) router.push(route) }
-
-const isDark = ref(true)
-const toggleTheme = () => {
-  isDark.value = !isDark.value
-  document.documentElement.classList.toggle('dark')
-}
-
-const currentSlide = ref(0)
-let slideInterval = null
 
 const showInvoices = ref(false)
 
@@ -274,35 +253,6 @@ const navItems = [
   flex-direction: column;
   overflow: hidden;
 }
-
-/* Top Bar */
-.top-bar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 16px;
-  height: 56px;
-  background: var(--bg);
-  flex-shrink: 0;
-  z-index: 40;
-}
-
-.icon-btn { background: none; border: none; color: var(--on-surface-variant); cursor: pointer; padding: 8px; }
-.icon-btn .material-symbols-outlined { font-size: 24px; }
-.relative { position: relative; }
-
-.notif-badge {
-  position: absolute; top: 2px; right: 2px;
-  width: 18px; height: 18px;
-  background: var(--primary-container); color: #0a0f1d;
-  font-size: 10px; font-weight: 700; border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-}
-
-.brand-center { display: flex; flex-direction: column; align-items: center; gap: 0; }
-.brand-diamond { font-size: 28px; color: var(--primary); }
-.brand-title { font-size: 14px; font-weight: 700; color: var(--primary); letter-spacing: 2px; line-height: 1.2; }
-.brand-sub { font-size: 10px; color: var(--on-surface-variant); }
 
 /* Main */
 .main-content {
