@@ -60,18 +60,65 @@
             <h3 class="product-name">{{ product.name }}</h3>
             <span class="product-spec">{{ product.spec }}</span>
             <div class="product-price">{{ product.price }} د.ع</div>
-            <div class="product-rating">
-              <span class="stars">★ {{ product.rating }}</span>
-              <span class="review-count">({{ product.reviews }})</span>
-            </div>
-            <div class="product-actions">
-              <button class="btn-calc">احسب القسط</button>
-              <button class="btn-buy">شراء فوراً</button>
-            </div>
+            <button class="btn-details" @click="openDetails(product)">عرض التفاصيل</button>
           </div>
         </div>
       </div>
     </main>
+
+    <!-- Product Details Bottom Sheet -->
+    <div v-if="selectedProduct" class="overlay" @click.self="selectedProduct = null">
+      <div class="bottom-sheet" @click.stop>
+        <div class="sheet-handle" @click="selectedProduct = null"><span class="handle-bar"></span></div>
+
+        <div class="sheet-scroll">
+          <!-- Image Gallery -->
+          <div class="gallery" ref="galleryRef">
+            <div class="gallery-track" :style="{ transform: `translateX(${galleryIndex * -100}%)` }">
+              <div class="gallery-slide" v-for="(img, i) in selectedProduct.images" :key="i" @click="fullscreenImg = img">
+                <img :src="img" class="gallery-img" />
+              </div>
+            </div>
+            <div class="gallery-dots">
+              <span v-for="(_, i) in selectedProduct.images" :key="i" class="g-dot" :class="{ active: galleryIndex === i }" @click="galleryIndex = i"></span>
+            </div>
+          </div>
+
+          <!-- Details -->
+          <div class="detail-section">
+            <h2 class="detail-name">{{ selectedProduct.name }}</h2>
+            <div class="detail-price">{{ selectedProduct.price }} د.ع</div>
+            <span class="detail-spec">{{ selectedProduct.spec }}</span>
+          </div>
+
+          <div class="detail-section">
+            <h3 class="detail-heading">الوصف</h3>
+            <p class="detail-desc">{{ selectedProduct.desc }}</p>
+          </div>
+
+          <div class="detail-section">
+            <h3 class="detail-heading">المواصفات</h3>
+            <div class="spec-row" v-for="(val, key) in selectedProduct.specs" :key="key">
+              <span class="spec-key">{{ key }}</span>
+              <span class="spec-val">{{ val }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bottom Actions -->
+        <div class="sheet-actions">
+          <button class="action-cash">شراء نقد</button>
+          <button class="action-installment">شراء بالقسط</button>
+          <button class="action-calc">حساب الأقساط</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Fullscreen Image -->
+    <div v-if="fullscreenImg" class="fullscreen-overlay" @click="fullscreenImg = null">
+      <button class="fs-close"><span class="material-symbols-outlined">close</span></button>
+      <img :src="fullscreenImg" class="fs-img" />
+    </div>
 
     <nav class="bottom-nav">
       <button class="nav-item" v-for="(item, i) in navItems" :key="item.label" :class="{ active: i === 1 }" @click="goTo(item.route)">
@@ -87,7 +134,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, watch, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 import TopBar from '../components/TopBar.vue'
 
@@ -95,8 +142,14 @@ const router = useRouter()
 const activeCat = ref('هواتف')
 const activeTab = ref('popular')
 const currentSlide = ref(0)
+const selectedProduct = ref(null)
+const galleryIndex = ref(0)
+const fullscreenImg = ref(null)
+const galleryRef = ref(null)
 
 const goTo = (route) => { if (route) router.push(route) }
+
+watch(selectedProduct, () => { galleryIndex.value = 0 })
 
 const categories = [
   { img: 'https://images.unsplash.com/photo-1549317661-bd32c8ce0afa?w=200&h=200&fit=crop', label: 'سيارات' },
@@ -121,10 +174,45 @@ onMounted(() => {
 onUnmounted(() => { if (sliderTimer) clearInterval(sliderTimer) })
 
 const products = [
-  { name: 'iPhone 16 Pro Max', spec: '256GB', price: '1,850,000', rating: '4.9', reviews: '128', img: 'https://images.unsplash.com/photo-1695048133142-1a20484d2569?w=400&h=300&fit=crop' },
-  { name: 'Samsung S24 Ultra', spec: '512GB', price: '1,650,000', rating: '4.8', reviews: '96', img: 'https://images.unsplash.com/photo-1610945415295-d9bbf067e59c?w=400&h=300&fit=crop' },
-  { name: 'Hisense 55 inch 4K', spec: 'Smart TV', price: '820,000', rating: '4.6', reviews: '75', img: 'https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?w=400&h=300&fit=crop' }
+  {
+    name: 'iPhone 16 Pro Max', spec: '256GB - تيتانيوم', price: '1,850,000',
+    img: 'https://images.unsplash.com/photo-1695048133142-1a20484d2569?w=400&h=300&fit=crop',
+    images: [
+      'https://images.unsplash.com/photo-1695048133142-1a20484d2569?w=800&h=800&fit=crop',
+      'https://images.unsplash.com/photo-1695048060896-8af0a9ae61d0?w=800&h=800&fit=crop',
+      'https://images.unsplash.com/photo-1695048133422-28a6e0e3d338?w=800&h=800&fit=crop'
+    ],
+    desc: 'هاتف آيفون 16 برو ماكس بسعة 256 جيجابايت، شاشة Super Retina XDR بحجم 6.9 بوصة، معالج A18 Pro، كاميرا ثلاثية 48 ميجابكسل، مقاوم للماء والغبار.',
+    specs: { 'الشاشة': '6.9 بوصة Super Retina XDR', 'المعالج': 'A18 Pro', 'الذاكرة': '256GB', 'الكاميرا': '48MP + 12MP + 12MP', 'البطارية': '4685 mAh', 'نظام التشغيل': 'iOS 18' }
+  },
+  {
+    name: 'Samsung S24 Ultra', spec: '512GB - أسود', price: '1,650,000',
+    img: 'https://images.unsplash.com/photo-1610945415295-d9bbf067e59c?w=400&h=300&fit=crop',
+    images: [
+      'https://images.unsplash.com/photo-1610945415295-d9bbf067e59c?w=800&h=800&fit=crop',
+      'https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?w=800&h=800&fit=crop',
+      'https://images.unsplash.com/photo-1565849904461-04a58adcb756?w=800&h=800&fit=crop'
+    ],
+    desc: 'سامسونج جالكسي S24 ألترا بسعة 512 جيجابايت، شاشة Dynamic AMOLED 2X بحجم 6.8 بوصة، معالج Snapdragon 8 Gen 3، قلم S Pen، كاميرا 200 ميجابكسل.',
+    specs: { 'الشاشة': '6.8 بوصة Dynamic AMOLED 2X', 'المعالج': 'Snapdragon 8 Gen 3', 'الذاكرة': '512GB', 'الكاميرا': '200MP + 50MP + 12MP + 10MP', 'البطارية': '5000 mAh', 'نظام التشغيل': 'Android 14' }
+  },
+  {
+    name: 'Hisense 55 inch 4K', spec: 'Smart TV - ULED', price: '820,000',
+    img: 'https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?w=400&h=300&fit=crop',
+    images: [
+      'https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?w=800&h=800&fit=crop',
+      'https://images.unsplash.com/photo-1461151304265-3855d7e1c881?w=800&h=800&fit=crop',
+      'https://images.unsplash.com/photo-1593305841991-05c297ba4575?w=800&h=800&fit=crop'
+    ],
+    desc: 'تلفزيون هيسينس ذكي 55 بوصة بتقنية ULED 4K، دعم HDR10+، نظام تشغيل سهل الاستخدام، صوت Dolby Atmos، مثالي للمشاهدة السينمائية في المنزل.',
+    specs: { 'الشاشة': '55 بوصة 4K ULED', 'الدقة': '3840 × 2160', ' HDR': 'HDR10+', 'الصوت': 'Dolby Atmos 30W', 'المنافذ': '3 × HDMI, 2 × USB', 'النظام': 'VIDAA U6' }
+  }
 ]
+
+const openDetails = (product) => {
+  selectedProduct.value = product
+  galleryIndex.value = 0
+}
 
 const navItems = [
   { icon: 'home', label: 'الرئيسية', route: '/home' },
@@ -169,8 +257,7 @@ const navItems = [
 /* Categories */
 .categories {
   display: flex; gap: 12px; overflow-x: auto; padding: 4px 0;
-  -ms-overflow-style: none; scrollbar-width: none;
-  flex-shrink: 0;
+  -ms-overflow-style: none; scrollbar-width: none; flex-shrink: 0;
 }
 
 .categories::-webkit-scrollbar { display: none; }
@@ -202,17 +289,9 @@ const navItems = [
   height: 160px; border: 1px solid var(--outline-variant);
 }
 
-.slider-track {
-  display: flex; width: 100%; height: 100%; transition: transform 0.5s ease;
-}
-
-.slide {
-  min-width: 100%; height: 100%; position: relative;
-}
-
-.slide-img {
-  width: 100%; height: 100%; object-fit: cover;
-}
+.slider-track { display: flex; width: 100%; height: 100%; transition: transform 0.5s ease; }
+.slide { min-width: 100%; height: 100%; position: relative; }
+.slide-img { width: 100%; height: 100%; object-fit: cover; }
 
 .slide-overlay {
   position: absolute; bottom: 0; left: 0; right: 0;
@@ -223,16 +302,8 @@ const navItems = [
 .slide-title { font-size: 16px; font-weight: 700; color: #fff; }
 .slide-sub { font-size: 12px; color: rgba(255,255,255,0.8); }
 
-.slider-dots {
-  position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%);
-  display: flex; gap: 6px;
-}
-
-.dot {
-  width: 6px; height: 6px; border-radius: 50%;
-  background: rgba(255,255,255,0.4); cursor: pointer; transition: all 0.3s;
-}
-
+.slider-dots { position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); display: flex; gap: 6px; }
+.dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.4); cursor: pointer; transition: all 0.3s; }
 .dot.active { background: var(--primary); width: 16px; border-radius: 3px; }
 
 /* Tabs */
@@ -277,23 +348,111 @@ const navItems = [
 .product-spec { font-size: 11px; color: var(--on-surface-variant); }
 .product-price { font-size: 15px; font-weight: 700; color: var(--primary); direction: rtl; }
 
-.product-rating { display: flex; align-items: center; gap: 4px; }
-.stars { font-size: 12px; color: var(--primary); }
-.review-count { font-size: 11px; color: var(--on-surface-variant); }
-
-.product-actions { display: flex; gap: 8px; margin-top: 4px; }
-
-.btn-calc {
-  flex: 1; background: var(--bg); border: 1px solid var(--outline-variant);
-  border-radius: 8px; padding: 6px 0; font-size: 11px; font-weight: 600;
-  color: var(--on-surface); cursor: pointer; font-family: 'Noto Kufi Arabic', sans-serif;
+.btn-details {
+  margin-top: auto; background: var(--bg); border: 1px solid var(--outline-variant);
+  border-radius: 8px; padding: 6px 0; font-size: 12px; font-weight: 600;
+  color: var(--primary); cursor: pointer; font-family: 'Noto Kufi Arabic', sans-serif;
+  transition: all 0.2s; width: 100%;
 }
 
-.btn-buy {
-  flex: 1; background: var(--primary-container); border: none;
-  border-radius: 8px; padding: 6px 0; font-size: 11px; font-weight: 700;
-  color: #0a0f1d; cursor: pointer; font-family: 'Noto Kufi Arabic', sans-serif;
+.btn-details:active { background: var(--primary); color: #0a0f1d; }
+
+/* Bottom Sheet */
+.overlay {
+  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.5); z-index: 100;
+  display: flex; align-items: flex-end; justify-content: center;
 }
+
+.bottom-sheet {
+  width: 100%; max-width: 480px; max-height: 90dvh;
+  background: var(--bg); border-radius: 20px 20px 0 0;
+  display: flex; flex-direction: column; overflow: hidden;
+  animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+
+.sheet-handle {
+  display: flex; justify-content: center; padding: 10px 0 4px; cursor: pointer;
+}
+
+.handle-bar { width: 40px; height: 4px; background: var(--outline-variant); border-radius: 2px; }
+
+.sheet-scroll { flex: 1; overflow-y: auto; padding-bottom: 80px; }
+
+/* Gallery */
+.gallery { position: relative; width: 100%; height: 280px; overflow: hidden; }
+
+.gallery-track { display: flex; width: 100%; height: 100%; transition: transform 0.4s ease; }
+
+.gallery-slide { min-width: 100%; height: 100%; cursor: pointer; }
+
+.gallery-img { width: 100%; height: 100%; object-fit: cover; }
+
+.gallery-dots {
+  position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%);
+  display: flex; gap: 6px;
+}
+
+.g-dot { width: 7px; height: 7px; border-radius: 50%; background: rgba(255,255,255,0.4); cursor: pointer; transition: all 0.3s; }
+.g-dot.active { background: var(--primary); width: 18px; border-radius: 4px; }
+
+/* Detail Sections */
+.detail-section { padding: 14px 16px; border-bottom: 1px solid var(--outline-variant); }
+.detail-name { font-size: 18px; font-weight: 700; color: var(--on-surface); margin-bottom: 4px; }
+.detail-price { font-size: 20px; font-weight: 700; color: var(--primary); direction: rtl; margin-bottom: 4px; }
+.detail-spec { font-size: 12px; color: var(--on-surface-variant); }
+
+.detail-heading { font-size: 14px; font-weight: 700; color: var(--on-surface); margin-bottom: 8px; }
+.detail-desc { font-size: 13px; color: var(--on-surface-variant); line-height: 1.7; }
+
+.spec-row {
+  display: flex; justify-content: space-between; padding: 8px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.spec-key { font-size: 12px; color: var(--on-surface-variant); }
+.spec-val { font-size: 12px; font-weight: 600; color: var(--on-surface); }
+
+/* Sheet Actions */
+.sheet-actions {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  display: flex; gap: 8px; padding: 12px 16px;
+  background: var(--bg); border-top: 1px solid var(--outline-variant);
+  padding-bottom: calc(12px + env(safe-area-inset-bottom, 4px));
+}
+
+.sheet-actions button {
+  flex: 1; border: none; border-radius: 10px; padding: 10px 0;
+  font-size: 12px; font-weight: 700; cursor: pointer;
+  font-family: 'Noto Kufi Arabic', sans-serif; transition: all 0.2s;
+}
+
+.action-cash { background: var(--primary-container); color: #0a0f1d; }
+.action-installment { background: var(--primary); color: #0a0f1d; }
+.action-calc { background: var(--surface-container); color: var(--on-surface); border: 1px solid var(--outline-variant) !important; }
+
+/* Fullscreen Image */
+.fullscreen-overlay {
+  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.95); z-index: 200;
+  display: flex; align-items: center; justify-content: center;
+}
+
+.fs-close {
+  position: absolute; top: 16px; left: 16px;
+  background: rgba(255,255,255,0.2); border: none; border-radius: 50%;
+  width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;
+  cursor: pointer; z-index: 201;
+}
+
+.fs-close .material-symbols-outlined { font-size: 24px; color: #fff; }
+
+.fs-img { max-width: 95%; max-height: 90dvh; object-fit: contain; border-radius: 8px; }
 
 /* Bottom Nav */
 .bottom-nav {
