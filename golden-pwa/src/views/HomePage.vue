@@ -5,7 +5,9 @@
         <span class="material-symbols-outlined">{{ isDark ? 'light_mode' : 'dark_mode' }}</span>
       </button>
       <div class="brand-center">
-        <h1 class="brand-title">العصر الذهبي</h1>
+        <span class="material-symbols-outlined brand-diamond" :style="{ fontVariationSettings: `'FILL' 1` }">diamond</span>
+        <h1 class="brand-title">GOLDEN GROUP</h1>
+        <span class="brand-sub">العصر الذهبي</span>
       </div>
       <button class="icon-btn relative">
         <span class="material-symbols-outlined">notifications</span>
@@ -18,7 +20,9 @@
       <section class="card-wrap">
         <div class="card-header">
             <h2 class="card-title">أقساطي</h2>
-            <div class="invoice-pill" @click="showInvoices = !showInvoices">
+            <div class="card-header-right">
+              <button class="export-btn">تصدير الفاتورة</button>
+              <div class="invoice-pill" @click="showInvoices = !showInvoices">
               <span>فاتورة #{{ selectedInvoice.id }}</span>
               <span class="material-symbols-outlined pill-arrow" :class="{ rotated: showInvoices }">keyboard_arrow_down</span>
             </div>
@@ -38,6 +42,7 @@
                 <span class="inv-remaining">{{ inv.remaining }} د.ع</span>
               </div>
             </div>
+          </div>
           </div>
 
           <div class="stats-grid">
@@ -150,7 +155,7 @@
     </main>
 
     <nav class="bottom-nav">
-      <button class="nav-item active" v-for="(item, i) in navItems" :key="item.label" :class="{ active: i === 0 }">
+      <button class="nav-item active" v-for="(item, i) in navItems" :key="item.label" :class="{ active: i === 0 }" @click="goTo(item.route)">
         <div class="nav-icon-wrap">
           <span class="material-symbols-outlined nav-icon" :class="{ filled: i === 0 }">{{ item.icon }}</span>
           <span v-if="item.badge" class="nav-badge"></span>
@@ -164,6 +169,10 @@
 
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
+const goTo = (route) => { if (route) router.push(route) }
 
 const isDark = ref(true)
 const toggleTheme = () => {
@@ -248,11 +257,11 @@ const services = [
 ]
 
 const navItems = [
-  { icon: 'home', label: 'الرئيسية' },
-  { icon: 'shopping_bag', label: 'المتجر' },
-  { icon: 'account_balance_wallet', label: 'تسوياتي' },
-  { icon: 'notifications', label: 'الإشعارات', badge: true },
-  { icon: 'person', label: 'حسابي' }
+  { icon: 'home', label: 'الرئيسية', route: null },
+  { icon: 'shopping_bag', label: 'المتجر', route: '/store' },
+  { icon: 'account_balance_wallet', label: 'تسوياتي', route: '/settlements' },
+  { icon: 'notifications', label: 'الإشعارات', badge: true, route: null },
+  { icon: 'person', label: 'حسابي', route: '/account' }
 ]
 </script>
 
@@ -290,8 +299,10 @@ const navItems = [
   display: flex; align-items: center; justify-content: center;
 }
 
-.brand-center { display: flex; align-items: center; }
-.brand-title { font-size: 18px; font-weight: 700; color: var(--primary); letter-spacing: 1px; }
+.brand-center { display: flex; flex-direction: column; align-items: center; gap: 0; }
+.brand-diamond { font-size: 28px; color: var(--primary); }
+.brand-title { font-size: 14px; font-weight: 700; color: var(--primary); letter-spacing: 2px; line-height: 1.2; }
+.brand-sub { font-size: 10px; color: var(--on-surface-variant); }
 
 /* Main */
 .main-content {
@@ -320,6 +331,15 @@ const navItems = [
   align-items: center;
   margin-bottom: 24px;
   position: relative;
+}
+
+.card-header-right { display: flex; align-items: center; gap: 10px; }
+
+.export-btn {
+  background: var(--surface-variant); border: 1px solid var(--outline-variant);
+  border-radius: 8px; padding: 4px 10px; font-size: 11px; font-weight: 600;
+  color: var(--on-surface-variant); cursor: pointer;
+  font-family: 'Noto Kufi Arabic', sans-serif; white-space: nowrap;
 }
 
 .card-title { font-size: 18px; font-weight: 700; color: var(--on-surface); }
