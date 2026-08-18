@@ -43,6 +43,9 @@
               <span class="product-card-spec">{{ p.spec }}</span>
               <span class="product-card-price">{{ p.price }} د.ع</span>
             </div>
+            <button class="info-btn" @click.stop="openDetails(p)">
+              <span class="material-symbols-outlined">info</span>
+            </button>
             <div v-if="isSelected(p)" class="chosen-badge"><span class="material-symbols-outlined">check</span></div>
             <span v-else class="material-symbols-outlined add-icon">add_circle</span>
           </div>
@@ -140,6 +143,41 @@
       </template>
     </div>
 
+    <!-- Detail Sheet -->
+    <div v-if="detailProduct" class="sheet-overlay" @click.self="detailProduct = null">
+      <div class="sheet">
+        <div class="sheet-handle" @click="detailProduct = null"><div class="handle-bar"></div></div>
+        <div class="sheet-scroll">
+          <img :src="detailProduct.img" class="sheet-img" @click="fullscreenImg = detailProduct.img" />
+          <div class="sheet-body">
+            <h2 class="sheet-name">{{ detailProduct.name }}</h2>
+            <span class="sheet-spec">{{ detailProduct.spec }}</span>
+            <div class="sheet-price">{{ detailProduct.price }} د.ع</div>
+            <p class="sheet-desc">{{ detailProduct.desc }}</p>
+            <h3 class="sheet-sub">المواصفات</h3>
+            <div class="sheet-specs">
+              <div v-for="(val, key) in detailProduct.specs" :key="key" class="sheet-spec-row">
+                <span class="sheet-spec-key">{{ key }}</span>
+                <span class="sheet-spec-val">{{ val }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="sheet-actions">
+          <button class="sheet-action-select" @click="toggleProduct(detailProduct); detailProduct = null">
+            <span class="material-symbols-outlined">{{ isSelected(detailProduct) ? 'remove_circle' : 'add_circle' }}</span>
+            <span>{{ isSelected(detailProduct) ? 'إزالة من الاختيار' : 'اختيار المنتج' }}</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Fullscreen Image -->
+    <div v-if="fullscreenImg" class="fullscreen-overlay" @click="fullscreenImg = null">
+      <button class="fs-close"><span class="material-symbols-outlined">close</span></button>
+      <img :src="fullscreenImg" class="fs-img" />
+    </div>
+
     <nav class="bottom-nav">
       <button class="nav-item" v-for="item in navItems" :key="item.label" @click="goTo(item.route)">
         <div class="nav-icon-wrap">
@@ -165,15 +203,49 @@ const selectedProducts = ref([])
 const showCalculator = ref(false)
 const downPayment = ref('')
 const selectedMonths = ref(null)
+const detailProduct = ref(null)
+const fullscreenImg = ref(null)
 const durations = [10, 16, 18, 24, 36]
 
+const openDetails = (p) => { detailProduct.value = p }
+
 const products = [
-  { name: 'iPhone 16 Pro Max', spec: '256GB - تيتانيوم', price: '1,850,000', priceRaw: 1850000, img: 'https://images.unsplash.com/photo-1695048133142-1a20484d2569?w=400&h=300&fit=crop' },
-  { name: 'Samsung S24 Ultra', spec: '512GB - أسود', price: '1,650,000', priceRaw: 1650000, img: 'https://images.unsplash.com/photo-1610945415295-d9bbf067e59c?w=400&h=300&fit=crop' },
-  { name: 'Hisense 55 inch 4K', spec: 'Smart TV - ULED', price: '820,000', priceRaw: 820000, img: 'https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?w=400&h=300&fit=crop' },
-  { name: 'MacBook Pro M3', spec: '14 inch - 512GB', price: '5,200,000', priceRaw: 5200000, img: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=400&h=300&fit=crop' },
-  { name: 'iPad Pro M4', spec: '13 inch - 256GB', price: '3,100,000', priceRaw: 3100000, img: 'https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=400&h=300&fit=crop' },
-  { name: 'AirPods Pro 2', spec: 'USB-C - Active NC', price: '580,000', priceRaw: 580000, img: 'https://images.unsplash.com/photo-1606220945770-b5b6c2c55bf1?w=400&h=300&fit=crop' }
+  {
+    name: 'iPhone 16 Pro Max', spec: '256GB - تيتانيوم', price: '1,850,000', priceRaw: 1850000,
+    img: 'https://images.unsplash.com/photo-1695048133142-1a20484d2569?w=800&h=800&fit=crop',
+    desc: 'هاتف آيفون 16 برو ماكس بسعة 256 جيجابايت، شاشة Super Retina XDR بحجم 6.9 بوصة، معالج A18 Pro، كاميرا ثلاثية 48 ميجابكسل.',
+    specs: { 'الشاشة': '6.9 بوصة Super Retina XDR', 'المعالج': 'A18 Pro', 'الذاكرة': '256GB', 'الكاميرا': '48MP + 12MP + 12MP', 'البطارية': '4685 mAh', 'نظام التشغيل': 'iOS 18' }
+  },
+  {
+    name: 'Samsung S24 Ultra', spec: '512GB - أسود', price: '1,650,000', priceRaw: 1650000,
+    img: 'https://images.unsplash.com/photo-1610945415295-d9bbf067e59c?w=800&h=800&fit=crop',
+    desc: 'سامسونج جالكسي S24 ألترا بسعة 512 جيجابايت، شاشة Dynamic AMOLED 2X، معالج Snapdragon 8 Gen 3، قلم S Pen.',
+    specs: { 'الشاشة': '6.8 بوصة Dynamic AMOLED 2X', 'المعالج': 'Snapdragon 8 Gen 3', 'الذاكرة': '512GB', 'الكاميرا': '200MP + 50MP + 12MP', 'البطارية': '5000 mAh', 'نظام التشغيل': 'Android 14' }
+  },
+  {
+    name: 'Hisense 55 inch 4K', spec: 'Smart TV - ULED', price: '820,000', priceRaw: 820000,
+    img: 'https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?w=800&h=800&fit=crop',
+    desc: 'تلفزيون هيسينس ذكي 55 بوصة بتقنية ULED 4K، دعم HDR10+، صوت Dolby Atmos.',
+    specs: { 'الشاشة': '55 بوصة 4K ULED', 'الدقة': '3840 × 2160', 'HDR': 'HDR10+', 'الصوت': 'Dolby Atmos 30W', 'المنافذ': '3 × HDMI, 2 × USB', 'النظام': 'VIDAA U6' }
+  },
+  {
+    name: 'MacBook Pro M3', spec: '14 inch - 512GB', price: '5,200,000', priceRaw: 5200000,
+    img: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=800&h=800&fit=crop',
+    desc: 'ماك بوك برو بمعالج M3، شاشة Liquid Retina XDR بحجم 14 بوصة، أداء احترافي للمطورين والمبدعين.',
+    specs: { 'الشاشة': '14.2 بوصة Liquid Retina XDR', 'المعالج': 'Apple M3', 'الذاكرة': '512GB SSD', 'الرام': '18GB Unified', 'البطارية': 'حتى 17 ساعة', 'نظام التشغيل': 'macOS Sonoma' }
+  },
+  {
+    name: 'iPad Pro M4', spec: '13 inch - 256GB', price: '3,100,000', priceRaw: 3100000,
+    img: 'https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=800&h=800&fit=crop',
+    desc: 'آيباد برو بمعالج M4، شاشة Ultra Retina XDR بحجم 13 بوصة، أرفع وأخف من أي وقت.',
+    specs: { 'الشاشة': '13 بوصة Ultra Retina XDR', 'المعالج': 'Apple M4', 'الذاكرة': '256GB', 'الكاميرا': '12MP Wide', 'الوزن': '579 جرام', 'نظام التشغيل': 'iPadOS 17' }
+  },
+  {
+    name: 'AirPods Pro 2', spec: 'USB-C - Active NC', price: '580,000', priceRaw: 580000,
+    img: 'https://images.unsplash.com/photo-1606220945770-b5b6c2c55bf1?w=800&h=800&fit=crop',
+    desc: 'إيربودز برو 2 مع تقنية إلغاء الضوضاء النشط، صوت مكاني، وشحن عبر USB-C.',
+    specs: { 'النوع': 'In-Ear Wireless', 'الإلغاء': 'Active Noise Cancellation', 'المدة': 'حتى 6 ساعات', 'الحالة': 'حتى 30 ساعة', 'الشحن': 'USB-C + MagSafe', 'المقاومة': 'IP54' }
+  }
 ]
 
 const filteredProducts = computed(() => {
@@ -276,6 +348,8 @@ const navItems = [
 .product-card-spec { font-size: 12px; color: var(--on-surface-variant); }
 .product-card-price { font-size: 14px; font-weight: 700; color: var(--primary); margin-top: 2px; }
 .add-icon { font-size: 26px; color: var(--on-surface-variant); flex-shrink: 0; }
+.info-btn { width: 32px; height: 32px; border-radius: 50%; background: rgba(99, 179, 237, 0.1); border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; }
+.info-btn .material-symbols-outlined { font-size: 20px; color: #63b3ed; }
 .chosen-badge { width: 28px; height: 28px; border-radius: 50%; background: var(--primary); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
 .chosen-badge .material-symbols-outlined { font-size: 18px; color: #0a0f1d; }
 
@@ -343,4 +417,33 @@ const navItems = [
 .nav-item { display: flex; flex-direction: column; align-items: center; gap: 2px; background: none; border: none; color: var(--on-surface-variant); cursor: pointer; padding: 4px 8px; }
 .nav-icon { font-size: 24px; }
 .nav-label { font-size: 10px; font-weight: 500; }
+
+/* Detail Sheet */
+.sheet-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 100; display: flex; align-items: flex-end; justify-content: center; }
+.sheet { width: 100%; max-width: 480px; max-height: 85vh; background: var(--bg); border-radius: 20px 20px 0 0; display: flex; flex-direction: column; animation: slideUp 0.25s ease; }
+@keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+.sheet-handle { display: flex; justify-content: center; padding: 10px 0 4px; cursor: pointer; }
+.handle-bar { width: 40px; height: 4px; border-radius: 2px; background: var(--outline-variant); }
+.sheet-scroll { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+.sheet-img { width: 100%; aspect-ratio: 4/3; object-fit: cover; cursor: pointer; }
+.sheet-body { padding: 16px; }
+.sheet-name { font-size: 20px; font-weight: 800; color: var(--on-surface); margin-bottom: 4px; }
+.sheet-spec { font-size: 13px; color: var(--on-surface-variant); display: block; margin-bottom: 8px; }
+.sheet-price { font-size: 22px; font-weight: 800; color: var(--primary); margin-bottom: 14px; }
+.sheet-desc { font-size: 13px; line-height: 1.8; color: var(--on-surface-variant); margin-bottom: 16px; }
+.sheet-sub { font-size: 15px; font-weight: 700; color: var(--on-surface); margin-bottom: 10px; }
+.sheet-specs { background: var(--surface-container); border-radius: 14px; overflow: hidden; }
+.sheet-spec-row { display: flex; justify-content: space-between; padding: 12px 14px; border-bottom: 1px solid var(--outline-variant); }
+.sheet-spec-row:last-child { border-bottom: none; }
+.sheet-spec-key { font-size: 13px; color: var(--on-surface-variant); }
+.sheet-spec-val { font-size: 13px; font-weight: 600; color: var(--on-surface); }
+.sheet-actions { padding: 12px 16px; border-top: 1px solid var(--outline-variant); }
+.sheet-action-select { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 14px; border-radius: 14px; background: var(--primary); border: none; color: #0a0f1d; font-size: 15px; font-weight: 700; font-family: inherit; cursor: pointer; }
+.sheet-action-select .material-symbols-outlined { font-size: 22px; }
+
+/* Fullscreen */
+.fullscreen-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 200; display: flex; align-items: center; justify-content: center; }
+.fs-close { position: absolute; top: 16px; left: 16px; width: 40px; height: 40px; border-radius: 50%; background: rgba(255,255,255,0.15); border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 1; }
+.fs-close .material-symbols-outlined { font-size: 24px; color: #fff; }
+.fs-img { max-width: 95%; max-height: 90vh; object-fit: contain; border-radius: 8px; }
 </style>
