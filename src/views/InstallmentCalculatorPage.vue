@@ -24,7 +24,7 @@
           </div>
           <button class="calc-fab" @click="showCalculator = true">
             <span class="material-symbols-outlined">calculate</span>
-            <span>احسب ({{ selectedProducts.length }})</span>
+            <span>احسب القسط ({{ selectedProducts.length }})</span>
           </button>
         </div>
 
@@ -43,8 +43,9 @@
               <span class="product-card-spec">{{ p.spec }}</span>
               <span class="product-card-price">{{ p.price }} د.ع</span>
             </div>
-            <button class="info-btn" @click.stop="openDetails(p)">
+            <button class="details-btn" @click.stop="openDetails(p)">
               <span class="material-symbols-outlined">info</span>
+              <span>تفاصيل المنتج</span>
             </button>
             <div v-if="isSelected(p)" class="chosen-badge"><span class="material-symbols-outlined">check</span></div>
             <span v-else class="material-symbols-outlined add-icon">add_circle</span>
@@ -348,8 +349,9 @@ const navItems = [
 .product-card-spec { font-size: 12px; color: var(--on-surface-variant); }
 .product-card-price { font-size: 14px; font-weight: 700; color: var(--primary); margin-top: 2px; }
 .add-icon { font-size: 26px; color: var(--on-surface-variant); flex-shrink: 0; }
-.info-btn { width: 32px; height: 32px; border-radius: 50%; background: rgba(99, 179, 237, 0.1); border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; }
-.info-btn .material-symbols-outlined { font-size: 20px; color: #63b3ed; }
+.details-btn { display: flex; align-items: center; gap: 4px; padding: 6px 10px; border-radius: 8px; background: rgba(99, 179, 237, 0.12); border: 1px solid rgba(99, 179, 237, 0.3); cursor: pointer; flex-shrink: 0; }
+.details-btn .material-symbols-outlined { font-size: 16px; color: #63b3ed; }
+.details-btn span:last-child { font-size: 11px; font-weight: 600; color: #63b3ed; font-family: inherit; white-space: nowrap; }
 .chosen-badge { width: 28px; height: 28px; border-radius: 50%; background: var(--primary); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
 .chosen-badge .material-symbols-outlined { font-size: 18px; color: #0a0f1d; }
 
