@@ -3,11 +3,6 @@ import { createRouter, createWebHashHistory } from 'vue-router'
 const routes = [
   {
     path: '/',
-    name: 'Splash',
-    component: () => import('../views/SplashScreen.vue')
-  },
-  {
-    path: '/login',
     name: 'Login',
     component: () => import('../views/LoginPage.vue')
   },
