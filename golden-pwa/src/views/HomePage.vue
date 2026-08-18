@@ -28,14 +28,14 @@
             <div class="stat-col border-l">
               <span class="stat-label">المبلغ المتبقي</span>
               <div class="stat-row">
-                <span class="stat-num gold">4,250,000</span>
+                <span class="stat-num gold">250,000,000</span>
                 <span class="stat-unit">د.ع</span>
               </div>
             </div>
             <div class="stat-col pr-2">
               <span class="stat-label">المبلغ الكلي</span>
               <div class="stat-row">
-                <span class="stat-num">12,500,000</span>
+                <span class="stat-num">150,000,000</span>
                 <span class="stat-unit">د.ع</span>
               </div>
             </div>
@@ -305,8 +305,8 @@ const navItems = [
 .stat-label { font-size: 12px; color: #bec6df; }
 .stat-row { display: flex; align-items: baseline; gap: 4px; }
 
-.stat-num { font-size: 22px; font-weight: 700; color: var(--on-surface); }
-.stat-num.gold { font-size: 28px; color: var(--primary); }
+.stat-num { font-size: 16px; font-weight: 700; color: var(--on-surface); }
+.stat-num.gold { font-size: 18px; color: var(--primary); }
 .stat-unit { font-size: 13px; color: #bec6df; }
 
 /* Date Bar */
