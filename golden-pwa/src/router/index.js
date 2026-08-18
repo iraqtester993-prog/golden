@@ -35,6 +35,21 @@ const routes = [
     path: '/calculator',
     name: 'Calculator',
     component: () => import('../views/InstallmentCalculatorPage.vue')
+  },
+  {
+    path: '/orders',
+    name: 'Orders',
+    component: () => import('../views/OrdersPage.vue')
+  },
+  {
+    path: '/favorites',
+    name: 'Favorites',
+    component: () => import('../views/FavoritesPage.vue')
+  },
+  {
+    path: '/profile-edit',
+    name: 'ProfileEdit',
+    component: () => import('../views/ProfileEditPage.vue')
   }
 ]
 

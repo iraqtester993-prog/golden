@@ -1,11 +1,11 @@
 <template>
-  <div class="register-screen">
-    <div class="register-container">
+  <div class="page">
+    <div class="page-inner">
       <div class="reg-header">
         <button class="back-btn" @click="$router.back()">
           <span class="material-symbols-outlined">arrow_forward</span>
         </button>
-        <h1 class="reg-title">إنشاء حساب</h1>
+        <h1 class="reg-title">البيانات الشخصية</h1>
       </div>
 
       <div class="form-area">
@@ -21,7 +21,7 @@
               </div>
             </div>
           </label>
-          <span class="profile-hint">أضف صورة个人ية</span>
+          <span class="profile-hint">تعديل الصورة الشخصية</span>
         </div>
 
         <div class="input-group">
@@ -118,26 +118,29 @@
           </div>
         </div>
 
-        <button class="register-btn" @click="register">
-          <span>إنشاء الحساب</span>
+        <button class="register-btn" @click="save">
+          <span class="material-symbols-outlined">save</span>
+          <span>تأكيد التعديلات</span>
         </button>
-
-        <div class="login-link">
-          <span>لديك حساب بالفعل؟</span>
-          <button class="gold-link" @click="$router.push('/')">تسجيل الدخول</button>
-        </div>
       </div>
+    </div>
+
+    <!-- Toast -->
+    <div v-if="toast" class="toast toast-success">
+      <span class="material-symbols-outlined">check_circle</span>
+      <span>{{ toast }}</span>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, reactive } from 'vue'
+import { ref, reactive, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
 const showPass = ref(false)
 const profilePreview = ref(null)
+const toast = ref(null)
 
 const form = reactive({
   fullName: '',
@@ -151,45 +154,75 @@ const form = reactive({
   nationalFront: null,
   nationalBack: null,
   residenceCard: null,
-  departmentId: null
+  departmentId: null,
+  profilePhoto: null
+})
+
+onMounted(() => {
+  const saved = JSON.parse(localStorage.getItem('golden_user') || '{}')
+  form.fullName = saved.fullName || ''
+  form.phone = saved.phone || ''
+  form.address = saved.address || ''
+  form.password = ''
+  form.type = saved.clientType || 'employee'
+  form.department = saved.department || ''
+  form.jobTitle = saved.jobTitle || ''
+  form.workAddress = saved.workAddress || ''
+  if (saved.profilePhoto) profilePreview.value = saved.profilePhoto
 })
 
 const handleProfilePhoto = (event) => {
   const file = event.target.files[0]
   if (file) {
-    form.profilePhoto = file
-    profilePreview.value = URL.createObjectURL(file)
+    const reader = new FileReader()
+    reader.onload = (e) => {
+      profilePreview.value = e.target.result
+      form.profilePhoto = e.target.result
+    }
+    reader.readAsDataURL(file)
   }
 }
 
 const handleFile = (event, field) => {
   const file = event.target.files[0]
   if (file) {
-    form[field] = file
+    form[field] = { name: file.name, size: file.size }
   }
 }
 
-const register = () => {
-  localStorage.setItem('golden_user', JSON.stringify({
+const save = () => {
+  const saved = JSON.parse(localStorage.getItem('golden_user') || '{}')
+  const data = {
+    ...saved,
     fullName: form.fullName,
     phone: form.phone,
     address: form.address,
-    clientType: form.type
-  }))
-  router.push('/home')
+    clientType: form.type,
+    department: form.department,
+    jobTitle: form.jobTitle,
+    workAddress: form.workAddress
+  }
+  if (form.password) data.password = form.password
+  if (profilePreview.value) data.profilePhoto = profilePreview.value
+  if (form.nationalFront) data.nationalFront = form.nationalFront
+  if (form.nationalBack) data.nationalBack = form.nationalBack
+  if (form.residenceCard) data.residenceCard = form.residenceCard
+  if (form.departmentId) data.departmentId = form.departmentId
+  localStorage.setItem('golden_user', JSON.stringify(data))
+  toast.value = 'تم حفظ التعديلات بنجاح'
+  setTimeout(() => { router.back() }, 1200)
 }
 </script>
 
 <style scoped>
-.register-screen {
+.page {
   width: 100%;
   height: 100dvh;
   background: var(--bg);
   overflow-y: auto;
-  overscroll-behavior-y: contain;
+  overscroll-behavior: none;
 }
-
-.register-container {
+.page-inner {
   width: 100%;
   max-width: 400px;
   margin: 0 auto;
@@ -203,7 +236,6 @@ const register = () => {
   margin-bottom: 24px;
   padding-top: 8px;
 }
-
 .back-btn {
   background: none;
   border: none;
@@ -212,7 +244,6 @@ const register = () => {
   padding: 8px;
   display: flex;
 }
-
 .reg-title {
   font-size: 20px;
   font-weight: 700;
@@ -233,9 +264,7 @@ const register = () => {
   gap: 6px;
   margin-bottom: 8px;
 }
-
 .profile-photo-label { cursor: pointer; }
-
 .profile-circle {
   width: 90px;
   height: 90px;
@@ -249,22 +278,10 @@ const register = () => {
   transition: border-color 0.3s;
   overflow: hidden;
 }
-
 .profile-circle.uploaded { border-style: solid; border-color: var(--primary); }
-
 .profile-circle:active { border-color: var(--primary); }
-
-.profile-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.profile-icon {
-  font-size: 36px;
-  color: var(--on-surface-variant);
-}
-
+.profile-img { width: 100%; height: 100%; object-fit: cover; }
+.profile-icon { font-size: 36px; color: var(--on-surface-variant); }
 .camera-badge {
   position: absolute;
   bottom: 0;
@@ -276,17 +293,8 @@ const register = () => {
   justify-content: center;
   padding: 4px;
 }
-
-.camera-badge .material-symbols-outlined {
-  font-size: 18px;
-  color: var(--primary);
-}
-
-.profile-hint {
-  font-size: 11px;
-  color: var(--on-surface-variant);
-}
-
+.camera-badge .material-symbols-outlined { font-size: 18px; color: var(--primary); }
+.profile-hint { font-size: 11px; color: var(--on-surface-variant); }
 .file-input { display: none; }
 
 .input-group {
@@ -299,17 +307,8 @@ const register = () => {
   height: 50px;
   transition: border-color 0.3s;
 }
-
-.input-group:focus-within {
-  border-color: var(--primary);
-}
-
-.input-icon {
-  color: var(--on-surface-variant);
-  font-size: 20px;
-  margin-left: 10px;
-}
-
+.input-group:focus-within { border-color: var(--primary); }
+.input-icon { color: var(--on-surface-variant); font-size: 20px; margin-left: 10px; }
 .input-field {
   flex: 1;
   background: transparent;
@@ -320,11 +319,7 @@ const register = () => {
   font-family: 'Noto Kufi Arabic', sans-serif;
   direction: rtl;
 }
-
-.input-field::placeholder {
-  color: var(--on-surface-variant);
-}
-
+.input-field::placeholder { color: var(--on-surface-variant); }
 .eye-btn {
   background: none;
   border: none;
@@ -334,12 +329,7 @@ const register = () => {
   display: flex;
 }
 
-.type-selector {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-}
-
+.type-selector { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .type-btn {
   display: flex;
   flex-direction: column;
@@ -355,35 +345,12 @@ const register = () => {
   cursor: pointer;
   transition: all 0.3s;
 }
+.type-btn .material-symbols-outlined { font-size: 26px; }
+.type-btn.active { border-color: var(--primary); color: var(--primary); }
 
-.type-btn .material-symbols-outlined {
-  font-size: 26px;
-}
-
-.type-btn.active {
-  border-color: var(--primary);
-  color: var(--primary);
-}
-
-.upload-section {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin-top: 4px;
-}
-
-.upload-title {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--on-surface-variant);
-}
-
-.upload-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-}
-
+.upload-section { display: flex; flex-direction: column; gap: 8px; margin-top: 4px; }
+.upload-title { font-size: 13px; font-weight: 600; color: var(--on-surface-variant); }
+.upload-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .upload-box {
   position: relative;
   display: flex;
@@ -399,50 +366,14 @@ const register = () => {
   transition: all 0.3s;
   min-height: 90px;
 }
-
-.upload-box.full {
-  grid-column: 1 / -1;
-}
-
-.upload-box:active {
-  border-color: var(--primary);
-}
-
-.upload-box.uploaded {
-  border-color: var(--success);
-  border-style: solid;
-}
-
-.file-input {
-  display: none;
-}
-
-.upload-icon {
-  font-size: 28px;
-  color: var(--on-surface-variant);
-}
-
-.upload-box.uploaded .upload-icon {
-  color: var(--success);
-}
-
-.upload-label {
-  font-size: 11px;
-  color: var(--on-surface-variant);
-  text-align: center;
-}
-
-.upload-box.uploaded .upload-label {
-  color: var(--success);
-}
-
-.check-upload {
-  position: absolute;
-  top: 8px;
-  left: 8px;
-  color: var(--success);
-  font-size: 20px;
-}
+.upload-box.full { grid-column: 1 / -1; }
+.upload-box:active { border-color: var(--primary); }
+.upload-box.uploaded { border-color: var(--success); border-style: solid; }
+.upload-icon { font-size: 28px; color: var(--on-surface-variant); }
+.upload-box.uploaded .upload-icon { color: var(--success); }
+.upload-label { font-size: 11px; color: var(--on-surface-variant); text-align: center; }
+.upload-box.uploaded .upload-label { color: var(--success); }
+.check-upload { position: absolute; top: 8px; left: 8px; color: var(--success); font-size: 20px; }
 
 .register-btn {
   width: 100%;
@@ -458,32 +389,31 @@ const register = () => {
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 8px;
   margin-top: 8px;
   transition: transform 0.15s, box-shadow 0.3s;
   box-shadow: 0 4px 20px rgba(212, 175, 55, 0.25);
 }
+.register-btn:active { transform: scale(0.97); }
+.register-btn .material-symbols-outlined { font-size: 20px; }
 
-.register-btn:active {
-  transform: scale(0.97);
-}
-
-.login-link {
+.toast {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
   display: flex;
-  justify-content: center;
   align-items: center;
   gap: 8px;
-  font-size: 14px;
-  color: var(--on-surface-variant);
-  margin-top: 4px;
-}
-
-.gold-link {
-  background: none;
-  border: none;
-  color: var(--primary);
-  font-size: 14px;
+  padding: 12px 20px;
+  border-radius: 14px;
+  font-size: 13px;
   font-weight: 600;
-  font-family: 'Noto Kufi Arabic', sans-serif;
-  cursor: pointer;
+  z-index: 200;
+  animation: slideUp 0.2s ease;
+  white-space: nowrap;
 }
+.toast-success { background: var(--primary); color: #0a0f1d; }
+.toast .material-symbols-outlined { font-size: 20px; }
+@keyframes slideUp { from { transform: translate(-50%, 20px); opacity: 0; } to { transform: translate(-50%, 0); opacity: 1; } }
 </style>

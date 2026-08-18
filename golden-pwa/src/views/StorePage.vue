@@ -52,7 +52,7 @@
         <div class="product-card" v-for="product in products" :key="product.name">
           <div class="product-img-wrap">
             <img :src="product.img" class="product-img" />
-            <button class="fav-btn">
+            <button class="fav-btn" :class="{ 'fav-active': isFav(product) }" @click.stop="toggleFav(product)">
               <span class="material-symbols-outlined">favorite</span>
             </button>
           </div>
@@ -109,7 +109,7 @@
         <div class="sheet-actions">
           <button class="action-cash">شراء نقد</button>
           <button class="action-installment">شراء بالقسط</button>
-          <button class="action-calc" @click="goTo('/calculator')">حساب الأقساط</button>
+          <button class="action-calc" @click="selectedProduct && goTo('/calculator?product=' + encodeURIComponent(JSON.stringify({ name: selectedProduct.name })))">حساب الأقساط</button>
         </div>
       </div>
     </div>
@@ -148,6 +148,17 @@ const fullscreenImg = ref(null)
 const galleryRef = ref(null)
 
 const goTo = (route) => { if (route) router.push(route) }
+
+const favorites = ref(JSON.parse(localStorage.getItem('golden_favorites') || '[]'))
+const isFav = (p) => favorites.value.some(f => f.name === p.name)
+const toggleFav = (p) => {
+  if (isFav(p)) {
+    favorites.value = favorites.value.filter(f => f.name !== p.name)
+  } else {
+    favorites.value.push({ name: p.name, spec: p.spec, price: p.price, img: p.img })
+  }
+  localStorage.setItem('golden_favorites', JSON.stringify(favorites.value))
+}
 
 watch(selectedProduct, () => { galleryIndex.value = 0 })
 
@@ -218,7 +229,7 @@ const navItems = [
   { icon: 'home', label: 'الرئيسية', route: '/home' },
   { icon: 'shopping_bag', label: 'المتجر', route: null },
   { icon: 'account_balance_wallet', label: 'أقساطي', route: '/settlements' },
-  { icon: 'notifications', label: 'طلباتي', badge: true, route: null },
+  { icon: 'receipt_long', label: 'طلباتي', badge: true, route: '/orders' },
   { icon: 'person', label: 'حسابي', route: '/account' }
 ]
 </script>
@@ -342,6 +353,8 @@ const navItems = [
 }
 
 .fav-btn .material-symbols-outlined { font-size: 16px; color: #fff; }
+.fav-btn.fav-active { background: rgba(239, 68, 68, 0.8); }
+.fav-btn.fav-active .material-symbols-outlined { font-variation-settings: 'FILL' 1; color: #fff; }
 
 .product-info { flex: 1; display: flex; flex-direction: column; gap: 3px; }
 .product-name { font-size: 14px; font-weight: 700; color: var(--on-surface); }

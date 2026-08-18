@@ -1,20 +1,29 @@
 <template>
   <header class="top-bar">
-    <button class="icon-btn" @click="toggleTheme">
+    <button v-if="showBack" class="icon-btn" @click="$router.back()">
+      <span class="material-symbols-outlined">arrow_forward_ios</span>
+    </button>
+    <button v-else class="icon-btn" @click="toggleTheme">
       <span class="material-symbols-outlined">{{ isDark ? 'light_mode' : 'dark_mode' }}</span>
     </button>
     <div class="brand-center">
-      <h1 class="brand-title">العصر الذهبي</h1>
+      <h1 class="brand-title">{{ title || 'العصر الذهبي' }}</h1>
     </div>
-    <button class="icon-btn relative">
+    <button v-if="!showBack" class="icon-btn relative">
       <span class="material-symbols-outlined">notifications</span>
       <span class="notif-badge">2</span>
     </button>
+    <span v-else style="width:40px;"></span>
   </header>
 </template>
 
 <script setup>
 import { ref } from 'vue'
+
+defineProps({
+  title: { type: String, default: '' },
+  showBack: { type: Boolean, default: false }
+})
 
 const isDark = ref(document.documentElement.classList.contains('dark'))
 
@@ -64,6 +73,6 @@ const toggleTheme = () => {
   justify-content: center;
 }
 
-.brand-center { display: flex; align-items: center; }
+.brand-center { display: flex; align-items: center; flex: 1; justify-content: center; }
 .brand-title { font-size: 18px; font-weight: 700; color: var(--primary); letter-spacing: 1px; }
 </style>
