@@ -8,6 +8,10 @@
       </div>
 
       <div class="form-area">
+        <div v-if="loginNotice" class="login-notice" role="status">
+          <span class="material-symbols-outlined">check_circle</span>
+          <span>{{ loginNotice }}</span>
+        </div>
         <div class="input-group">
           <span class="material-symbols-outlined input-icon">phone</span>
           <input type="tel" placeholder="رقم الهاتف" class="input-field" v-model="phone" />
@@ -44,9 +48,11 @@ const router = useRouter()
 const phone = ref('')
 const password = ref('')
 const showPass = ref(false)
+const loginNotice = ref('')
 
 const login = () => {
-  router.push('/home')
+  loginNotice.value = 'تم تسجيل الدخول بنجاح، أهلاً بك'
+  setTimeout(() => router.push('/home'), 700)
 }
 </script>
 
@@ -101,6 +107,9 @@ const login = () => {
   flex-direction: column;
   gap: 16px;
 }
+
+.login-notice { display: flex; align-items: center; justify-content: center; gap: 7px; padding: 10px 12px; border: 1px solid rgba(52, 211, 153, 0.35); border-radius: 12px; background: rgba(52, 211, 153, 0.1); color: var(--success); font-size: 12px; font-weight: 600; }
+.login-notice .material-symbols-outlined { font-size: 18px; font-variation-settings: 'FILL' 1; }
 
 .input-group {
   display: flex;

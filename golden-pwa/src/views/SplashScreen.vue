@@ -4,6 +4,10 @@
       <div class="logo-wrapper">
         <img :src="logo" alt="Golden Group" class="logo" />
       </div>
+      <div class="welcome-copy">
+        <h1>أهلاً بك في العصر الذهبي</h1>
+        <p>خدماتك ومنتجاتك في مكان واحد</p>
+      </div>
       <div class="loading-bar">
         <div class="loading-fill"></div>
       </div>
@@ -69,6 +73,10 @@ onMounted(() => {
   object-fit: contain;
   mix-blend-mode: screen;
 }
+
+.welcome-copy { text-align: center; }
+.welcome-copy h1 { font-size: 18px; color: var(--primary); }
+.welcome-copy p { margin-top: 6px; font-size: 12px; color: var(--on-surface-variant); }
 
 .loading-bar {
   width: 180px;
