@@ -3,6 +3,20 @@
     <TopBar title="طلباتي" :showBack="true" />
 
     <div class="page-content">
+      <!-- Status filters: always visible, including before the first order -->
+      <div class="tabs-wrap" aria-label="حالات الطلبات">
+        <div class="tabs">
+          <button class="tab" :class="{ active: activeTab === 'all' }" @click="activeTab = 'all'">الكل</button>
+          <button class="tab" :class="{ active: activeTab === 'pending' }" @click="activeTab = 'pending'">قيد المراجعة</button>
+          <button class="tab" :class="{ active: activeTab === 'inquiry' }" @click="activeTab = 'inquiry'">استعلام</button>
+        </div>
+        <div class="tabs">
+          <button class="tab" :class="{ active: activeTab === 'approved' }" @click="activeTab = 'approved'">تم الموافقة</button>
+          <button class="tab" :class="{ active: activeTab === 'shipping' }" @click="activeTab = 'shipping'">قيد التوصيل</button>
+          <button class="tab" :class="{ active: activeTab === 'delivered' }" @click="activeTab = 'delivered'">تم التسليم</button>
+        </div>
+      </div>
+
       <!-- Empty State -->
       <div v-if="orders.length === 0" class="empty-state">
         <span class="material-symbols-outlined empty-icon">receipt_long</span>
@@ -16,20 +30,6 @@
 
       <!-- Orders List -->
       <template v-else>
-        <!-- Tabs -->
-        <div class="tabs-wrap">
-          <div class="tabs">
-            <button class="tab" :class="{ active: activeTab === 'all' }" @click="activeTab = 'all'">الكل</button>
-            <button class="tab" :class="{ active: activeTab === 'pending' }" @click="activeTab = 'pending'">قيد المراجعة</button>
-            <button class="tab" :class="{ active: activeTab === 'inquiry' }" @click="activeTab = 'inquiry'">استعلام</button>
-          </div>
-          <div class="tabs">
-            <button class="tab" :class="{ active: activeTab === 'approved' }" @click="activeTab = 'approved'">تم الموافقة</button>
-            <button class="tab" :class="{ active: activeTab === 'shipping' }" @click="activeTab = 'shipping'">قيد التوصيل</button>
-            <button class="tab" :class="{ active: activeTab === 'delivered' }" @click="activeTab = 'delivered'">تم التسليم</button>
-          </div>
-        </div>
-
         <div class="orders-list">
           <div v-for="order in filteredOrders" :key="order.id" class="order-card" @click="openDetail(order)">
             <div class="order-header">
@@ -306,7 +306,7 @@ const statusSteps = [
   { label: 'استعلام دائرة الزبون', key: 'inquiry' },
   { label: 'تم الموافقة', key: 'approved' },
   { label: 'قيد التوصيل', key: 'shipping' },
-  { label: 'تم التوصيل', key: 'delivered' }
+  { label: 'تم التسليم', key: 'delivered' }
 ]
 
 const statusIndex = (s) => statusSteps.findIndex(st => st.key === s)
@@ -317,7 +317,7 @@ const statusLabel = (s) => {
     inquiry: 'استعلام دائرة الزبون',
     approved: 'تم الموافقة',
     shipping: 'قيد التوصيل',
-    delivered: 'تم التوصيل',
+    delivered: 'تم التسليم',
     cancelled: 'ملغي'
   }
   return map[s] || s

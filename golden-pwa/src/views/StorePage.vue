@@ -395,7 +395,7 @@ const navItems = [
 
 .handle-bar { width: 40px; height: 4px; background: var(--outline-variant); border-radius: 2px; }
 
-.sheet-scroll { flex: 1; overflow-y: auto; padding-bottom: 80px; }
+.sheet-scroll { flex: 1; min-height: 0; overflow-y: auto; padding-bottom: 16px; }
 
 /* Gallery */
 .gallery { position: relative; width: 100%; height: 280px; overflow: hidden; }
@@ -433,10 +433,10 @@ const navItems = [
 
 /* Sheet Actions */
 .sheet-actions {
-  position: absolute; bottom: 0; left: 0; right: 0;
   display: flex; gap: 8px; padding: 12px 16px;
   background: var(--bg); border-top: 1px solid var(--outline-variant);
   padding-bottom: calc(12px + env(safe-area-inset-bottom, 4px));
+  flex-shrink: 0;
 }
 
 .sheet-actions button {
