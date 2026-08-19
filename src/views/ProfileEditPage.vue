@@ -1,5 +1,6 @@
 <template>
   <div class="page">
+    <TopBar />
     <div class="page-inner">
       <div class="reg-header">
         <button class="back-btn" @click="$router.back()">
@@ -136,6 +137,7 @@
 <script setup>
 import { ref, reactive, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
+import TopBar from '../components/TopBar.vue'
 
 const router = useRouter()
 const showPass = ref(false)

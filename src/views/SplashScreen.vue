@@ -20,10 +20,10 @@ const isFading = ref(false)
 onMounted(() => {
   setTimeout(() => {
     isFading.value = true
-  }, 1600)
+  }, 2600)
   setTimeout(() => {
     router.replace('/login')
-  }, 2000)
+  }, 3000)
 })
 </script>
 
@@ -45,7 +45,7 @@ onMounted(() => {
   justify-content: center;
   gap: 24px;
   opacity: 1;
-  transition: opacity 0.8s ease;
+  transition: opacity 0.4s ease;
 }
 
 .splash-content.fade-out {
