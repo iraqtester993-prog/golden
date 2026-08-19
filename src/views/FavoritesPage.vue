@@ -1,6 +1,9 @@
 <template>
   <div class="page">
-    <TopBar title="المفضلة" :showBack="true" />
+    <TopBar />
+    <button class="page-back" @click="$router.back()">
+      <span class="material-symbols-outlined">arrow_forward</span> رجوع إلى الرئيسية
+    </button>
 
     <div class="page-content">
       <div v-if="favorites.length === 0" class="empty-state">
@@ -64,6 +67,8 @@ const navItems = [
 
 <style scoped>
 .page { width: 100%; height: 100dvh; background: var(--bg); display: flex; flex-direction: column; overflow: hidden; }
+.page-back { display: flex; align-items: center; gap: 5px; margin: 12px 16px 0; padding: 0; border: 0; background: none; color: var(--primary); font: inherit; font-size: 13px; font-weight: 700; cursor: pointer; flex-shrink: 0; }
+.page-back .material-symbols-outlined { font-size: 18px; }
 .page-content { flex: 1; overflow-y: auto; padding: 12px 16px 100px; display: flex; flex-direction: column; gap: 12px; }
 .page-content > * { flex-shrink: 0; }
 
