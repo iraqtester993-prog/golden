@@ -6,8 +6,14 @@
     <button v-else class="icon-btn" @click="toggleTheme">
       <span class="material-symbols-outlined">{{ isDark ? 'light_mode' : 'dark_mode' }}</span>
     </button>
-    <div class="brand-center">
-      <h1 class="brand-title">{{ title || 'العصر الذهبي' }}</h1>
+    <div class="brand-center" aria-label="Golden Group - العصر الذهبي">
+      <div class="header-logo">
+        <span class="gg-mark">GG</span>
+        <div class="wordmark" dir="rtl">
+          <span class="wordmark-ar">العصر الذهبي</span>
+          <span class="wordmark-en">GOLDEN GROUP</span>
+        </div>
+      </div>
     </div>
     <button v-if="!showBack" class="icon-btn relative">
       <span class="material-symbols-outlined">notifications</span>
@@ -74,5 +80,9 @@ const toggleTheme = () => {
 }
 
 .brand-center { display: flex; align-items: center; flex: 1; justify-content: center; }
-.brand-title { font-size: 18px; font-weight: 700; color: var(--primary); letter-spacing: 1px; }
+.header-logo { display: flex; align-items: center; gap: 7px; direction: ltr; line-height: 1; }
+.gg-mark { display: inline-flex; align-items: center; justify-content: center; width: 33px; height: 33px; border: 1px solid rgba(242, 202, 80, .65); border-radius: 10px; background: linear-gradient(145deg, rgba(242, 202, 80, .18), rgba(212, 175, 55, .04)); color: var(--primary); font-family: Georgia, serif; font-size: 18px; font-weight: 700; letter-spacing: -5px; padding-left: 1px; text-shadow: 0 1px 8px rgba(242, 202, 80, .35); }
+.wordmark { display: flex; flex-direction: column; align-items: flex-end; gap: 3px; min-width: 92px; }
+.wordmark-ar { color: var(--primary); font-size: 12px; font-weight: 700; }
+.wordmark-en { color: var(--on-surface-variant); font-family: Georgia, serif; font-size: 8px; font-weight: 700; letter-spacing: .8px; }
 </style>
