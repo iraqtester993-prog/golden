@@ -65,8 +65,3 @@ html:not(.dark) body {
   background: #faf8f5;
   color: #1a1512;
 }
-
-html:not(.dark) {
-  --on-surface-variant: #423b32;
-  --outline-variant: #b9ae9d;
-}

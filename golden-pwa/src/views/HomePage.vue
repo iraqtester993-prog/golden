@@ -182,6 +182,41 @@
       </div>
     </div>
 
+    <!-- Brands Sheet -->
+    <div v-if="showBrandsSheet" class="sheet-overlay" @click.self="showBrandsSheet = false">
+      <div class="sheet">
+        <div class="sheet-handle" @click="showBrandsSheet = false"><div class="handle-bar"></div></div>
+        <div class="sheet-scroll">
+          <h3 class="sheet-title">الماركات</h3>
+          <template v-if="!selectedBrand">
+            <div class="brands-grid">
+              <div v-for="brand in brands" :key="brand.name" class="brand-card" @click="selectedBrand = brand">
+                <img :src="brand.img" class="brand-img" />
+                <span class="brand-name">{{ brand.name }}</span>
+              </div>
+            </div>
+          </template>
+          <template v-else>
+            <button class="back-link" @click="selectedBrand = null">
+              <span class="material-symbols-outlined">arrow_forward_ios</span>
+              <span>العودة للماركات</span>
+            </button>
+            <h4 class="brand-selected-title">{{ selectedBrand.name }}</h4>
+            <div class="brand-products">
+              <div v-for="p in brandProducts" :key="p.name" class="brand-product-card" @click="goTo('/store')">
+                <img :src="p.img" class="brand-product-img" />
+                <div class="brand-product-info">
+                  <span class="brand-product-name">{{ p.name }}</span>
+                  <span class="brand-product-spec">{{ p.spec }}</span>
+                  <span class="brand-product-price">{{ p.price }} د.ع</span>
+                </div>
+              </div>
+            </div>
+          </template>
+        </div>
+      </div>
+    </div>
+
     <!-- Close Invoice Sheet -->
     <div v-if="showCloseSheet" class="sheet-overlay" @click.self="showCloseSheet = false">
       <div class="sheet">
@@ -298,7 +333,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 import TopBar from '../components/TopBar.vue'
 
@@ -308,8 +343,10 @@ const goTo = (route) => { if (route) router.push(route) }
 const showInvoices = ref(false)
 const showBranchesSheet = ref(false)
 const showDealersSheet = ref(false)
+const showBrandsSheet = ref(false)
 const showCloseSheet = ref(false)
 const showStatementSheet = ref(false)
+const selectedBrand = ref(null)
 const toast = ref(null)
 const currentSlide = ref(0)
 let slideInterval = null
@@ -388,6 +425,32 @@ const dealers = [
   { name: 'وكالة الزهراء للأجهزة', address: 'الكاظمية، بغداد', img: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=800&h=400&fit=crop', phones: ['07702221100', '07802221100'] }
 ]
 
+const brands = [
+  { name: 'Apple', img: 'https://images.unsplash.com/photo-1611532736597-de2d4265fba3?w=200&h=200&fit=crop' },
+  { name: 'Samsung', img: 'https://images.unsplash.com/photo-1610945415295-d9bbf067e59c?w=200&h=200&fit=crop' },
+  { name: 'Hisense', img: 'https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?w=200&h=200&fit=crop' }
+]
+
+const brandProductsMap = {
+  Apple: [
+    { name: 'iPhone 16 Pro Max', spec: '256GB - تيتانيوم', price: '1,850,000', img: 'https://images.unsplash.com/photo-1695048133142-1a20484d2569?w=400&h=300&fit=crop' },
+    { name: 'MacBook Pro M3', spec: '14 inch - 512GB', price: '5,200,000', img: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=400&h=300&fit=crop' },
+    { name: 'iPad Pro M4', spec: '13 inch - 256GB', price: '3,100,000', img: 'https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=400&h=300&fit=crop' },
+    { name: 'AirPods Pro 2', spec: 'USB-C - Active NC', price: '580,000', img: 'https://images.unsplash.com/photo-1606220945770-b5b6c2c55bf1?w=400&h=300&fit=crop' }
+  ],
+  Samsung: [
+    { name: 'Samsung S24 Ultra', spec: '512GB - أسود', price: '1,650,000', img: 'https://images.unsplash.com/photo-1610945415295-d9bbf067e59c?w=400&h=300&fit=crop' }
+  ],
+  Hisense: [
+    { name: 'Hisense 55 inch 4K', spec: 'Smart TV - ULED', price: '820,000', img: 'https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?w=400&h=300&fit=crop' }
+  ]
+}
+
+const brandProducts = computed(() => {
+  if (!selectedBrand.value) return []
+  return brandProductsMap[selectedBrand.value.name] || []
+})
+
 const quickActions = [
   { icon: 'credit_score', label: 'إطفاء فاتورة', handler: () => { showCloseSheet.value = true } },
   { icon: 'add_circle', label: 'طلب جديد', handler: () => goTo('/store') },
@@ -399,7 +462,7 @@ const services = [
   { icon: 'category', label: 'المنتجات', handler: () => goTo('/store') },
   { icon: 'local_offer', label: 'العروض', handler: () => goTo('/store') },
   { icon: 'account_balance_wallet', label: 'أقساطي', handler: () => goTo('/settlements') },
-  { icon: 'store', label: 'الماركات', handler: () => goTo('/brands') },
+  { icon: 'store', label: 'الماركات', handler: () => { selectedBrand.value = null; showBrandsSheet.value = true } },
   { icon: 'location_on', label: 'الفروع', handler: () => { showBranchesSheet.value = true } },
   { icon: 'support_agent', label: 'الوكلاء', handler: () => { showDealersSheet.value = true } },
   { icon: 'account_balance_wallet', label: 'تسديد قسط', handler: () => goTo('/settlements') },
@@ -445,11 +508,11 @@ const navItems = [
 .stat-col { display: flex; flex-direction: column; gap: 4px; }
 .border-l { border-right: 1px solid rgba(77, 70, 53, 0.5); padding-right: 16px; }
 .pr-2 { padding-right: 8px; }
-.stat-label { font-size: 12px; color: var(--on-surface-variant); }
+.stat-label { font-size: 12px; color: #bec6df; }
 .stat-row { display: flex; align-items: baseline; gap: 4px; }
 .stat-num { font-size: 16px; font-weight: 700; color: var(--on-surface); }
 .stat-num.gold { font-size: 18px; color: var(--primary); }
-.stat-unit { font-size: 13px; color: var(--on-surface-variant); }
+.stat-unit { font-size: 13px; color: #bec6df; }
 
 /* Date Bar */
 .date-bar { display: flex; justify-content: space-between; align-items: center; background: var(--surface-container); border: 1px solid var(--outline-variant); border-radius: 12px; padding: 10px 14px; }
