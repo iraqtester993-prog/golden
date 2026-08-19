@@ -124,7 +124,7 @@
 
         <div class="login-link">
           <span>لديك حساب بالفعل؟</span>
-          <button class="gold-link" @click="$router.push('/')">تسجيل الدخول</button>
+          <button class="gold-link" @click="$router.push('/login')">تسجيل الدخول</button>
         </div>
       </div>
     </div>

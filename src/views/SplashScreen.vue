@@ -4,9 +4,7 @@
       <div class="logo-wrapper">
         <img :src="logo" alt="Golden Group" class="logo" />
       </div>
-      <div class="loading-bar">
-        <div class="loading-fill"></div>
-      </div>
+      <p class="welcome-message">تسوق الآن وادفع على راحتك</p>
     </div>
   </div>
 </template>
@@ -14,7 +12,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import logo from '../assets/logo.png'
+import logo from '../assets/logo-transparent-v3.png'
 
 const router = useRouter()
 const isFading = ref(false)
@@ -22,10 +20,10 @@ const isFading = ref(false)
 onMounted(() => {
   setTimeout(() => {
     isFading.value = true
-  }, 2200)
+  }, 1600)
   setTimeout(() => {
     router.replace('/login')
-  }, 3000)
+  }, 2000)
 })
 </script>
 
@@ -33,7 +31,7 @@ onMounted(() => {
 .splash-screen {
   width: 100%;
   height: 100dvh;
-  background: #0a0f1d;
+  background: var(--bg);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -45,7 +43,7 @@ onMounted(() => {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 40px;
+  gap: 24px;
   opacity: 1;
   transition: opacity 0.8s ease;
 }
@@ -55,8 +53,8 @@ onMounted(() => {
 }
 
 .logo-wrapper {
-  width: 260px;
-  height: 260px;
+  width: min(260px, 70vw);
+  height: min(260px, 70vw);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -67,23 +65,13 @@ onMounted(() => {
   width: 100%;
   height: 100%;
   object-fit: contain;
-  mix-blend-mode: screen;
 }
 
-.loading-bar {
-  width: 180px;
-  height: 3px;
-  background: rgba(242, 202, 80, 0.15);
-  border-radius: 4px;
-  overflow: hidden;
-}
-
-.loading-fill {
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, #d4af37, #f2ca50);
-  border-radius: 4px;
-  animation: fill-bar 2.5s ease-in-out;
+.welcome-message {
+  color: var(--primary);
+  font-size: clamp(16px, 4vw, 20px);
+  font-weight: 700;
+  text-align: center;
 }
 
 @keyframes pulse-in {
@@ -97,8 +85,4 @@ onMounted(() => {
   }
 }
 
-@keyframes fill-bar {
-  0% { width: 0%; }
-  100% { width: 100%; }
-}
 </style>
