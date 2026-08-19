@@ -463,10 +463,8 @@ const services = [
   { icon: 'local_offer', label: 'العروض', handler: () => goTo('/store') },
   { icon: 'account_balance_wallet', label: 'أقساطي', handler: () => goTo('/settlements') },
   { icon: 'store', label: 'الماركات', handler: () => { selectedBrand.value = null; showBrandsSheet.value = true } },
-  { icon: 'location_on', label: 'الفروع', handler: () => { showBranchesSheet.value = true } },
-  { icon: 'support_agent', label: 'الوكلاء', handler: () => { showDealersSheet.value = true } },
-  { icon: 'account_balance_wallet', label: 'تسديد قسط', handler: () => goTo('/settlements') },
-  { icon: 'calculate', label: 'حاسبة التقسيط', handler: () => goTo('/calculator') },
+  { icon: 'location_on', label: 'الفروع', handler: () => goTo('/branches') },
+  { icon: 'support_agent', label: 'الوكلاء', handler: () => goTo('/agents') },
   { icon: 'more_horiz', label: 'المزيد', handler: () => {} }
 ]
 

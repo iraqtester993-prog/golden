@@ -42,6 +42,16 @@ const routes = [
     component: () => import('../views/InstallmentCalculatorPage.vue')
   },
   {
+    path: '/branches/:id?',
+    name: 'Branches',
+    component: () => import('../views/BranchesPage.vue')
+  },
+  {
+    path: '/agents/:id?',
+    name: 'Agents',
+    component: () => import('../views/AgentsPage.vue')
+  },
+  {
     path: '/orders',
     name: 'Orders',
     component: () => import('../views/OrdersPage.vue')
