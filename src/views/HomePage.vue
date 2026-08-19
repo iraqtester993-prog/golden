@@ -482,8 +482,8 @@ const navItems = [
 .main-content { flex: 1; overflow-y: auto; overscroll-behavior-y: contain; padding: 16px 16px 90px; display: flex; flex-direction: column; gap: 16px; width: 100%; margin: 0 auto; }
 
 /* Card */
-.card-wrap { border-radius: 16px; border: 1px solid var(--outline-variant); padding: 20px; background: var(--surface-container-high); }
-.card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; position: relative; }
+.card-wrap { border-radius: 16px; border: 1px solid var(--outline-variant); padding: 14px 16px; background: var(--surface-container-high); }
+.card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; position: relative; }
 .card-title { font-size: 16px; font-weight: 700; color: var(--primary); text-align: center; flex: 1; }
 .invoice-pill { display: flex; align-items: center; gap: 6px; background: var(--bg); border: 1px solid var(--outline-variant); border-radius: 20px; padding: 4px 12px; font-size: 11px; color: var(--on-surface-variant); cursor: pointer; transition: border-color 0.2s; }
 .invoice-pill:active { border-color: var(--primary); }
@@ -501,10 +501,10 @@ const navItems = [
 .inv-remaining { font-size: 12px; font-weight: 600; color: var(--primary); }
 
 /* Stats */
-.stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
-.stats-grid.border-t { border-top: 1px solid rgba(77, 70, 53, 0.5); padding-top: 16px; margin-bottom: 16px; }
+.stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px; }
+.stats-grid.border-t { border-top: 1px solid rgba(77, 70, 53, 0.5); padding-top: 12px; margin-bottom: 12px; }
 .stat-col { display: flex; flex-direction: column; gap: 4px; }
-.border-l { border-right: 1px solid rgba(77, 70, 53, 0.5); padding-right: 16px; }
+.border-l { border-right: 1px solid rgba(77, 70, 53, 0.5); padding-right: 12px; }
 .pr-2 { padding-right: 8px; }
 .stat-label { font-size: 12px; color: #bec6df; }
 .stat-row { display: flex; align-items: baseline; gap: 4px; }

@@ -5,25 +5,39 @@
         <img :src="logo" alt="Golden Group" class="logo" />
       </div>
       <p class="welcome-message">تسوق الآن وادفع على راحتك</p>
+      <button class="skip-button" @click="goToLogin">تخطي</button>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 import logo from '../assets/logo-transparent-v3.png'
 
 const router = useRouter()
 const isFading = ref(false)
+let fadeTimer
+let redirectTimer
+
+const goToLogin = () => {
+  clearTimeout(fadeTimer)
+  clearTimeout(redirectTimer)
+  router.replace('/login')
+}
 
 onMounted(() => {
-  setTimeout(() => {
+  fadeTimer = setTimeout(() => {
     isFading.value = true
   }, 2600)
-  setTimeout(() => {
-    router.replace('/login')
+  redirectTimer = setTimeout(() => {
+    goToLogin()
   }, 3000)
+})
+
+onUnmounted(() => {
+  clearTimeout(fadeTimer)
+  clearTimeout(redirectTimer)
 })
 </script>
 
@@ -73,6 +87,19 @@ onMounted(() => {
   font-weight: 700;
   text-align: center;
 }
+
+.skip-button {
+  padding: 8px 20px;
+  border: 1px solid var(--outline-variant);
+  border-radius: 20px;
+  background: transparent;
+  color: var(--on-surface-variant);
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.skip-button:active { border-color: var(--primary); color: var(--primary); }
 
 @keyframes pulse-in {
   0% {
