@@ -131,6 +131,7 @@
       <span class="material-symbols-outlined">check_circle</span>
       <span>{{ toast }}</span>
     </div>
+    <BottomNav />
   </div>
 </template>
 
@@ -138,6 +139,7 @@
 import { ref, reactive, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import TopBar from '../components/TopBar.vue'
+import BottomNav from '../components/BottomNav.vue'
 
 const router = useRouter()
 const showPass = ref(false)
@@ -228,7 +230,7 @@ const save = () => {
   width: 100%;
   max-width: 400px;
   margin: 0 auto;
-  padding: 12px 20px 40px;
+  padding: 12px 20px 100px;
 }
 
 .reg-header {

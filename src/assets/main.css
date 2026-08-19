@@ -19,6 +19,16 @@ html, body {
   height: 100%;
 }
 
+/* يبقى الهدر وشريط التنقل ظاهرين عند فتح أي قائمة أو نافذة منبثقة. */
+.top-bar {
+  position: relative;
+  z-index: 300 !important;
+}
+
+.bottom-nav {
+  z-index: 300 !important;
+}
+
 ::-webkit-scrollbar {
   display: none;
 }

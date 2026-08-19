@@ -41,6 +41,7 @@
         </a>
       </section>
     </main>
+    <BottomNav />
   </div>
 </template>
 
@@ -48,6 +49,7 @@
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import TopBar from '../components/TopBar.vue'
+import BottomNav from '../components/BottomNav.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -65,7 +67,7 @@ const openDetail = id => router.push(`/branches/${id}`)
 .directory-screen { min-height: 100dvh; background: var(--bg); color: var(--on-surface); }
 .page-back { display: flex; align-items: center; gap: 5px; margin: 14px 16px -6px; padding: 0; background: none; border: 0; color: var(--primary); font: inherit; font-size: 13px; font-weight: 700; cursor: pointer; }
 .page-back .material-symbols-outlined { font-size: 18px; }
-.directory-content, .detail-content { max-width: 520px; margin: 0 auto; padding: 20px 16px 40px; }
+.directory-content, .detail-content { max-width: 520px; margin: 0 auto; padding: 20px 16px 100px; }
 .page-intro { display: flex; gap: 12px; align-items: center; margin-bottom: 20px; }
 .intro-icon, .detail-icon { color: var(--primary); font-size: 34px; }
 .page-intro h2, .detail-card h2 { font-size: 18px; margin-bottom: 4px; }
