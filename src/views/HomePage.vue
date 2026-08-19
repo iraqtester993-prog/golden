@@ -455,7 +455,7 @@ const quickActions = [
   { icon: 'credit_score', label: 'إطفاء فاتورة', handler: () => { showCloseSheet.value = true } },
   { icon: 'add_circle', label: 'طلب جديد', handler: () => goTo('/store') },
   { icon: 'receipt_long', label: 'كشف حساب', handler: () => { statementInv.value = selectedInvoice.value; showStatementSheet.value = true } },
-  { icon: 'payments', label: 'تسديد قسط', handler: () => goTo('/settlements') }
+  { icon: 'calculate', label: 'حاسبة التقسيط', handler: () => goTo('/calculator') }
 ]
 
 const services = [
