@@ -466,6 +466,7 @@ const services = [
   { icon: 'location_on', label: 'الفروع', handler: () => { showBranchesSheet.value = true } },
   { icon: 'support_agent', label: 'الوكلاء', handler: () => { showDealersSheet.value = true } },
   { icon: 'account_balance_wallet', label: 'تسديد قسط', handler: () => goTo('/settlements') },
+  { icon: 'calculate', label: 'حاسبة التقسيط', handler: () => goTo('/calculator') },
   { icon: 'more_horiz', label: 'المزيد', handler: () => {} }
 ]
 
