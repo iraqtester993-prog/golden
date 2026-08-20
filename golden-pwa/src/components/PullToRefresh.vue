@@ -1,8 +1,11 @@
 <template>
-  <div v-if="enabled && (pulling || refreshing)" class="refresh-indicator" :class="{ ready: pullDistance >= triggerDistance, refreshing }" :style="{ transform: `translate(-50%, ${indicatorOffset}px)` }">
-    <img :src="logo" alt="العصر الذهبي" />
-    <div class="refresh-bar"><span :style="{ width: `${progress}%` }"></span></div>
-  </div>
+  <template v-if="enabled && (pulling || refreshing)">
+    <div class="refresh-backdrop"></div>
+    <div class="refresh-indicator" :class="{ ready: pullDistance >= triggerDistance, refreshing }">
+      <img :src="logo" alt="العصر الذهبي" />
+      <div class="refresh-bar"><span :style="{ width: `${displayProgress}%` }"></span></div>
+    </div>
+  </template>
 </template>
 
 <script setup>
@@ -20,7 +23,7 @@ const progress = ref(0)
 let activeScroller = null
 let timer = null
 const enabled = computed(() => !['/', '/login', '/register'].includes(route.path))
-const indicatorOffset = computed(() => refreshing.value ? 10 : Math.min(-72 + pullDistance.value, 10))
+const displayProgress = computed(() => refreshing.value ? progress.value : Math.min(100, Math.round((pullDistance.value / triggerDistance) * 100)))
 
 const findScroller = target => {
   let element = target
@@ -78,8 +81,10 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped>
-.refresh-indicator { position:fixed; top:0; left:50%; z-index:500; width:138px; padding:8px 13px 10px; border:1px solid rgba(242,202,80,.28); border-radius:0 0 16px 16px; background:var(--bg); box-shadow:0 8px 18px rgba(0,0,0,.2); transition:transform .16s ease; pointer-events:none; }
-.refresh-indicator img { display:block; width:74px; height:42px; margin:0 auto 4px; object-fit:contain; }
+.refresh-backdrop { position:fixed; inset:0; z-index:490; background:rgba(10,15,29,.18); backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px); pointer-events:none; animation:fade-in .16s ease-out; }
+.refresh-indicator { position:fixed; top:50%; left:50%; z-index:500; width:164px; padding:18px 16px 16px; border:1px solid rgba(242,202,80,.36); border-radius:20px; background:rgba(20,27,45,.62); box-shadow:0 14px 36px rgba(0,0,0,.24); transform:translate(-50%,-50%); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); pointer-events:none; animation:indicator-in .18s ease-out; }
+.refresh-indicator img { display:block; width:96px; height:54px; margin:0 auto 7px; object-fit:contain; }
 .refresh-bar { height:3px; overflow:hidden; border-radius:4px; background:rgba(242,202,80,.18); }.refresh-bar span { display:block; height:100%; border-radius:inherit; background:linear-gradient(90deg,var(--primary-container),var(--primary)); transition:width .03s linear; }
 .ready .refresh-bar span { background:var(--success); }
+@keyframes fade-in { from { opacity:0 } to { opacity:1 } } @keyframes indicator-in { from { opacity:0; transform:translate(-50%,-46%) scale(.94) } to { opacity:1; transform:translate(-50%,-50%) scale(1) } }
 </style>
