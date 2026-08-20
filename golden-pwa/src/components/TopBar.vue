@@ -84,8 +84,8 @@ const toggleTheme = () => {
 .brand-center { display: flex; align-items: center; flex: 1; justify-content: center; min-width: 0; }
 .brand-title { font-size: 18px; font-weight: 700; color: var(--primary); letter-spacing: 1px; }
 .brand-lockup { display: flex; align-items: center; gap: 7px; direction: ltr; color: var(--primary); }
-.brand-mark { font-family: Georgia, serif; font-size: 30px; font-weight: 700; letter-spacing: -6px; line-height: 1; text-shadow: 0 0 12px rgba(242, 202, 80, 0.18); }
+.brand-mark { font-family: Georgia, serif; font-size: 35px; font-weight: 700; letter-spacing: -7px; line-height: 1; text-shadow: 0 0 12px rgba(242, 202, 80, 0.18); }
 .brand-copy { display: flex; flex-direction: column; align-items: flex-start; line-height: 1; direction: rtl; }
-.brand-arabic { font-size: 15px; font-weight: 700; white-space: nowrap; }
-.brand-english { margin-top: 2px; font-family: Georgia, serif; font-size: 10px; letter-spacing: 1.4px; white-space: nowrap; }
+.brand-arabic { font-size: 17px; font-weight: 700; white-space: nowrap; }
+.brand-english { margin-top: 2px; font-family: Georgia, serif; font-size: 11px; letter-spacing: 1.4px; white-space: nowrap; }
 </style>
