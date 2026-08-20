@@ -1,6 +1,6 @@
 <template>
   <div class="page">
-    <TopBar title="طلباتي" :showBack="true" />
+    <TopBar />
 
     <div class="page-content">
       <!-- Status filters: always visible, including before the first order -->
