@@ -520,12 +520,12 @@ const navItems = [
 .date-badge { font-size: 12px; color: var(--on-surface); background: var(--surface-variant); padding: 4px 10px; border-radius: 8px; }
 
 /* Quick Actions */
-.quick-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
-.action-btn { background: var(--surface-container); border: 1px solid var(--outline-variant); border-radius: 12px; padding: 9px 4px; display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; transition: border-color 0.2s; }
-.action-btn:active { border-color: var(--primary); }
-.action-icon { font-size: 23px; color: var(--primary); }
+.quick-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+.action-btn { height: 90px; background: var(--surface-container); border: 1px solid rgba(196,154,59,.45); border-radius: 18px; padding: 10px 4px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 7px; cursor: pointer; transition: border-color 0.2s, transform .2s; }
+.action-btn:active { border-color: var(--primary); transform: scale(.97); }
+.action-icon { font-size: 28px; color: var(--primary); }
 .action-icon.filled { font-variation-settings: 'FILL' 1; }
-.action-label { font-size: 12px; font-weight: 700; color: var(--on-surface); text-align: center; }
+.action-label { font-size: 11px; font-weight: 700; color: var(--on-surface); text-align: center; white-space: nowrap; }
 
 /* Slider */
 .slider-wrap { width: 100%; }
