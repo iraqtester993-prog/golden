@@ -64,7 +64,7 @@ const onEnd = () => {
   progress.value = 0
   const startedAt = Date.now()
   timer = window.setInterval(() => {
-    progress.value = Math.min(100, Math.round(((Date.now() - startedAt) / 3000) * 100))
+    progress.value = Math.min(100, Math.round(((Date.now() - startedAt) / 2000) * 100))
     if (progress.value >= 100) { window.clearInterval(timer); timer = null; finishRefresh() }
   }, 30)
 }
@@ -83,7 +83,7 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped>
-.refresh-backdrop { position:fixed; inset:0; z-index:490; background:rgba(10,15,29,.01); backdrop-filter:blur(3px); -webkit-backdrop-filter:blur(3px); pointer-events:none; animation:fade-in .16s ease-out; }
+.refresh-backdrop { position:fixed; inset:0; z-index:490; background:rgba(10,15,29,.01); backdrop-filter:blur(3px); -webkit-backdrop-filter:blur(3px); pointer-events:auto; animation:fade-in .16s ease-out; }
 .refresh-indicator { position:fixed; top:50%; left:50%; z-index:500; width:172px; height:172px; display:grid; place-items:center; transform:translate(-50%,-50%); pointer-events:none; animation:indicator-in .18s ease-out; }
 .refresh-ring { position:relative; width:150px; height:150px; display:grid; place-items:center; }
 .refresh-ring svg { position:absolute; inset:0; width:100%; height:100%; transform:rotate(-90deg); overflow:visible; }.progress-line { fill:none; stroke:var(--primary); stroke-width:2.8; stroke-linecap:round; stroke-dasharray:var(--progress) 100; transition:stroke-dasharray .03s linear; filter:drop-shadow(0 0 4px rgba(242,202,80,.28)); }
