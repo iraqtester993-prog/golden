@@ -15,8 +15,8 @@ export default defineConfig({
         clientsClaim: true
       },
       manifest: {
-        name: 'Golden Group - العصر الذهبي',
-        short_name: 'Golden Group',
+        name: 'العصر الذهبي',
+        short_name: 'العصر الذهبي',
         description: 'تطبيق العصر الذهبي - Golden Group',
         theme_color: '#0a0f1d',
         background_color: '#0a0f1d',
