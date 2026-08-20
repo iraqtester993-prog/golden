@@ -211,7 +211,7 @@ const navItems = [
 .menu-label { font-size: 14px; color: var(--on-surface); }
 .arrow { font-size: 20px; color: var(--on-surface-variant); }
 
-.support-card { background: var(--surface-container-high); display: flex; align-items: center; justify-content: space-between; padding: 0 16px; cursor: pointer; }
+.support-card { min-height: 68px; background: var(--surface-container-high); display: flex; align-items: center; justify-content: space-between; padding: 0 16px; cursor: pointer; }
 .support-card:active { background: var(--surface-container); }
 .support-icon-wrap { width: 46px; height: 46px; border-radius: 12px; background: rgba(99, 179, 237, 0.15); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
 .support-icon-wrap .material-symbols-outlined { font-size: 24px; color: #63b3ed; }
