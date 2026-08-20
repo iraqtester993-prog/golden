@@ -199,12 +199,18 @@ const register = () => {
 .reg-header {
   display: flex;
   align-items: center;
-  gap: 12px;
-  margin-bottom: 24px;
-  padding-top: 8px;
+  justify-content: center;
+  position: relative;
+  min-height: 60px;
+  margin: -12px -20px 24px;
+  padding: 0 20px;
+  border-bottom: 1px solid rgba(242, 202, 80, 0.35);
+  background: var(--bg);
 }
 
 .back-btn {
+  position: absolute;
+  right: 20px;
   background: none;
   border: none;
   color: var(--on-surface);
@@ -217,6 +223,7 @@ const register = () => {
   font-size: 20px;
   font-weight: 700;
   color: var(--on-surface);
+  text-align: center;
 }
 
 .form-area {
