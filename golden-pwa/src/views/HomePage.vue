@@ -320,7 +320,7 @@
     </div>
 
     <nav class="bottom-nav">
-      <button class="nav-item active" v-for="(item, i) in navItems" :key="item.label" :class="{ active: i === 0 }" @click="goTo(item.route)">
+      <button class="nav-item" v-for="(item, i) in navItems" :key="item.label" :class="{ active: i === 0 }" @click="goTo(item.route)">
         <div class="nav-icon-wrap">
           <span class="material-symbols-outlined nav-icon" :class="{ filled: i === 0 }">{{ item.icon }}</span>
           <span v-if="item.badge" class="nav-badge"></span>
@@ -525,7 +525,7 @@ const navItems = [
 .action-btn:active { border-color: var(--primary); }
 .action-icon { font-size: 26px; color: var(--primary); }
 .action-icon.filled { font-variation-settings: 'FILL' 1; }
-.action-label { font-size: 10px; color: var(--on-surface); text-align: center; }
+.action-label { font-size: 12px; font-weight: 700; color: var(--on-surface); text-align: center; }
 
 /* Slider */
 .slider-wrap { width: 100%; }
@@ -561,15 +561,16 @@ const navItems = [
 .tx-date { font-size: 11px; color: var(--on-surface-variant); }
 
 /* Bottom Nav */
-.bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; height: 64px; background: var(--bg); border-top: 1px solid var(--outline-variant); display: flex; justify-content: space-around; align-items: center; padding-bottom: env(safe-area-inset-bottom, 4px); z-index: 50; }
-.nav-item { display: flex; flex-direction: column; align-items: center; gap: 2px; background: none; border: none; color: var(--on-surface-variant); cursor: pointer; padding: 4px 8px; }
-.nav-item.active { color: var(--primary); }
-.nav-icon-wrap { position: relative; display: flex; align-items: center; justify-content: center; }
-.nav-icon { font-size: 24px; }
+.bottom-nav { position:fixed; bottom:10px; left:12px; right:12px; height:68px; background:var(--surface-container); border:1px solid var(--outline-variant); border-radius:22px; display:flex; justify-content:space-around; align-items:center; padding:5px 6px calc(5px + env(safe-area-inset-bottom)); box-shadow:0 8px 24px rgba(0,0,0,.2); z-index:50; }
+.nav-item { flex:1; display:flex; flex-direction:column; align-items:center; gap:3px; background:none; border:none; color:var(--on-surface-variant); cursor:pointer; padding:3px 2px; font-family:inherit; }
+.nav-item.active { color:var(--primary); font-weight:700; }
+.nav-icon-wrap { width:36px; height:32px; position:relative; display:flex; align-items:center; justify-content:center; border-radius:12px; transition:.2s; }
+.nav-item.active .nav-icon-wrap { background:var(--primary); color:#0a0f1d; box-shadow:0 4px 10px rgba(242,202,80,.22); }
+.nav-icon { font-size:22px; }
 .nav-icon.filled { font-variation-settings: 'FILL' 1; }
 .nav-dot { position: absolute; bottom: -6px; left: 50%; transform: translateX(-50%); width: 5px; height: 5px; background: var(--primary); border-radius: 50%; }
 .nav-badge { position: absolute; top: -2px; right: -4px; width: 8px; height: 8px; background: var(--error); border-radius: 50%; }
-.nav-label { font-size: 10px; font-weight: 500; }
+.nav-label { font-size:11px; font-weight:600; }
 
 /* ── Shared Sheet Styles ── */
 .sheet-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 100; display: flex; align-items: flex-end; justify-content: center; }

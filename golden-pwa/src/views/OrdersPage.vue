@@ -280,7 +280,7 @@
     </div>
 
     <nav class="bottom-nav">
-      <button class="nav-item" v-for="item in navItems" :key="item.label" @click="goTo(item.route)">
+      <button class="nav-item" v-for="item in navItems" :key="item.label" :class="{ active: item.route === '/orders' }" @click="goTo(item.route)">
         <div class="nav-icon-wrap">
           <span class="material-symbols-outlined nav-icon">{{ item.icon }}</span>
         </div>

@@ -28,7 +28,7 @@
     </div>
 
     <nav class="bottom-nav">
-      <button class="nav-item" v-for="item in navItems" :key="item.label" @click="$router.push(item.route)">
+      <button class="nav-item" v-for="item in navItems" :key="item.label" :class="{ active: item.route === '/favorites' }" @click="$router.push(item.route)">
         <div class="nav-icon-wrap">
           <span class="material-symbols-outlined nav-icon">{{ item.icon }}</span>
         </div>
