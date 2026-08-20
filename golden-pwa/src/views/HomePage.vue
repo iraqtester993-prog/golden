@@ -484,8 +484,8 @@ const navItems = [
 .main-content { flex: 1; overflow-y: auto; overscroll-behavior-y: contain; padding: 16px 16px 90px; display: flex; flex-direction: column; gap: 16px; width: 100%; margin: 0 auto; }
 
 /* Card */
-.card-wrap { border-radius: 16px; border: 1px solid var(--outline-variant); padding: 20px; background: var(--surface-container-high); }
-.card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; position: relative; }
+.card-wrap { border-radius: 16px; border: 1px solid var(--outline-variant); padding: 14px; background: var(--surface-container-high); }
+.card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; position: relative; }
 .card-title { font-size: 16px; font-weight: 700; color: var(--primary); text-align: center; flex: 1; }
 .invoice-pill { display: flex; align-items: center; gap: 6px; background: var(--bg); border: 1px solid var(--outline-variant); border-radius: 20px; padding: 4px 12px; font-size: 11px; color: var(--on-surface-variant); cursor: pointer; transition: border-color 0.2s; }
 .invoice-pill:active { border-color: var(--primary); }
@@ -503,8 +503,8 @@ const navItems = [
 .inv-remaining { font-size: 12px; font-weight: 600; color: var(--primary); }
 
 /* Stats */
-.stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
-.stats-grid.border-t { border-top: 1px solid rgba(77, 70, 53, 0.5); padding-top: 16px; margin-bottom: 16px; }
+.stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+.stats-grid.border-t { border-top: 1px solid rgba(77, 70, 53, 0.5); padding-top: 12px; margin-bottom: 12px; }
 .stat-col { display: flex; flex-direction: column; gap: 4px; }
 .border-l { border-right: 1px solid rgba(77, 70, 53, 0.5); padding-right: 16px; }
 .pr-2 { padding-right: 8px; }
@@ -515,7 +515,7 @@ const navItems = [
 .stat-unit { font-size: 13px; color: #bec6df; }
 
 /* Date Bar */
-.date-bar { display: flex; justify-content: space-between; align-items: center; background: var(--surface-container); border: 1px solid var(--outline-variant); border-radius: 12px; padding: 10px 14px; }
+.date-bar { display: flex; justify-content: space-between; align-items: center; background: var(--surface-container); border: 1px solid var(--outline-variant); border-radius: 12px; padding: 8px 12px; }
 .date-left { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--on-surface-variant); }
 .date-icon { font-size: 16px; color: var(--primary); }
 .date-badge { font-size: 12px; color: var(--on-surface); background: var(--surface-variant); padding: 4px 10px; border-radius: 8px; }
