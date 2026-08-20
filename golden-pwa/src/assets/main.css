@@ -79,5 +79,5 @@ html:not(.dark) .status-delivered { color: #806000; }
 #app .bottom-nav .nav-icon-wrap { width:36px !important; height:32px !important; display:flex !important; align-items:center !important; justify-content:center !important; border-radius:12px !important; transition:.2s !important; }
 #app .bottom-nav .nav-icon { font-size:22px !important; }
 #app .bottom-nav .nav-label { font-size:11px !important; font-weight:600 !important; }
-#app .bottom-nav .nav-item.active { color:var(--primary) !important; font-weight:700 !important; }
-#app .bottom-nav .nav-item.active .nav-icon-wrap { background:rgba(242,202,80,.16) !important; color:var(--primary) !important; border:1px solid rgba(242,202,80,.24) !important; box-shadow:0 4px 12px rgba(242,202,80,.10) !important; backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px); }
+#app .bottom-nav .nav-item.active { color:var(--primary) !important; font-weight:700 !important; background:rgba(242,202,80,.13) !important; border:1px solid rgba(242,202,80,.20) !important; border-radius:14px !important; box-shadow:0 4px 12px rgba(242,202,80,.08) !important; backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px); }
+#app .bottom-nav .nav-item.active .nav-icon-wrap { background:transparent !important; color:var(--primary) !important; border:0 !important; box-shadow:none !important; }
