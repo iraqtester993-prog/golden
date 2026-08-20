@@ -13,7 +13,7 @@
 <script setup>
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
-import logo from '../assets/logo-transparent.png'
+import logo from '../assets/logo-transparent-fast.png'
 
 const route = useRoute()
 const triggerDistance = 82

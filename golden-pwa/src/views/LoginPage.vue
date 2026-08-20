@@ -42,7 +42,7 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import logo from '../assets/logo-transparent.png'
+import logo from '../assets/logo-transparent-fast.png'
 
 const router = useRouter()
 const phone = ref('')

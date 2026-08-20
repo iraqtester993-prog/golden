@@ -22,12 +22,13 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import logo from '../assets/logo-transparent.png'
+import logo from '../assets/logo-transparent-fast.png'
 
 const router = useRouter()
 const isLoadingComplete = ref(false)
 
 onMounted(() => {
+  import('./LoginPage.vue')
   setTimeout(() => {
     isLoadingComplete.value = true
   }, 3000)

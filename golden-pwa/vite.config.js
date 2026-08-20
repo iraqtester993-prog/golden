@@ -8,7 +8,7 @@ export default defineConfig({
     vue(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['favicon.ico', 'icon-192-transparent.png', 'icon-512-transparent.png'],
+      includeAssets: ['favicon-fast.png', 'icon-192-transparent-fast.png', 'icon-512-transparent-fast.png'],
       workbox: {
         cleanupOutdatedCaches: true,
         skipWaiting: true,
@@ -26,12 +26,12 @@ export default defineConfig({
         lang: 'ar',
         icons: [
           {
-            src: 'icon-192-transparent.png',
+            src: 'icon-192-transparent-fast.png',
             sizes: '192x192',
             type: 'image/png'
           },
           {
-            src: 'icon-512-transparent.png',
+            src: 'icon-512-transparent-fast.png',
             sizes: '512x512',
             type: 'image/png',
             purpose: 'any maskable'
