@@ -1,6 +1,6 @@
 <template>
   <div class="splash-screen">
-    <div class="splash-content" :class="{ 'fade-out': isFading }">
+    <div class="splash-content">
       <div class="logo-wrapper">
         <img :src="logo" alt="Golden Group" class="logo" />
       </div>
@@ -11,6 +11,10 @@
       <div class="loading-bar">
         <div class="loading-fill"></div>
       </div>
+      <button v-if="isLoadingComplete" class="skip-btn" @click="router.replace('/login')">
+        تخطي
+        <span class="material-symbols-outlined">arrow_back</span>
+      </button>
     </div>
   </div>
 </template>
@@ -21,14 +25,11 @@ import { useRouter } from 'vue-router'
 import logo from '../assets/logo.png'
 
 const router = useRouter()
-const isFading = ref(false)
+const isLoadingComplete = ref(false)
 
 onMounted(() => {
   setTimeout(() => {
-    isFading.value = true
-  }, 2200)
-  setTimeout(() => {
-    router.replace('/login')
+    isLoadingComplete.value = true
   }, 3000)
 })
 </script>
@@ -37,7 +38,7 @@ onMounted(() => {
 .splash-screen {
   width: 100%;
   height: 100dvh;
-  background: #0a0f1d;
+  background: var(--bg);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -49,13 +50,7 @@ onMounted(() => {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 40px;
-  opacity: 1;
-  transition: opacity 0.8s ease;
-}
-
-.splash-content.fade-out {
-  opacity: 0;
+  gap: 28px;
 }
 
 .logo-wrapper {
@@ -91,8 +86,11 @@ onMounted(() => {
   height: 100%;
   background: linear-gradient(90deg, #d4af37, #f2ca50);
   border-radius: 4px;
-  animation: fill-bar 2.5s ease-in-out;
+  animation: fill-bar 3s linear forwards;
 }
+
+.skip-btn { display: flex; align-items: center; gap: 6px; padding: 10px 20px; border: 1px solid var(--primary); border-radius: 12px; background: transparent; color: var(--primary); font: inherit; font-size: 13px; font-weight: 700; cursor: pointer; animation: show-skip 0.25s ease-out; }
+.skip-btn .material-symbols-outlined { font-size: 18px; }
 
 @keyframes pulse-in {
   0% {
@@ -108,5 +106,10 @@ onMounted(() => {
 @keyframes fill-bar {
   0% { width: 0%; }
   100% { width: 100%; }
+}
+
+@keyframes show-skip {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 </style>
