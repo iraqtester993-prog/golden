@@ -22,7 +22,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import logo from '../assets/logo.png'
+import logo from '../assets/logo-dark.png'
 
 const router = useRouter()
 const isLoadingComplete = ref(false)
@@ -66,7 +66,6 @@ onMounted(() => {
   width: 100%;
   height: 100%;
   object-fit: contain;
-  mix-blend-mode: screen;
 }
 
 .welcome-copy { text-align: center; }

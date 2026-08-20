@@ -42,7 +42,7 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import logo from '../assets/logo.png'
+import logo from '../assets/logo-dark.png'
 
 const router = useRouter()
 const phone = ref('')
@@ -98,8 +98,6 @@ const login = () => {
   width: 100%;
   height: 100%;
   object-fit: contain;
-  /* يجعل الأسود المدمج في ملف الشعار يندمج مع خلفية شاشة الدخول في الوضعين. */
-  mix-blend-mode: screen;
 }
 
 .form-area {
