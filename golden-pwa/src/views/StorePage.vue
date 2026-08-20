@@ -250,10 +250,10 @@ const navItems = [
 </script>
 
 <style scoped>
-.page { width: 100%; height: 100dvh; background: var(--bg); display: flex; flex-direction: column; overflow: hidden; overscroll-behavior: none; }
+.page { width: 100%; max-width:100%; height: 100dvh; background: var(--bg); display: flex; flex-direction: column; overflow: hidden; overscroll-behavior: none; }
 
 .page-content {
-  flex: 1; overflow-y: auto; overscroll-behavior-y: contain; padding: 12px 16px 90px;
+  flex: 1; min-width:0; max-width:100%; overflow-y: auto; overflow-x:hidden; overscroll-behavior-y: contain; padding: 12px 16px 90px;
   display: flex; flex-direction: column; gap: 12px;
 }
 
@@ -281,17 +281,11 @@ const navItems = [
 .filter-btn .material-symbols-outlined { font-size: 20px; color: var(--on-surface-variant); }
 
 /* Categories */
-.categories {
-  display: flex; gap: 12px; overflow-x: auto; padding: 4px 0;
-  -ms-overflow-style: none; scrollbar-width: none; flex-shrink: 0;
-}
+.categories { display:flex; justify-content:space-between; gap:4px; overflow-x:hidden; padding:4px 0; flex-shrink:0; }
 
 .categories::-webkit-scrollbar { display: none; }
 
-.cat-item {
-  display: flex; flex-direction: column; align-items: center; gap: 6px;
-  background: none; border: none; cursor: pointer; min-width: 70px;
-}
+.cat-item { flex:1; min-width:0; display:flex; flex-direction:column; align-items:center; gap:6px; background:none; border:none; cursor:pointer; }
 
 .cat-icon-wrap {
   width: 62px; height: 62px; border-radius: 50%;
@@ -371,7 +365,7 @@ const navItems = [
 .fav-btn.fav-active { background: rgba(239, 68, 68, 0.8); }
 .fav-btn.fav-active .material-symbols-outlined { font-variation-settings: 'FILL' 1; color: #fff; }
 
-.product-info { flex: 1; display: flex; flex-direction: column; gap: 3px; }
+.product-info { flex: 1; min-width:0; display: flex; flex-direction: column; gap: 3px; }
 .product-name { font-size: 14px; font-weight: 700; color: var(--on-surface); }
 .product-spec { font-size: 11px; color: var(--on-surface-variant); }
 .product-price { font-size: 15px; font-weight: 700; color: var(--primary); direction: rtl; }
