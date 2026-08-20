@@ -80,4 +80,4 @@ html:not(.dark) .status-delivered { color: #806000; }
 #app .bottom-nav .nav-icon { font-size:22px !important; }
 #app .bottom-nav .nav-label { font-size:11px !important; font-weight:600 !important; }
 #app .bottom-nav .nav-item.active { color:var(--primary) !important; font-weight:700 !important; }
-#app .bottom-nav .nav-item.active .nav-icon-wrap { background:var(--primary) !important; color:#0a0f1d !important; box-shadow:0 4px 10px rgba(242,202,80,.22) !important; }
+#app .bottom-nav .nav-item.active .nav-icon-wrap { background:rgba(242,202,80,.16) !important; color:var(--primary) !important; border:1px solid rgba(242,202,80,.24) !important; box-shadow:0 4px 12px rgba(242,202,80,.10) !important; backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px); }
