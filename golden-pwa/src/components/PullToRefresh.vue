@@ -1,5 +1,6 @@
 <template>
   <template v-if="enabled && (pulling || refreshing)">
+    <div class="refresh-backdrop"></div>
     <div class="refresh-indicator" :class="{ ready: pullDistance >= triggerDistance, refreshing }">
       <div class="refresh-ring">
         <svg viewBox="0 0 100 100" aria-hidden="true"><circle class="progress-line" cx="50" cy="50" r="47" pathLength="100" :style="{ '--progress': displayProgress }" /></svg>
@@ -51,7 +52,7 @@ const onMove = event => {
 }
 const finishRefresh = () => {
   progress.value = 100
-  window.setTimeout(() => window.location.reload(), 80)
+  window.setTimeout(() => window.dispatchEvent(new Event('golden-page-refresh')), 80)
 }
 const onEnd = () => {
   if (!activeScroller || refreshing.value) return
@@ -82,9 +83,10 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped>
-.refresh-indicator { position:fixed; top:50%; left:50%; z-index:500; width:200px; height:200px; display:grid; place-items:center; transform:translate(-50%,-50%); pointer-events:none; animation:indicator-in .18s ease-out; }
-.refresh-ring { position:relative; width:178px; height:178px; display:grid; place-items:center; }
+.refresh-backdrop { position:fixed; inset:0; z-index:490; background:rgba(10,15,29,.01); backdrop-filter:blur(3px); -webkit-backdrop-filter:blur(3px); pointer-events:none; animation:fade-in .16s ease-out; }
+.refresh-indicator { position:fixed; top:50%; left:50%; z-index:500; width:172px; height:172px; display:grid; place-items:center; transform:translate(-50%,-50%); pointer-events:none; animation:indicator-in .18s ease-out; }
+.refresh-ring { position:relative; width:150px; height:150px; display:grid; place-items:center; }
 .refresh-ring svg { position:absolute; inset:0; width:100%; height:100%; transform:rotate(-90deg); overflow:visible; }.progress-line { fill:none; stroke:var(--primary); stroke-width:2.8; stroke-linecap:round; stroke-dasharray:var(--progress) 100; transition:stroke-dasharray .03s linear; filter:drop-shadow(0 0 4px rgba(242,202,80,.28)); }
 .ring-inner { width:100%; height:100%; display:grid; place-items:center; background:transparent; }.ring-inner img { width:126px; height:90px; object-fit:contain; }
-@keyframes indicator-in { from { opacity:0; transform:translate(-50%,-46%) scale(.94) } to { opacity:1; transform:translate(-50%,-50%) scale(1) } }
+@keyframes fade-in { from { opacity:0 } to { opacity:1 } } @keyframes indicator-in { from { opacity:0; transform:translate(-50%,-46%) scale(.94) } to { opacity:1; transform:translate(-50%,-50%) scale(1) } }
 </style>
