@@ -22,7 +22,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import logo from '../assets/logo-dark.png'
+import logo from '../assets/logo-transparent.png'
 
 const router = useRouter()
 const isLoadingComplete = ref(false)
