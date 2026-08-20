@@ -460,11 +460,11 @@ const quickActions = [
 
 const services = [
   { icon: 'category', label: 'المنتجات', handler: () => goTo('/store') },
-  { icon: 'local_offer', label: 'العروض', handler: () => goTo('/store') },
+  { icon: 'local_offer', label: 'العروض', handler: () => goTo('/store?tab=offers') },
   { icon: 'account_balance_wallet', label: 'أقساطي', handler: () => goTo('/settlements') },
-  { icon: 'store', label: 'الماركات', handler: () => { selectedBrand.value = null; showBrandsSheet.value = true } },
-  { icon: 'location_on', label: 'الفروع', handler: () => { showBranchesSheet.value = true } },
-  { icon: 'support_agent', label: 'الوكلاء', handler: () => { showDealersSheet.value = true } },
+  { icon: 'store', label: 'الماركات', handler: () => goTo('/brands') },
+  { icon: 'location_on', label: 'الفروع', handler: () => goTo('/branches') },
+  { icon: 'support_agent', label: 'الوكلاء', handler: () => goTo('/dealers') },
   { icon: 'account_balance_wallet', label: 'تسديد قسط', handler: () => goTo('/settlements') },
   { icon: 'more_horiz', label: 'المزيد', handler: () => {} }
 ]

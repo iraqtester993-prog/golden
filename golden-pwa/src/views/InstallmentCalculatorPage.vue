@@ -478,6 +478,13 @@ onMounted(() => {
       }
     } catch (e) { /* ignore */ }
   }
+  if (route.query.products) {
+    try {
+      const requested = JSON.parse(route.query.products)
+      selectedProducts.value = products.filter(product => requested.some(item => item.name === product.name))
+      showCalculator.value = selectedProducts.value.length > 0
+    } catch (e) { /* ignore */ }
+  }
 })
 
 const navItems = [

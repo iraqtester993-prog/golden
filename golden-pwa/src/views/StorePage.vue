@@ -49,7 +49,7 @@
 
       <!-- Products -->
       <div class="products-list">
-        <div class="product-card" v-for="product in products" :key="product.name">
+        <div class="product-card" v-for="product in displayedProducts" :key="product.name">
           <div class="product-img-wrap">
             <img :src="product.img" class="product-img" />
             <button class="fav-btn" :class="{ 'fav-active': isFav(product) }" @click.stop="toggleFav(product)">
@@ -61,6 +61,7 @@
             <span class="product-spec">{{ product.spec }}</span>
             <div class="product-price">{{ product.price }} د.ع</div>
             <button class="btn-details" @click="openDetails(product)">عرض التفاصيل</button>
+            <button class="btn-cart" @click="addToCart(product)">إضافة للسلة</button>
           </div>
         </div>
       </div>
@@ -107,10 +108,22 @@
 
         <!-- Bottom Actions -->
         <div class="sheet-actions">
-          <button class="action-cash">شراء نقد</button>
-          <button class="action-installment">شراء بالقسط</button>
+          <button class="action-cash" @click="cashPurchase(selectedProduct)">شراء نقد</button>
+          <button class="action-installment" @click="buyInstallment(selectedProduct)">شراء بالقسط</button>
           <button class="action-calc" @click="selectedProduct && goTo('/calculator?product=' + encodeURIComponent(JSON.stringify({ name: selectedProduct.name })))">حساب الأقساط</button>
         </div>
+      </div>
+    </div>
+
+    <button v-if="cart.length" class="cart-fab" @click="cartOpen = true">
+      <span class="material-symbols-outlined">shopping_cart</span><span>{{ cart.length }}</span>
+    </button>
+    <div v-if="cartOpen" class="overlay" @click.self="cartOpen = false">
+      <div class="cart-sheet" @click.stop>
+        <h3>سلة المنتجات</h3>
+        <div v-for="(item, index) in cart" :key="item.name" class="cart-row"><span>{{ item.name }}</span><button @click="cart.splice(index, 1); saveCart()">حذف</button></div>
+        <strong>الإجمالي: {{ formatPrice(cartTotal) }} د.ع</strong>
+        <div class="cart-actions"><button class="action-cash" @click="cashPurchase(cart)">شراء نقد</button><button class="action-installment" @click="buyInstallment(cart)">شراء بالقسط</button></div>
       </div>
     </div>
 
@@ -134,11 +147,12 @@
 </template>
 
 <script setup>
-import { ref, watch, onMounted, onUnmounted } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref, watch, computed, onMounted, onUnmounted } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
 import TopBar from '../components/TopBar.vue'
 
 const router = useRouter()
+const route = useRoute()
 const activeCat = ref('هواتف')
 const activeTab = ref('popular')
 const currentSlide = ref(0)
@@ -146,6 +160,8 @@ const selectedProduct = ref(null)
 const galleryIndex = ref(0)
 const fullscreenImg = ref(null)
 const galleryRef = ref(null)
+const cart = ref(JSON.parse(localStorage.getItem('golden_cart') || '[]'))
+const cartOpen = ref(false)
 
 const goTo = (route) => { if (route) router.push(route) }
 
@@ -161,6 +177,7 @@ const toggleFav = (p) => {
 }
 
 watch(selectedProduct, () => { galleryIndex.value = 0 })
+watch(() => route.query.tab, tab => { if (tab) activeTab.value = tab }, { immediate: true })
 
 const categories = [
   { img: 'https://images.unsplash.com/photo-1549317661-bd32c8ce0afa?w=200&h=200&fit=crop', label: 'سيارات' },
@@ -194,7 +211,7 @@ const products = [
       'https://images.unsplash.com/photo-1695048133422-28a6e0e3d338?w=800&h=800&fit=crop'
     ],
     desc: 'هاتف آيفون 16 برو ماكس بسعة 256 جيجابايت، شاشة Super Retina XDR بحجم 6.9 بوصة، معالج A18 Pro، كاميرا ثلاثية 48 ميجابكسل، مقاوم للماء والغبار.',
-    specs: { 'الشاشة': '6.9 بوصة Super Retina XDR', 'المعالج': 'A18 Pro', 'الذاكرة': '256GB', 'الكاميرا': '48MP + 12MP + 12MP', 'البطارية': '4685 mAh', 'نظام التشغيل': 'iOS 18' }
+    brand: 'Apple', offer: true, specs: { 'الشاشة': '6.9 بوصة Super Retina XDR', 'المعالج': 'A18 Pro', 'الذاكرة': '256GB', 'الكاميرا': '48MP + 12MP + 12MP', 'البطارية': '4685 mAh', 'نظام التشغيل': 'iOS 18' }
   },
   {
     name: 'Samsung S24 Ultra', spec: '512GB - أسود', price: '1,650,000',
@@ -205,7 +222,7 @@ const products = [
       'https://images.unsplash.com/photo-1565849904461-04a58adcb756?w=800&h=800&fit=crop'
     ],
     desc: 'سامسونج جالكسي S24 ألترا بسعة 512 جيجابايت، شاشة Dynamic AMOLED 2X بحجم 6.8 بوصة، معالج Snapdragon 8 Gen 3، قلم S Pen، كاميرا 200 ميجابكسل.',
-    specs: { 'الشاشة': '6.8 بوصة Dynamic AMOLED 2X', 'المعالج': 'Snapdragon 8 Gen 3', 'الذاكرة': '512GB', 'الكاميرا': '200MP + 50MP + 12MP + 10MP', 'البطارية': '5000 mAh', 'نظام التشغيل': 'Android 14' }
+    brand: 'Samsung', offer: true, specs: { 'الشاشة': '6.8 بوصة Dynamic AMOLED 2X', 'المعالج': 'Snapdragon 8 Gen 3', 'الذاكرة': '512GB', 'الكاميرا': '200MP + 50MP + 12MP + 10MP', 'البطارية': '5000 mAh', 'نظام التشغيل': 'Android 14' }
   },
   {
     name: 'Hisense 55 inch 4K', spec: 'Smart TV - ULED', price: '820,000',
@@ -216,9 +233,24 @@ const products = [
       'https://images.unsplash.com/photo-1593305841991-05c297ba4575?w=800&h=800&fit=crop'
     ],
     desc: 'تلفزيون هيسينس ذكي 55 بوصة بتقنية ULED 4K، دعم HDR10+، نظام تشغيل سهل الاستخدام، صوت Dolby Atmos، مثالي للمشاهدة السينمائية في المنزل.',
-    specs: { 'الشاشة': '55 بوصة 4K ULED', 'الدقة': '3840 × 2160', ' HDR': 'HDR10+', 'الصوت': 'Dolby Atmos 30W', 'المنافذ': '3 × HDMI, 2 × USB', 'النظام': 'VIDAA U6' }
+    brand: 'Hisense', specs: { 'الشاشة': '55 بوصة 4K ULED', 'الدقة': '3840 × 2160', ' HDR': 'HDR10+', 'الصوت': 'Dolby Atmos 30W', 'المنافذ': '3 × HDMI, 2 × USB', 'النظام': 'VIDAA U6' }
   }
 ]
+
+const displayedProducts = computed(() => products.filter(p => (!route.query.brand || p.brand === route.query.brand) && (activeTab.value !== 'offers' || p.offer)))
+const cartTotal = computed(() => cart.value.reduce((total, p) => total + Number(String(p.price).replace(/,/g, '')), 0))
+const formatPrice = value => Number(value).toLocaleString('en')
+const saveCart = () => localStorage.setItem('golden_cart', JSON.stringify(cart.value))
+const addToCart = product => { if (!cart.value.some(p => p.name === product.name)) { cart.value.push(product); saveCart() } }
+const cashPurchase = source => {
+  const selected = Array.isArray(source) ? source : [source]
+  if (!selected.length) return
+  const orders = JSON.parse(localStorage.getItem('golden_orders') || '[]')
+  const total = selected.reduce((sum, p) => sum + Number(String(p.price).replace(/,/g, '')), 0)
+  orders.push({ id: orders.length ? Math.max(...orders.map(o => o.id)) + 1 : 1001, date: new Date().toLocaleDateString('ar-EG', { year: 'numeric', month: 'short', day: 'numeric' }), status: 'pending', type: 'cash', products: selected, totalPrice: total, totalAmount: total, monthlyInstallment: total, fullName: '', phone: '', address: '', ownerNote: '' })
+  localStorage.setItem('golden_orders', JSON.stringify(orders)); cart.value = []; saveCart(); router.push('/orders')
+}
+const buyInstallment = source => { const selected = Array.isArray(source) ? source : [source]; if (selected.length) router.push('/calculator?products=' + encodeURIComponent(JSON.stringify(selected.map(p => ({ name: p.name }))))); }
 
 const openDetails = (product) => {
   selectedProduct.value = product
@@ -369,6 +401,7 @@ const navItems = [
 }
 
 .btn-details:active { background: var(--primary); color: #0a0f1d; }
+.btn-cart { margin-top: 6px; border: 0; background: transparent; color: var(--primary); font: inherit; font-size: 11px; font-weight: 700; cursor: pointer; }
 
 /* Bottom Sheet */
 .overlay {
@@ -448,6 +481,15 @@ const navItems = [
 .action-cash { background: var(--primary-container); color: #0a0f1d; }
 .action-installment { background: var(--primary); color: #0a0f1d; }
 .action-calc { background: var(--surface-container); color: var(--on-surface); border: 1px solid var(--outline-variant) !important; }
+
+.cart-fab { position: fixed; left: 18px; bottom: 82px; z-index: 60; display: flex; align-items: center; gap: 5px; padding: 11px 14px; border: 0; border-radius: 24px; background: var(--primary); color: #0a0f1d; font: inherit; font-weight: 800; box-shadow: 0 6px 18px rgba(0,0,0,.28); cursor: pointer; }
+.cart-fab .material-symbols-outlined { font-size: 21px; }
+.cart-sheet { width: 100%; max-width: 480px; padding: 22px 16px calc(20px + env(safe-area-inset-bottom)); border-radius: 20px 20px 0 0; background: var(--bg); }
+.cart-sheet h3 { margin-bottom: 14px; color: var(--on-surface); }
+.cart-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--outline-variant); font-size: 13px; color: var(--on-surface); }
+.cart-row button { border: 0; background: transparent; color: var(--error); font: inherit; font-size: 12px; cursor: pointer; }
+.cart-sheet > strong { display: block; margin: 14px 0; color: var(--primary); }
+.cart-actions { display: flex; gap: 8px; }.cart-actions button { flex: 1; border: 0; border-radius: 10px; padding: 11px; font: inherit; font-size: 12px; font-weight: 700; cursor: pointer; }
 
 /* Fullscreen Image */
 .fullscreen-overlay {

@@ -70,8 +70,8 @@
               </div>
               <div class="order-footer">
                 <div class="order-total">
-                  <span class="order-total-label">القسط الشهري</span>
-                  <span class="order-total-value">{{ formatNum(order.monthlyInstallment) }} د.ع</span>
+                <span class="order-total-label">{{ order.type === 'cash' ? 'إجمالي الشراء' : 'القسط الشهري' }}</span>
+                <span class="order-total-value">{{ formatNum(order.type === 'cash' ? order.totalAmount : order.monthlyInstallment) }} د.ع</span>
                 </div>
                 <span class="material-symbols-outlined order-arrow">chevron_left</span>
               </div>
@@ -114,7 +114,7 @@
             </h3>
             <div class="detail-row"><span class="detail-key">رقم الطلب</span><span class="detail-val">#{{ detailOrder.id }}</span></div>
             <div class="detail-row"><span class="detail-key">تاريخ التقديم</span><span class="detail-val">{{ detailOrder.date }}</span></div>
-            <div class="detail-row"><span class="detail-key">نوع الطلب</span><span class="detail-val">{{ detailOrder.type === 'close_invoice' ? 'إطفاء فاتورة' : 'طلب أقساط' }}</span></div>
+            <div class="detail-row"><span class="detail-key">نوع الطلب</span><span class="detail-val">{{ detailOrder.type === 'close_invoice' ? 'إطفاء فاتورة' : (detailOrder.type === 'cash' ? 'شراء نقدي' : 'طلب أقساط') }}</span></div>
             <div v-if="detailOrder.type !== 'close_invoice'" class="detail-row"><span class="detail-key">المنتجات</span><span class="detail-val">{{ detailOrder.products?.length || 0 }} منتجات</span></div>
           </div>
 
@@ -164,7 +164,7 @@
           </div>
 
           <!-- Payment Details (regular orders only) -->
-          <template v-if="detailOrder.type !== 'close_invoice'">
+          <template v-if="detailOrder.type !== 'close_invoice' && detailOrder.type !== 'cash'">
             <div class="detail-section">
               <h3 class="detail-heading">
                 <span class="material-symbols-outlined">payments</span>
@@ -178,6 +178,10 @@
               <div class="detail-row"><span class="detail-key">الإجمالي الكلي</span><span class="detail-val">{{ formatNum(detailOrder.totalAmount) }} د.ع</span></div>
             </div>
           </template>
+          <div v-else-if="detailOrder.type === 'cash'" class="detail-section">
+            <h3 class="detail-heading"><span class="material-symbols-outlined">payments</span>تفاصيل الشراء</h3>
+            <div class="detail-row highlight"><span class="detail-key">إجمالي الشراء النقدي</span><span class="detail-val">{{ formatNum(detailOrder.totalAmount) }} د.ع</span></div>
+          </div>
 
           <!-- Owner Notes -->
           <div v-if="detailOrder.ownerNote" class="detail-section owner-note-section">
