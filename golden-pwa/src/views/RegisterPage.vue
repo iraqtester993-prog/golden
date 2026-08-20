@@ -201,6 +201,9 @@ const register = () => {
   align-items: center;
   justify-content: center;
   position: relative;
+  position: sticky;
+  top: 0;
+  z-index: 20;
   min-height: 60px;
   margin: -12px -20px 24px;
   padding: 0 20px;

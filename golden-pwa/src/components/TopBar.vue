@@ -1,5 +1,5 @@
 <template>
-  <header class="top-bar">
+  <header class="top-bar" :class="{ 'with-back': showBack }">
     <button v-if="showBack" class="icon-btn" @click="$router.back()">
       <span class="material-symbols-outlined">arrow_forward_ios</span>
     </button>
@@ -45,6 +45,7 @@ const toggleTheme = () => {
   z-index: 40;
   border-bottom: 1px solid var(--outline-variant);
 }
+.top-bar.with-back { border-bottom-color: rgba(242, 202, 80, 0.35); }
 
 .icon-btn {
   background: none;
