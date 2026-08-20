@@ -70,7 +70,7 @@
     <!-- Product Details Bottom Sheet -->
     <div v-if="selectedProduct" class="overlay" @click.self="selectedProduct = null">
       <div class="bottom-sheet" @click.stop>
-        <div class="sheet-handle" @click="selectedProduct = null"><span class="handle-bar"></span></div>
+        <div class="sheet-handle"><span class="handle-bar"></span><button class="sheet-close" aria-label="إغلاق" @click="selectedProduct = null"><span class="material-symbols-outlined">close</span></button></div>
 
         <div class="sheet-scroll">
           <!-- Image Gallery -->
@@ -115,18 +115,6 @@
       </div>
     </div>
 
-    <button v-if="cart.length" class="cart-fab" @click="cartOpen = true">
-      <span class="material-symbols-outlined">shopping_cart</span><span>{{ cart.length }}</span>
-    </button>
-    <div v-if="cartOpen" class="overlay" @click.self="cartOpen = false">
-      <div class="cart-sheet" @click.stop>
-        <h3>سلة المنتجات</h3>
-        <div v-for="(item, index) in cart" :key="item.name" class="cart-row"><span>{{ item.name }}</span><button @click="cart.splice(index, 1); saveCart()">حذف</button></div>
-        <strong>الإجمالي: {{ formatPrice(cartTotal) }} د.ع</strong>
-        <div class="cart-actions"><button class="action-cash" @click="cashPurchase(cart)">شراء نقد</button><button class="action-installment" @click="buyInstallment(cart)">شراء بالقسط</button></div>
-      </div>
-    </div>
-
     <!-- Fullscreen Image -->
     <div v-if="fullscreenImg" class="fullscreen-overlay" @click="fullscreenImg = null">
       <button class="fs-close"><span class="material-symbols-outlined">close</span></button>
@@ -150,6 +138,7 @@
 import { ref, watch, computed, onMounted, onUnmounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import TopBar from '../components/TopBar.vue'
+import { useCart } from '../composables/useCart'
 
 const router = useRouter()
 const route = useRoute()
@@ -160,8 +149,7 @@ const selectedProduct = ref(null)
 const galleryIndex = ref(0)
 const fullscreenImg = ref(null)
 const galleryRef = ref(null)
-const cart = ref(JSON.parse(localStorage.getItem('golden_cart') || '[]'))
-const cartOpen = ref(false)
+const { cart, add: addToCart, clear: clearCart } = useCart()
 
 const goTo = (route) => { if (route) router.push(route) }
 
@@ -238,17 +226,13 @@ const products = [
 ]
 
 const displayedProducts = computed(() => products.filter(p => (!route.query.brand || p.brand === route.query.brand) && (activeTab.value !== 'offers' || p.offer)))
-const cartTotal = computed(() => cart.value.reduce((total, p) => total + Number(String(p.price).replace(/,/g, '')), 0))
-const formatPrice = value => Number(value).toLocaleString('en')
-const saveCart = () => localStorage.setItem('golden_cart', JSON.stringify(cart.value))
-const addToCart = product => { if (!cart.value.some(p => p.name === product.name)) { cart.value.push(product); saveCart() } }
 const cashPurchase = source => {
   const selected = Array.isArray(source) ? source : [source]
   if (!selected.length) return
   const orders = JSON.parse(localStorage.getItem('golden_orders') || '[]')
   const total = selected.reduce((sum, p) => sum + Number(String(p.price).replace(/,/g, '')), 0)
   orders.push({ id: orders.length ? Math.max(...orders.map(o => o.id)) + 1 : 1001, date: new Date().toLocaleDateString('ar-EG', { year: 'numeric', month: 'short', day: 'numeric' }), status: 'pending', type: 'cash', products: selected, totalPrice: total, totalAmount: total, monthlyInstallment: total, fullName: '', phone: '', address: '', ownerNote: '' })
-  localStorage.setItem('golden_orders', JSON.stringify(orders)); cart.value = []; saveCart(); router.push('/orders')
+  localStorage.setItem('golden_orders', JSON.stringify(orders)); clearCart(); router.push('/orders')
 }
 const buyInstallment = source => { const selected = Array.isArray(source) ? source : [source]; if (selected.length) router.push('/calculator?products=' + encodeURIComponent(JSON.stringify(selected.map(p => ({ name: p.name }))))); }
 
@@ -425,6 +409,8 @@ const navItems = [
 .sheet-handle {
   display: flex; justify-content: center; padding: 10px 0 4px; cursor: pointer;
 }
+.sheet-close { position:absolute; left:12px; top:7px; border:0; background:transparent; color:var(--on-surface-variant); cursor:pointer; padding:5px; }
+.sheet-close .material-symbols-outlined { font-size:21px; }
 
 .handle-bar { width: 40px; height: 4px; background: var(--outline-variant); border-radius: 2px; }
 
@@ -482,14 +468,6 @@ const navItems = [
 .action-installment { background: var(--primary); color: #0a0f1d; }
 .action-calc { background: var(--surface-container); color: var(--on-surface); border: 1px solid var(--outline-variant) !important; }
 
-.cart-fab { position: fixed; left: 18px; bottom: 82px; z-index: 60; display: flex; align-items: center; gap: 5px; padding: 11px 14px; border: 0; border-radius: 24px; background: var(--primary); color: #0a0f1d; font: inherit; font-weight: 800; box-shadow: 0 6px 18px rgba(0,0,0,.28); cursor: pointer; }
-.cart-fab .material-symbols-outlined { font-size: 21px; }
-.cart-sheet { width: 100%; max-width: 480px; padding: 22px 16px calc(20px + env(safe-area-inset-bottom)); border-radius: 20px 20px 0 0; background: var(--bg); }
-.cart-sheet h3 { margin-bottom: 14px; color: var(--on-surface); }
-.cart-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--outline-variant); font-size: 13px; color: var(--on-surface); }
-.cart-row button { border: 0; background: transparent; color: var(--error); font: inherit; font-size: 12px; cursor: pointer; }
-.cart-sheet > strong { display: block; margin: 14px 0; color: var(--primary); }
-.cart-actions { display: flex; gap: 8px; }.cart-actions button { flex: 1; border: 0; border-radius: 10px; padding: 11px; font: inherit; font-size: 12px; font-weight: 700; cursor: pointer; }
 
 /* Fullscreen Image */
 .fullscreen-overlay {

@@ -89,7 +89,7 @@
     <!-- Detail Sheet -->
     <div v-if="detailOrder" class="sheet-overlay" @click.self="detailOrder = null">
       <div class="sheet">
-        <div class="sheet-handle" @click="detailOrder = null"><div class="handle-bar"></div></div>
+        <div class="sheet-handle"><div class="handle-bar"></div><button class="sheet-close" @click="detailOrder = null"><span class="material-symbols-outlined">close</span></button></div>
         <div class="sheet-scroll">
           <!-- Status Timeline -->
           <div class="detail-timeline">
@@ -212,7 +212,7 @@
     <!-- Edit Sheet -->
     <div v-if="editingOrder" class="sheet-overlay" @click.self="editingOrder = null">
       <div class="sheet">
-        <div class="sheet-handle" @click="editingOrder = null"><div class="handle-bar"></div></div>
+        <div class="sheet-handle"><div class="handle-bar"></div><button class="sheet-close" @click="editingOrder = null"><span class="material-symbols-outlined">close</span></button></div>
         <div class="sheet-scroll">
           <div class="edit-header">
             <span class="material-symbols-outlined">edit</span>
@@ -262,6 +262,7 @@
     <!-- Cancel Confirm Dialog -->
     <div v-if="cancelTarget" class="dialog-overlay" @click.self="cancelTarget = null">
       <div class="dialog">
+        <button class="dialog-close" @click="cancelTarget = null"><span class="material-symbols-outlined">close</span></button>
         <span class="material-symbols-outlined dialog-icon">warning</span>
         <h3 class="dialog-title">إلغاء الطلب</h3>
         <p class="dialog-text">هل أنت متأكد من إلغاء الطلب #{{ cancelTarget.id }}؟ لا يمكن التراجع عن هذا الإجراء.</p>
@@ -471,7 +472,8 @@ const navItems = [
 .sheet-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 100; display: flex; align-items: flex-end; justify-content: center; }
 .sheet { width: 100%; max-width: 480px; max-height: 90vh; background: var(--bg); border-radius: 20px 20px 0 0; display: flex; flex-direction: column; animation: slideUp 0.25s ease; }
 @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
-.sheet-handle { display: flex; justify-content: center; padding: 10px 0 4px; cursor: pointer; }
+.sheet-handle { display: flex; justify-content: center; padding: 10px 0 4px; cursor: pointer; position:relative; }
+.sheet-close,.dialog-close { position:absolute; left:12px; top:5px; border:0; background:transparent; color:var(--on-surface-variant); cursor:pointer; }.sheet-close .material-symbols-outlined,.dialog-close .material-symbols-outlined{font-size:20px}
 .handle-bar { width: 40px; height: 4px; border-radius: 2px; background: var(--outline-variant); }
 .sheet-scroll { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 0 16px 20px; }
 
@@ -542,7 +544,7 @@ const navItems = [
 
 /* Dialog */
 .dialog-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 150; display: flex; align-items: center; justify-content: center; padding: 24px; }
-.dialog { width: 100%; max-width: 360px; background: var(--bg); border-radius: 20px; padding: 24px; text-align: center; animation: slideUp 0.2s ease; }
+.dialog { position:relative; width: 100%; max-width: 360px; background: var(--bg); border-radius: 20px; padding: 24px; text-align: center; animation: slideUp 0.2s ease; }
 .dialog-icon { font-size: 48px; color: #ef5350; }
 .dialog-title { font-size: 18px; font-weight: 700; color: var(--on-surface); margin: 10px 0 6px; }
 .dialog-text { font-size: 13px; line-height: 1.7; color: var(--on-surface-variant); margin-bottom: 20px; }

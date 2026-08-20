@@ -93,7 +93,7 @@
     <!-- Support Sheet -->
     <div v-if="showSupportSheet" class="sheet-overlay" @click.self="showSupportSheet = false">
       <div class="sheet">
-        <div class="sheet-handle" @click="showSupportSheet = false"><div class="handle-bar"></div></div>
+        <div class="sheet-handle"><div class="handle-bar"></div><button class="sheet-close" @click="showSupportSheet = false"><span class="material-symbols-outlined">close</span></button></div>
         <div class="sheet-scroll">
           <h3 class="sheet-title">مركز الدعم الفني</h3>
           <div class="support-form">
@@ -232,7 +232,8 @@ const navItems = [
 .sheet-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 100; display: flex; align-items: flex-end; justify-content: center; }
 .sheet { width: 100%; max-width: 480px; max-height: 85vh; background: var(--bg); border-radius: 20px 20px 0 0; display: flex; flex-direction: column; animation: slideUp 0.25s ease; }
 @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
-.sheet-handle { display: flex; justify-content: center; padding: 10px 0 4px; cursor: pointer; }
+.sheet-handle { display: flex; justify-content: center; padding: 10px 0 4px; cursor: pointer; position:relative; }
+.sheet-close { position:absolute; left:12px; top:5px; border:0; background:transparent; color:var(--on-surface-variant); cursor:pointer; }.sheet-close .material-symbols-outlined{font-size:20px}
 .handle-bar { width: 40px; height: 4px; border-radius: 2px; background: var(--outline-variant); }
 .sheet-scroll { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 0 16px 20px; }
 .sheet-title { font-size: 18px; font-weight: 700; color: var(--on-surface); margin-bottom: 16px; text-align: center; }
