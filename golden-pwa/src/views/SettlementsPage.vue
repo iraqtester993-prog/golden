@@ -353,9 +353,9 @@ const navItems = [
 }
 
 /* Summary Card */
--summary-card {
-  background: linear-gradient(135deg, #0a1628, #0f1d35);
-  border: 1px solid var(--outline-variant); border-radius: 16px;
+.summary-card {
+  background: var(--surface-container-high);
+  border: 1px solid rgba(99, 179, 237, 0.28); border-radius: 16px;
   padding: 20px; display: flex; align-items: center; gap: 16px;
 }
 
