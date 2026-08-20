@@ -75,6 +75,7 @@ html:not(.dark) .order-note-preview { color: #176b9d; }
 html:not(.dark) .status-approved { color: #287a3a; }
 html:not(.dark) .status-shipping { color: #7a3b8e; }
 html:not(.dark) .status-delivered { color: #806000; }
+html:not(.dark) .stats-panel { background:linear-gradient(135deg, #e0dbd3 0%, #f1ede7 100%); border-color:rgba(184,147,10,.28); }
 
 /* Modern floating bottom navigation shared by all application pages */
 #app .bottom-nav { position:fixed !important; bottom:10px !important; left:50% !important; right:auto !important; width:min(calc(100% - 24px),516px) !important; transform:translateX(-50%); height:68px !important; margin:0 !important; padding:5px 6px calc(5px + env(safe-area-inset-bottom)) !important; display:flex !important; align-items:center !important; justify-content:space-around !important; background:var(--surface-container) !important; border:1px solid var(--outline-variant) !important; border-radius:22px !important; box-shadow:0 8px 24px rgba(0,0,0,.20) !important; z-index:120 !important; }
