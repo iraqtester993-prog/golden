@@ -521,9 +521,9 @@ const navItems = [
 
 /* Quick Actions */
 .quick-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
-.action-btn { background: var(--surface-container); border: 1px solid var(--outline-variant); border-radius: 12px; padding: 14px 4px; display: flex; flex-direction: column; align-items: center; gap: 6px; cursor: pointer; transition: border-color 0.2s; }
+.action-btn { background: var(--surface-container); border: 1px solid var(--outline-variant); border-radius: 12px; padding: 9px 4px; display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; transition: border-color 0.2s; }
 .action-btn:active { border-color: var(--primary); }
-.action-icon { font-size: 26px; color: var(--primary); }
+.action-icon { font-size: 23px; color: var(--primary); }
 .action-icon.filled { font-variation-settings: 'FILL' 1; }
 .action-label { font-size: 12px; font-weight: 700; color: var(--on-surface); text-align: center; }
 
