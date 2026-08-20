@@ -27,6 +27,7 @@ const routes = [
     component: () => import('../views/StorePage.vue')
   },
   { path: '/cart', name: 'Cart', component: () => import('../views/CartPage.vue') },
+  { path: '/product', name: 'ProductDetails', component: () => import('../views/ProductDetailsPage.vue') },
   { path: '/brands', name: 'Brands', component: () => import('../views/BrandsPage.vue') },
   { path: '/branches', name: 'Branches', component: () => import('../views/DirectoryPage.vue') },
   { path: '/dealers', name: 'Dealers', component: () => import('../views/DirectoryPage.vue') },

@@ -237,8 +237,7 @@ const cashPurchase = source => {
 const buyInstallment = source => { const selected = Array.isArray(source) ? source : [source]; if (selected.length) router.push('/calculator?products=' + encodeURIComponent(JSON.stringify(selected.map(p => ({ name: p.name }))))); }
 
 const openDetails = (product) => {
-  selectedProduct.value = product
-  galleryIndex.value = 0
+  router.push('/product?name=' + encodeURIComponent(product.name))
 }
 
 const navItems = [
