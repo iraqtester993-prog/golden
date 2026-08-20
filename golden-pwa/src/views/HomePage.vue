@@ -25,36 +25,25 @@
             </div>
           </div>
 
-          <div class="stats-grid">
-            <div class="stat-col border-l">
-              <span class="stat-label">المبلغ المتبقي</span>
-              <div class="stat-row">
-                <span class="stat-num gold">{{ selectedInvoice.remaining }}</span>
-                <span class="stat-unit">د.ع</span>
+          <div class="stats-panel">
+            <div class="stats-grid">
+              <div class="stat-col border-l">
+                <span class="stat-label">المبلغ المتبقي</span>
+                <div class="stat-row"><span class="stat-num gold">{{ selectedInvoice.remaining }}</span><span class="stat-unit">د.ع</span></div>
+              </div>
+              <div class="stat-col pr-2">
+                <span class="stat-label">المبلغ الكلي</span>
+                <div class="stat-row"><span class="stat-num">{{ selectedInvoice.total }}</span><span class="stat-unit">د.ع</span></div>
               </div>
             </div>
-            <div class="stat-col pr-2">
-              <span class="stat-label">المبلغ الكلي</span>
-              <div class="stat-row">
-                <span class="stat-num">{{ selectedInvoice.total }}</span>
-                <span class="stat-unit">د.ع</span>
+            <div class="stats-grid border-t">
+              <div class="stat-col border-l">
+                <span class="stat-label">عدد الأقساط المتبقية</span>
+                <div class="stat-row"><span class="stat-num">{{ selectedInvoice.remainingInstallments }}</span><span class="stat-unit">قسط</span></div>
               </div>
-            </div>
-          </div>
-
-          <div class="stats-grid border-t">
-            <div class="stat-col border-l">
-              <span class="stat-label">عدد الأقساط المتبقية</span>
-              <div class="stat-row">
-                <span class="stat-num">{{ selectedInvoice.remainingInstallments }}</span>
-                <span class="stat-unit">قسط</span>
-              </div>
-            </div>
-            <div class="stat-col pr-2">
-              <span class="stat-label">عدد الأقساط الكلية</span>
-              <div class="stat-row">
-                <span class="stat-num">{{ selectedInvoice.totalInstallments }}</span>
-                <span class="stat-unit">قسط</span>
+              <div class="stat-col pr-2">
+                <span class="stat-label">عدد الأقساط الكلية</span>
+                <div class="stat-row"><span class="stat-num">{{ selectedInvoice.totalInstallments }}</span><span class="stat-unit">قسط</span></div>
               </div>
             </div>
           </div>
@@ -510,8 +499,9 @@ const navItems = [
 .inv-remaining { font-size: 12px; font-weight: 600; color: var(--primary); }
 
 /* Stats */
-.stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
-.stats-grid.border-t { border-top: 1px solid rgba(77, 70, 53, 0.5); padding-top: 12px; margin-bottom: 12px; }
+.stats-panel { margin-bottom:12px; padding:13px 12px 11px; background:rgba(10,15,29,.22); border:1px solid rgba(196,154,59,.20); border-radius:14px; }
+.stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 12px; }
+.stats-grid:last-child { margin-bottom:0; }.stats-grid.border-t { border-top: 1px solid rgba(77, 70, 53, 0.5); padding-top: 12px; }
 .stat-col { display: flex; flex-direction: column; gap: 4px; }
 .border-l { border-right: 1px solid rgba(77, 70, 53, 0.5); padding-right: 16px; }
 .pr-2 { padding-right: 8px; }
