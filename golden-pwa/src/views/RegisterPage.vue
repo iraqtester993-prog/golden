@@ -8,6 +8,8 @@
         <h1 class="reg-title">إنشاء حساب</h1>
       </div>
 
+      <img :src="logo" alt="العصر الذهبي" class="register-logo" />
+
       <div class="form-area">
         <!-- Profile Photo -->
         <div class="profile-photo-section">
@@ -134,6 +136,7 @@
 <script setup>
 import { ref, reactive } from 'vue'
 import { useRouter } from 'vue-router'
+import logo from '../assets/logo-transparent.png'
 
 const router = useRouter()
 const showPass = ref(false)
@@ -210,6 +213,7 @@ const register = () => {
   border-bottom: 1px solid rgba(242, 202, 80, 0.35);
   background: var(--bg);
 }
+.register-logo { display:block; width:112px; height:58px; margin:8px auto 4px; object-fit:contain; }
 
 .back-btn {
   position: absolute;
