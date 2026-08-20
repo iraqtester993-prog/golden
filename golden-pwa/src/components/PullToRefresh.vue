@@ -52,7 +52,11 @@ const onMove = event => {
 }
 const finishRefresh = () => {
   progress.value = 100
-  window.setTimeout(() => window.dispatchEvent(new Event('golden-page-refresh')), 80)
+  window.setTimeout(() => {
+    refreshing.value = false
+    pullDistance.value = 0
+    window.dispatchEvent(new Event('golden-page-refresh'))
+  }, 80)
 }
 const onEnd = () => {
   if (!activeScroller || refreshing.value) return
