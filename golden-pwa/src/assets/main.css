@@ -50,9 +50,9 @@ html:not(.dark) {
   --surface-variant: #e8e3dc;
   --surface-container-high: #e0dbd3;
   --on-surface: #1a1512;
-  --on-surface-variant: #5a5347;
-  --outline: #99907c;
-  --outline-variant: #c9c2b6;
+  --on-surface-variant: #463f35;
+  --outline: #71695d;
+  --outline-variant: #aca396;
   --primary: #b8930a;
   --primary-container: #c9a020;
   --gold-light: #b8930a;
@@ -65,3 +65,10 @@ html:not(.dark) body {
   background: #faf8f5;
   color: #1a1512;
 }
+
+html:not(.dark) .status-pending { color: #995600; }
+html:not(.dark) .status-inquiry,
+html:not(.dark) .order-note-preview { color: #176b9d; }
+html:not(.dark) .status-approved { color: #287a3a; }
+html:not(.dark) .status-shipping { color: #7a3b8e; }
+html:not(.dark) .status-delivered { color: #806000; }

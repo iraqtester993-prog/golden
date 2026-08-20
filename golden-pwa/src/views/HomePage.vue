@@ -507,11 +507,11 @@ const navItems = [
 .stat-col { display: flex; flex-direction: column; gap: 4px; }
 .border-l { border-right: 1px solid rgba(77, 70, 53, 0.5); padding-right: 16px; }
 .pr-2 { padding-right: 8px; }
-.stat-label { font-size: 12px; color: #bec6df; }
+.stat-label { font-size: 12px; color: var(--on-surface-variant); }
 .stat-row { display: flex; align-items: baseline; gap: 4px; }
 .stat-num { font-size: 16px; font-weight: 700; color: var(--on-surface); }
 .stat-num.gold { font-size: 18px; color: var(--primary); }
-.stat-unit { font-size: 13px; color: #bec6df; }
+.stat-unit { font-size: 13px; color: var(--on-surface-variant); }
 
 /* Date Bar */
 .date-bar { display: flex; justify-content: space-between; align-items: center; background: var(--surface-container); border: 1px solid var(--outline-variant); border-radius: 12px; padding: 8px 12px; }
