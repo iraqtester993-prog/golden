@@ -17,6 +17,9 @@ html, body {
 #app {
   width: 100%;
   height: 100%;
+  max-width: 540px;
+  margin: 0 auto;
+  overflow: hidden;
 }
 
 ::-webkit-scrollbar {
@@ -74,7 +77,7 @@ html:not(.dark) .status-shipping { color: #7a3b8e; }
 html:not(.dark) .status-delivered { color: #806000; }
 
 /* Modern floating bottom navigation shared by all application pages */
-#app .bottom-nav { position:fixed !important; bottom:10px !important; left:12px !important; right:12px !important; height:68px !important; margin:0 !important; padding:5px 6px calc(5px + env(safe-area-inset-bottom)) !important; display:flex !important; align-items:center !important; justify-content:space-around !important; background:var(--surface-container) !important; border:1px solid var(--outline-variant) !important; border-radius:22px !important; box-shadow:0 8px 24px rgba(0,0,0,.20) !important; z-index:50 !important; }
+#app .bottom-nav { position:fixed !important; bottom:10px !important; left:50% !important; right:auto !important; width:min(calc(100% - 24px),516px) !important; transform:translateX(-50%); height:68px !important; margin:0 !important; padding:5px 6px calc(5px + env(safe-area-inset-bottom)) !important; display:flex !important; align-items:center !important; justify-content:space-around !important; background:var(--surface-container) !important; border:1px solid var(--outline-variant) !important; border-radius:22px !important; box-shadow:0 8px 24px rgba(0,0,0,.20) !important; z-index:50 !important; }
 #app .bottom-nav .nav-item { flex:1 !important; position:relative !important; display:flex !important; flex-direction:column !important; align-items:center !important; gap:3px !important; padding:3px 2px !important; color:var(--on-surface-variant) !important; font-family:inherit !important; }
 #app .bottom-nav .nav-icon-wrap { width:36px !important; height:32px !important; display:flex !important; align-items:center !important; justify-content:center !important; border-radius:12px !important; transition:.2s !important; }
 #app .bottom-nav .nav-icon { font-size:22px !important; }

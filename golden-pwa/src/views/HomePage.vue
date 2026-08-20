@@ -226,6 +226,9 @@
             <span class="material-symbols-outlined close-icon">receipt_long</span>
             <h3 class="sheet-title">إطفاء فاتورة</h3>
             <p class="close-desc">سيتم تقديم طلب لتسديد كامل المبالغ المتبقية على الفاتورة المحددة.</p>
+            <div class="close-invoice-picker">
+              <button v-for="inv in invoices" :key="inv.id" :class="{ active: selectedInvoice.id === inv.id }" @click="selectedInvoice = inv">فاتورة #{{ inv.id }}</button>
+            </div>
             <div class="close-inv-card">
               <span class="close-inv-name">{{ selectedInvoice.name }}</span>
               <span class="close-inv-id">فاتورة #{{ selectedInvoice.id }}</span>
@@ -319,6 +322,10 @@
       <span>{{ toast.msg }}</span>
     </div>
 
+    <div v-if="showCloseSuccess" class="success-overlay" @click.self="showCloseSuccess = false">
+      <div class="success-dialog"><span class="material-symbols-outlined">check_circle</span><h3>تم إرسال الطلب</h3><p>سيتم مراجعة طلب إطفاء الفاتورة من قبل الإدارة.</p><button @click="showCloseSuccess = false">حسناً</button></div>
+    </div>
+
     <nav class="bottom-nav">
       <button class="nav-item" v-for="(item, i) in navItems" :key="item.label" :class="{ active: i === 0 }" @click="goTo(item.route)">
         <div class="nav-icon-wrap">
@@ -345,6 +352,7 @@ const showBranchesSheet = ref(false)
 const showDealersSheet = ref(false)
 const showBrandsSheet = ref(false)
 const showCloseSheet = ref(false)
+const showCloseSuccess = ref(false)
 const showStatementSheet = ref(false)
 const selectedBrand = ref(null)
 const toast = ref(null)
@@ -410,7 +418,7 @@ const submitCloseInvoice = () => {
     ownerNote: ''
   })
   localStorage.setItem('golden_orders', JSON.stringify(orders))
-  showToast('تم تقديم طلب إطفاء الفاتورة بنجاح! سيتم مراجعة طلبك من قبل الإدارة')
+  showCloseSuccess.value = true
 }
 
 const branches = [
@@ -615,6 +623,7 @@ const navItems = [
 
 /* Close Invoice */
 .close-invoice-content { display: flex; flex-direction: column; align-items: center; gap: 12px; padding-top: 10px; }
+.close-invoice-picker { width:100%; display:flex; gap:7px; overflow-x:auto; padding:2px 0; }.close-invoice-picker button{flex:1; min-width:100px; padding:8px; border:1px solid var(--outline-variant); border-radius:10px; background:var(--surface-container); color:var(--on-surface-variant); font:inherit; font-size:11px; cursor:pointer}.close-invoice-picker button.active{border-color:var(--primary);background:rgba(196,154,59,.12);color:var(--primary);font-weight:700}
 .close-icon { font-size: 48px; color: var(--primary); }
 .close-desc { font-size: 13px; color: var(--on-surface-variant); text-align: center; line-height: 1.7; }
 .close-inv-card { width: 100%; background: var(--surface-container); border: 1px solid var(--outline-variant); border-radius: 14px; padding: 16px; display: flex; flex-direction: column; align-items: center; gap: 6px; }
@@ -624,6 +633,9 @@ const navItems = [
 .close-actions { display: flex; flex-direction: column; gap: 10px; width: 100%; margin-top: 8px; }
 .close-confirm-btn { width: 100%; padding: 14px; border-radius: 14px; background: var(--primary); border: none; color: #0a0f1d; font-size: 15px; font-weight: 700; font-family: inherit; cursor: pointer; }
 .close-cancel-btn { width: 100%; padding: 12px; border-radius: 14px; background: none; border: 1px solid var(--outline-variant); color: var(--on-surface-variant); font-size: 14px; font-weight: 600; font-family: inherit; cursor: pointer; text-align: center; }
+.success-overlay { position:fixed; inset:0; z-index:160; display:grid; place-items:center; padding:24px; background:rgba(0,0,0,.48); }.success-dialog{width:100%;max-width:330px;padding:26px 22px;text-align:center;border-radius:20px;background:var(--surface-container);border:1px solid var(--outline-variant)}.success-dialog .material-symbols-outlined{font-size:50px;color:var(--success)}.success-dialog h3{margin-top:10px;color:var(--on-surface);font-size:18px}.success-dialog p{margin-top:8px;color:var(--on-surface-variant);font-size:12px;line-height:1.8}.success-dialog button{width:100%;margin-top:18px;padding:12px;border:0;border-radius:12px;background:var(--primary);color:#0a0f1d;font:inherit;font-weight:800;cursor:pointer}
+
+@media (max-width: 370px) { .main-content{padding-left:12px;padding-right:12px}.quick-grid{gap:8px}.action-btn{height:82px;border-radius:15px}.action-label{font-size:9px;white-space:normal;line-height:1.45}.action-icon{font-size:24px} }
 
 /* Account Statement */
 .statement-inv-select { display: flex; gap: 8px; overflow-x: auto; margin-bottom: 16px; padding-bottom: 4px; }
