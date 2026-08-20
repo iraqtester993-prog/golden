@@ -86,6 +86,6 @@ onBeforeUnmount(() => {
 .refresh-indicator { position:fixed; top:50%; left:50%; z-index:500; width:200px; height:200px; display:grid; place-items:center; transform:translate(-50%,-50%); pointer-events:none; animation:indicator-in .18s ease-out; }
 .refresh-ring { width:178px; height:178px; display:grid; place-items:center; border-radius:50%; padding:4px; background:conic-gradient(var(--primary) var(--progress), rgba(242,202,80,.16) 0); transform:rotate(-90deg); transition:background .03s linear; box-shadow:0 0 18px rgba(242,202,80,.14); }
 .ring-inner { width:100%; height:100%; display:grid; place-items:center; border-radius:50%; background:transparent; transform:rotate(90deg); }.ring-inner img { width:126px; height:90px; object-fit:contain; }
-.ready .refresh-ring { background:conic-gradient(var(--success) var(--progress), rgba(52,211,153,.16) 0); }
+.ready .refresh-ring { background:conic-gradient(var(--primary) var(--progress), rgba(242,202,80,.16) 0); }
 @keyframes fade-in { from { opacity:0 } to { opacity:1 } } @keyframes indicator-in { from { opacity:0; transform:translate(-50%,-46%) scale(.94) } to { opacity:1; transform:translate(-50%,-50%) scale(1) } }
 </style>
