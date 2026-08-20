@@ -1,8 +1,8 @@
 <template>
   <template v-if="enabled && (pulling || refreshing)">
-    <div class="refresh-backdrop"></div>
     <div class="refresh-indicator" :class="{ ready: pullDistance >= triggerDistance, refreshing }">
-      <div class="refresh-ring" :style="{ '--progress': `${displayProgress * 3.6}deg` }">
+      <div class="refresh-ring">
+        <svg viewBox="0 0 100 100" aria-hidden="true"><circle class="progress-line" cx="50" cy="50" r="47" pathLength="100" :style="{ '--progress': displayProgress }" /></svg>
         <div class="ring-inner"><img :src="logo" alt="العصر الذهبي" /></div>
       </div>
     </div>
@@ -82,10 +82,9 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped>
-.refresh-backdrop { position:fixed; inset:0; z-index:490; background:rgba(10,15,29,.07); backdrop-filter:blur(4px); -webkit-backdrop-filter:blur(4px); pointer-events:none; animation:fade-in .16s ease-out; }
 .refresh-indicator { position:fixed; top:50%; left:50%; z-index:500; width:200px; height:200px; display:grid; place-items:center; transform:translate(-50%,-50%); pointer-events:none; animation:indicator-in .18s ease-out; }
-.refresh-ring { width:178px; height:178px; display:grid; place-items:center; border-radius:50%; padding:4px; background:conic-gradient(var(--primary) var(--progress), rgba(242,202,80,.16) 0); transform:rotate(-90deg); transition:background .03s linear; box-shadow:0 0 18px rgba(242,202,80,.14); }
-.ring-inner { width:100%; height:100%; display:grid; place-items:center; border-radius:50%; background:transparent; transform:rotate(90deg); }.ring-inner img { width:126px; height:90px; object-fit:contain; }
-.ready .refresh-ring { background:conic-gradient(var(--primary) var(--progress), rgba(242,202,80,.16) 0); }
-@keyframes fade-in { from { opacity:0 } to { opacity:1 } } @keyframes indicator-in { from { opacity:0; transform:translate(-50%,-46%) scale(.94) } to { opacity:1; transform:translate(-50%,-50%) scale(1) } }
+.refresh-ring { position:relative; width:178px; height:178px; display:grid; place-items:center; }
+.refresh-ring svg { position:absolute; inset:0; width:100%; height:100%; transform:rotate(-90deg); overflow:visible; }.progress-line { fill:none; stroke:var(--primary); stroke-width:2.8; stroke-linecap:round; stroke-dasharray:var(--progress) 100; transition:stroke-dasharray .03s linear; filter:drop-shadow(0 0 4px rgba(242,202,80,.28)); }
+.ring-inner { width:100%; height:100%; display:grid; place-items:center; background:transparent; }.ring-inner img { width:126px; height:90px; object-fit:contain; }
+@keyframes indicator-in { from { opacity:0; transform:translate(-50%,-46%) scale(.94) } to { opacity:1; transform:translate(-50%,-50%) scale(1) } }
 </style>
