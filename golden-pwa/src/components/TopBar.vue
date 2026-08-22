@@ -7,11 +7,11 @@
       <span class="material-symbols-outlined">{{ isDark ? 'light_mode' : 'dark_mode' }}</span>
     </button>
     <div class="brand-center">
-      <div v-if="!title && !showBack" class="brand-lockup" aria-label="العصر الذهبي - Golden Group">
-        <span class="brand-mark">GG</span>
+      <div v-if="!title && !showBack" class="brand-lockup" :style="{ '--brand-logo': `url(${logo})` }" aria-label="العصر الذهبي - Golden Group">
+        <span class="brand-mark" aria-hidden="true"></span>
         <span class="brand-copy">
-          <span class="brand-arabic">العصر الذهبي</span>
-          <span class="brand-english">GOLDEN GROUP</span>
+          <span class="brand-arabic" aria-hidden="true"></span>
+          <span class="brand-english" aria-hidden="true"></span>
         </span>
       </div>
       <h1 v-else class="brand-title">{{ title || 'العصر الذهبي' }}</h1>
@@ -26,6 +26,7 @@
 
 <script setup>
 import { ref } from 'vue'
+import logo from '../assets/logo-transparent-fast.png'
 
 defineProps({
   title: { type: String, default: '' },
@@ -83,10 +84,9 @@ const toggleTheme = () => {
 
 .brand-center { display: flex; align-items: center; flex: 1; justify-content: center; min-width: 0; }
 .brand-title { font-size: 18px; font-weight: 700; color: var(--primary); letter-spacing: 1px; }
-.brand-lockup { display: flex; align-items: center; gap: 8px; direction: ltr; min-height: 42px; }
-.brand-mark { position: relative; font-family: Georgia, 'Times New Roman', serif; font-size: 36px; font-weight: 800; letter-spacing: -9px; line-height: .9; background: linear-gradient(135deg,#f0cf62 5%,#c28e23 48%,#8b5b0d 100%); -webkit-background-clip: text; background-clip: text; color: transparent; filter: drop-shadow(0 2px 2px rgba(0,0,0,.42)); }
-.brand-mark::after { content: ''; position: absolute; right: 2px; bottom: -4px; width: 28px; height: 2px; border-radius: 2px; background: linear-gradient(90deg,transparent,#d5a937,transparent); opacity: .8; }
-.brand-copy { display: flex; flex-direction: column; align-items: flex-start; line-height: 1; direction: rtl; }
-.brand-arabic { font-size: 17px; font-weight: 800; white-space: nowrap; background: linear-gradient(110deg,#f2d56a,#c58f25 70%,#a87015); -webkit-background-clip: text; background-clip: text; color: transparent; text-shadow: 0 1px 1px rgba(0,0,0,.24); }
-.brand-english { margin-top: 3px; font-family: Georgia, 'Times New Roman', serif; font-size: 10px; font-weight: 700; letter-spacing: 1.7px; white-space: nowrap; color: #d2a846; text-shadow: 0 1px 1px rgba(0,0,0,.4); }
+.brand-lockup { display: flex; align-items: center; gap: 7px; direction: ltr; height: 46px; }
+.brand-mark { width: 45px; height: 42px; flex: none; background-image: var(--brand-logo); background-size: 82px 82px; background-position: -20px -14px; background-repeat: no-repeat; filter: drop-shadow(0 2px 2px rgba(0,0,0,.4)); }
+.brand-copy { display: flex; flex-direction: column; align-items: flex-start; gap: 1px; direction: rtl; }
+.brand-arabic { display: block; width: 118px; height: 22px; background-image: var(--brand-logo); background-size: 150px 150px; background-position: -16px -103px; background-repeat: no-repeat; filter: drop-shadow(0 1px 1px rgba(0,0,0,.35)); }
+.brand-english { display: block; width: 132px; height: 16px; background-image: var(--brand-logo); background-size: 150px 150px; background-position: -7px -82px; background-repeat: no-repeat; filter: drop-shadow(0 1px 1px rgba(0,0,0,.35)); }
 </style>
