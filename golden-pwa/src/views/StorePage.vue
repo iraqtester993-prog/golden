@@ -21,6 +21,7 @@
           <span class="cat-label">{{ cat.label }}</span>
         </button>
       </section>
+      <section v-if="activeCat !== 'الكل'" class="subcategories"><button v-for="sub in activeCategory.subcategories" :key="sub" :class="{active:activeSub===sub}" @click="activeSub=sub">{{ sub }}</button></section>
 
       <!-- Image Slider -->
       <section class="slider-section">
@@ -61,7 +62,7 @@
             <span class="product-spec">{{ product.spec }}</span>
             <div class="product-price">{{ product.price }} د.ع</div>
             <button class="btn-details" @click="openDetails(product)">عرض التفاصيل</button>
-            <button class="btn-cart" @click="addToCart(product)">إضافة للسلة</button>
+            <div class="installment-strip"><span class="material-symbols-outlined">account_balance_wallet</span>يدعم التقسيط</div>
           </div>
         </div>
       </div>
@@ -142,7 +143,8 @@ import { useCart } from '../composables/useCart'
 
 const router = useRouter()
 const route = useRoute()
-const activeCat = ref('هواتف')
+const activeCat = ref('الكل')
+const activeSub = ref('الكل')
 const activeTab = ref('popular')
 const currentSlide = ref(0)
 const selectedProduct = ref(null)
@@ -168,12 +170,13 @@ watch(selectedProduct, () => { galleryIndex.value = 0 })
 watch(() => route.query.tab, tab => { if (tab) activeTab.value = tab }, { immediate: true })
 
 const categories = [
-  { img: 'https://images.unsplash.com/photo-1549317661-bd32c8ce0afa?w=200&h=200&fit=crop', label: 'سيارات' },
-  { img: 'https://images.unsplash.com/photo-1631545806609-206480c4ca4d?w=200&h=200&fit=crop', label: 'مكيفات' },
-  { img: 'https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?w=200&h=200&fit=crop', label: 'شاحنات' },
-  { img: 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=200&h=200&fit=crop', label: 'أجهزة منزلية' },
-  { img: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=200&h=200&fit=crop', label: 'هواتف' }
+  { img: 'https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=200&h=200&fit=crop', label: 'الكل', subcategories: [] },
+  { img: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=200&h=200&fit=crop', label: 'إلكترونيات', subcategories: ['الكل','هواتف','تلفزيونات'] },
+  { img: 'https://images.unsplash.com/photo-1549317661-bd32c8ce0afa?w=200&h=200&fit=crop', label: 'مركبات', subcategories: ['الكل','سيارات','شاحنات'] },
+  { img: 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=200&h=200&fit=crop', label: 'المنزل', subcategories: ['الكل','مكيفات','أجهزة منزلية'] }
 ]
+const activeCategory = computed(() => categories.find(category => category.label === activeCat.value) || categories[0])
+watch(activeCat, () => { activeSub.value = 'الكل' })
 
 const slides = [
   { img: 'https://images.unsplash.com/photo-1546868871-af0de0ae72be?w=800&h=400&fit=crop', title: 'عروض نهاية الأسبوع', sub: 'خصومات تصل إلى 50%' },
@@ -199,7 +202,7 @@ const products = [
       'https://images.unsplash.com/photo-1695048133422-28a6e0e3d338?w=800&h=800&fit=crop'
     ],
     desc: 'هاتف آيفون 16 برو ماكس بسعة 256 جيجابايت، شاشة Super Retina XDR بحجم 6.9 بوصة، معالج A18 Pro، كاميرا ثلاثية 48 ميجابكسل، مقاوم للماء والغبار.',
-    brand: 'Apple', offer: true, specs: { 'الشاشة': '6.9 بوصة Super Retina XDR', 'المعالج': 'A18 Pro', 'الذاكرة': '256GB', 'الكاميرا': '48MP + 12MP + 12MP', 'البطارية': '4685 mAh', 'نظام التشغيل': 'iOS 18' }
+    brand: 'Apple', mainCat: 'إلكترونيات', subCat: 'هواتف', offer: true, specs: { 'الشاشة': '6.9 بوصة Super Retina XDR', 'المعالج': 'A18 Pro', 'الذاكرة': '256GB', 'الكاميرا': '48MP + 12MP + 12MP', 'البطارية': '4685 mAh', 'نظام التشغيل': 'iOS 18' }
   },
   {
     name: 'Samsung S24 Ultra', spec: '512GB - أسود', price: '1,650,000',
@@ -210,7 +213,7 @@ const products = [
       'https://images.unsplash.com/photo-1565849904461-04a58adcb756?w=800&h=800&fit=crop'
     ],
     desc: 'سامسونج جالكسي S24 ألترا بسعة 512 جيجابايت، شاشة Dynamic AMOLED 2X بحجم 6.8 بوصة، معالج Snapdragon 8 Gen 3، قلم S Pen، كاميرا 200 ميجابكسل.',
-    brand: 'Samsung', offer: true, specs: { 'الشاشة': '6.8 بوصة Dynamic AMOLED 2X', 'المعالج': 'Snapdragon 8 Gen 3', 'الذاكرة': '512GB', 'الكاميرا': '200MP + 50MP + 12MP + 10MP', 'البطارية': '5000 mAh', 'نظام التشغيل': 'Android 14' }
+    brand: 'Samsung', mainCat: 'إلكترونيات', subCat: 'هواتف', offer: true, specs: { 'الشاشة': '6.8 بوصة Dynamic AMOLED 2X', 'المعالج': 'Snapdragon 8 Gen 3', 'الذاكرة': '512GB', 'الكاميرا': '200MP + 50MP + 12MP + 10MP', 'البطارية': '5000 mAh', 'نظام التشغيل': 'Android 14' }
   },
   {
     name: 'Hisense 55 inch 4K', spec: 'Smart TV - ULED', price: '820,000',
@@ -221,11 +224,11 @@ const products = [
       'https://images.unsplash.com/photo-1593305841991-05c297ba4575?w=800&h=800&fit=crop'
     ],
     desc: 'تلفزيون هيسينس ذكي 55 بوصة بتقنية ULED 4K، دعم HDR10+، نظام تشغيل سهل الاستخدام، صوت Dolby Atmos، مثالي للمشاهدة السينمائية في المنزل.',
-    brand: 'Hisense', specs: { 'الشاشة': '55 بوصة 4K ULED', 'الدقة': '3840 × 2160', ' HDR': 'HDR10+', 'الصوت': 'Dolby Atmos 30W', 'المنافذ': '3 × HDMI, 2 × USB', 'النظام': 'VIDAA U6' }
+    brand: 'Hisense', mainCat: 'إلكترونيات', subCat: 'تلفزيونات', specs: { 'الشاشة': '55 بوصة 4K ULED', 'الدقة': '3840 × 2160', ' HDR': 'HDR10+', 'الصوت': 'Dolby Atmos 30W', 'المنافذ': '3 × HDMI, 2 × USB', 'النظام': 'VIDAA U6' }
   }
 ]
 
-const displayedProducts = computed(() => products.filter(p => (!route.query.brand || p.brand === route.query.brand) && (activeTab.value !== 'offers' || p.offer)))
+const displayedProducts = computed(() => products.filter(p => (!route.query.brand || p.brand === route.query.brand) && (activeTab.value !== 'offers' || p.offer) && (activeCat.value === 'الكل' || p.mainCat === activeCat.value) && (activeSub.value === 'الكل' || p.subCat === activeSub.value)))
 const cashPurchase = source => {
   const selected = Array.isArray(source) ? source : [source]
   if (!selected.length) return
@@ -248,6 +251,7 @@ const navItems = [
   { icon: 'person', label: 'حسابي', route: '/account' }
 ]
 </script>
+<style scoped>.subcategories{display:flex;gap:7px;overflow:auto;padding:0 1px}.subcategories button{flex:none;padding:7px 12px;border:1px solid var(--outline-variant);border-radius:18px;background:var(--surface-container);color:var(--on-surface-variant);font:inherit;font-size:10px;cursor:pointer}.subcategories button.active{border-color:var(--primary);background:rgba(196,154,59,.12);color:var(--primary)}.installment-strip{display:flex;align-items:center;justify-content:center;gap:5px;margin-top:9px;padding:7px;border-radius:9px;background:rgba(196,154,59,.11);color:var(--primary);font-size:10px;font-weight:700}.installment-strip .material-symbols-outlined{font-size:15px}</style>
 
 <style scoped>
 .page { width: 100%; max-width:100%; height: 100dvh; background: var(--bg); display: flex; flex-direction: column; overflow: hidden; overscroll-behavior: none; }

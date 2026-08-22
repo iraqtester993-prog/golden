@@ -29,6 +29,7 @@
         <button class="login-btn" @click="login">
           <span>تسجيل الدخول</span>
         </button>
+        <button class="guest-btn" @click="loginAsGuest">الدخول كضيف</button>
 
         <div class="register-link">
           <span>ليس لديك حساب؟</span>
@@ -51,9 +52,11 @@ const showPass = ref(false)
 const loginNotice = ref('')
 
 const login = () => {
+  localStorage.setItem('golden_guest', 'false')
   loginNotice.value = 'تم تسجيل الدخول بنجاح، أهلاً بك'
   setTimeout(() => router.push('/home'), 700)
 }
+const loginAsGuest = () => { localStorage.setItem('golden_guest', 'true'); router.push('/home') }
 </script>
 
 <style scoped>
@@ -189,6 +192,7 @@ const login = () => {
 .login-btn:active {
   transform: scale(0.97);
 }
+.guest-btn{width:100%;height:48px;border:1px solid var(--primary);border-radius:14px;background:transparent;color:var(--primary);font:inherit;font-size:14px;font-weight:700;cursor:pointer}
 
 .register-link {
   display: flex;

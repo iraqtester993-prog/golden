@@ -66,7 +66,7 @@
           </div>
           <div class="inv-next">
             <span class="material-symbols-outlined next-icon">calendar_today</span>
-            <span class="next-text">القسط القادم: {{ inv.nextDate }}</span>
+            <span class="next-text">القسط القادم: {{ numericDate(inv.nextDate) }}</span>
           </div>
         </div>
       </div>
@@ -104,7 +104,7 @@
               <span class="inv-stat-label">إجمالي الأشهر</span>
             </div>
             <div class="inv-stat">
-              <span class="inv-stat-num paid-date">{{ inv.paidDate }}</span>
+              <span class="inv-stat-num paid-date">{{ numericDate(inv.paidDate) }}</span>
               <span class="inv-stat-label">تاريخ السداد</span>
             </div>
           </div>
@@ -176,11 +176,11 @@
             <div class="month-row" v-for="(m, i) in selectedInv.months" :key="i">
               <div class="month-info">
                 <span class="month-num">القسط {{ i + 1 }}</span>
-                <span class="month-date">{{ m.date }}</span>
+              <span class="month-date">{{ numericDate(m.date) }}</span>
               </div>
               <div class="month-right">
                 <span class="month-amount">{{ m.amount }} د.ع</span>
-                <span class="month-badge" :class="m.status">{{ m.status === 'paid' ? 'مدفوع' : m.status === 'next' ? 'القادم' : 'قادم' }}</span>
+                <span class="month-badge" :class="m.status">{{ m.status === 'paid' ? 'مدفوع' : m.status === 'latePaid' ? 'مدفوع متلكئ' : m.status === 'partialPaid' ? 'مدفوع جزئي' : m.status === 'next' ? 'القادم' : 'غير مدفوع' }}</span>
               </div>
             </div>
           </div>
@@ -216,6 +216,7 @@ const activeTab = ref('current')
 const selectedInv = ref(null)
 
 const goTo = (route) => { if (route) router.push(route) }
+const numericDate = (value) => { const months={يناير:'01',فبراير:'02',مارس:'03',أبريل:'04',مايو:'05',يونيو:'06',يوليو:'07',أغسطس:'08',سبتمبر:'09',أكتوبر:'10',نوفمبر:'11',ديسمبر:'12'}; const parts=value.split(' '); return parts.length===3?`${String(parts[0]).padStart(2,'0')}/${months[parts[1]]||parts[1]}/${parts[2]}`:value }
 
 const currentInstallments = [
   {
@@ -231,10 +232,10 @@ const currentInstallments = [
       { date: '15 فبراير 2025', amount: '833,000', status: 'paid' },
       { date: '15 مارس 2025', amount: '833,000', status: 'paid' },
       { date: '15 أبريل 2025', amount: '833,000', status: 'paid' },
-      { date: '15 مايو 2025', amount: '833,000', status: 'paid' },
+      { date: '15 مايو 2025', amount: '833,000', status: 'latePaid' },
       { date: '15 يونيو 2025', amount: '833,000', status: 'paid' },
       { date: '15 يوليو 2025', amount: '833,000', status: 'paid' },
-      { date: '15 أغسطس 2025', amount: '833,000', status: 'paid' },
+      { date: '15 أغسطس 2025', amount: '833,000', status: 'partialPaid' },
       { date: '15 سبتمبر 2025', amount: '833,000', status: 'paid' },
       { date: '15 أكتوبر 2025', amount: '833,000', status: 'paid' },
       { date: '15 نوفمبر 2025', amount: '833,000', status: 'paid' },
@@ -568,6 +569,8 @@ const navItems = [
 }
 
 .month-badge.paid { background: rgba(52, 211, 153, 0.15); color: var(--success); }
+.month-badge.latePaid { background: rgba(251, 146, 60, 0.16); color: #fb923c; }
+.month-badge.partialPaid { background: rgba(99, 179, 237, 0.16); color: #63b3ed; }
 .month-badge.next { background: rgba(242, 202, 80, 0.15); color: var(--primary); }
 .month-badge.pending { background: var(--surface-container); color: var(--on-surface-variant); }
 

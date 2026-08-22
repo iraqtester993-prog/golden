@@ -85,10 +85,6 @@
               <span class="calc-product-price">{{ p.price }} د.ع</span>
             </div>
           </div>
-          <div class="calc-total-row">
-            <span class="calc-total-label">الإجمالي</span>
-            <span class="calc-total-value">{{ formatNum(totalPrice) }} د.ع</span>
-          </div>
         </div>
 
         <!-- Add More Products -->
@@ -135,14 +131,9 @@
               <span class="result-unit">د.ع</span>
             </div>
           </div>
-          <div class="result-divider"></div>
           <div class="result-row">
-            <span class="result-label">إجمالي المبلغ</span>
-            <span class="result-value-sm">{{ formatNum(totalAmount) }} د.ع</span>
-          </div>
-          <div class="result-row">
-            <span class="result-label">عدد الأقساط</span>
-            <span class="result-value-sm">{{ selectedMonths }} قسط</span>
+            <span class="result-label">مدة التقسيط</span>
+            <span class="result-value-sm">{{ selectedMonths }} شهر</span>
           </div>
         </div>
 
@@ -187,19 +178,6 @@
             <label class="form-label">العنوان</label>
             <input v-model="address" class="form-input" type="text" placeholder="المدينة / المنطقة" />
           </div>
-          <div class="form-group">
-            <label class="form-label">نوع العميل</label>
-            <div class="client-type-grid">
-              <button class="client-type-btn" :class="{ active: clientType === 'employee' }" @click="clientType = 'employee'">
-                <span class="material-symbols-outlined">badge</span>
-                <span>موظف</span>
-              </button>
-              <button class="client-type-btn" :class="{ active: clientType === 'merchant' }" @click="clientType = 'merchant'">
-                <span class="material-symbols-outlined">storefront</span>
-                <span>تاجر</span>
-              </button>
-            </div>
-          </div>
         </div>
 
         <!-- Salary -->
@@ -216,18 +194,11 @@
             <span class="material-symbols-outlined" :class="salaryCheck.ok ? 'check-ok' : 'check-bad'">{{ salaryCheck.ok ? 'check_circle' : 'error' }}</span>
             <span :class="salaryCheck.ok ? 'check-ok' : 'check-bad'">{{ salaryCheck.text }}</span>
           </div>
+          <label class="salary-proof"><input type="file" accept="image/*" @change="salaryProof=$event.target.files?.[0]||null"/><span class="material-symbols-outlined">upload_file</span><span>{{ salaryProof ? salaryProof.name : 'صورة تأييد الراتب أو آخر فاتورة راتب (اختياري)' }}</span></label>
         </div>
 
         <!-- Final Summary -->
         <div class="result-card">
-          <div class="result-row">
-            <span class="result-label">إجمالي المنتجات</span>
-            <span class="result-value-sm">{{ formatNum(totalPrice) }} د.ع</span>
-          </div>
-          <div class="result-row" v-if="downPayment > 0">
-            <span class="result-label">المبلغ المقدم</span>
-            <span class="result-value-sm">{{ formatNum(Number(downPayment)) }} د.ع</span>
-          </div>
           <div class="result-row">
             <span class="result-label">مدة التقسيط</span>
             <span class="result-value-sm">{{ selectedMonths }} شهر</span>
@@ -319,11 +290,12 @@ const phone = ref('')
 const address = ref('')
 const clientType = ref('employee')
 const salary = ref('')
+const salaryProof = ref(null)
 const durations = [10, 16, 18, 24, 36]
 
 const openDetails = (p) => { detailProduct.value = p }
 
-const goToStep3 = () => { showStep3.value = true }
+const goToStep3 = () => { if (localStorage.getItem('golden_guest') === 'true') { router.push('/register'); return } showStep3.value = true }
 
 const salaryCheck = computed(() => {
   if (!salary.value || !monthlyInstallment.value) return { ok: true, text: '' }
@@ -495,6 +467,7 @@ const navItems = [
   { icon: 'person', label: 'حسابي', route: '/account' }
 ]
 </script>
+<style scoped>.salary-proof{display:flex;align-items:center;gap:8px;margin-top:12px;padding:11px;border:1px dashed rgba(196,154,59,.5);border-radius:12px;color:var(--on-surface-variant);font-size:11px;cursor:pointer}.salary-proof input{display:none}.salary-proof .material-symbols-outlined{color:var(--primary)}</style>
 
 <style scoped>
 .page { width: 100%; max-width:100%; height: 100dvh; background: var(--bg); display: flex; flex-direction: column; overflow: hidden; }
