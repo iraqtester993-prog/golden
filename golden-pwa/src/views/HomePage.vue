@@ -297,7 +297,7 @@
               <div v-for="n in statementInv.totalInstallments" :key="n" class="inst-row" :class="statementStatus(statementInv,n).className">
                 <span class="inst-num">قسط {{ n }}</span>
                 <span class="inst-amount">{{ statementInv.monthly }} د.ع</span>
-                <span class="inst-status"><span v-if="statementStatus(statementInv,n).className==='paid'" class="material-symbols-outlined inst-check">check_circle</span><span v-else :class="statementStatus(statementInv,n).className==='due'?'inst-next-badge':'inst-pending'">{{ statementStatus(statementInv,n).label }}</span></span>
+                <span class="inst-status"><span :class="`inst-${statementStatus(statementInv,n).className}`">{{ statementStatus(statementInv,n).label }}</span></span>
               </div>
             </div>
           </div>
@@ -454,11 +454,15 @@ const brandProductsMap = {
 
 const statementStatus = (invoice, installmentNumber) => {
   const paidCount = invoice.totalInstallments - invoice.remainingInstallments
-  if (installmentNumber <= paidCount) return { className: 'paid', label: 'مدفوع' }
+  if (installmentNumber <= paidCount) {
+    if (installmentNumber === 3) return { className: 'late-paid', label: 'مدفوع متلكئ' }
+    if (installmentNumber === 6) return { className: 'partial-paid', label: 'مدفوع جزئي' }
+    return { className: 'paid', label: 'مدفوع' }
+  }
   const [year, month, day] = invoice.nextDate.split('/').map(Number)
   const dueDate = new Date(year, month - 1 + (installmentNumber - paidCount - 1), day)
   const today = new Date(); today.setHours(0, 0, 0, 0)
-  return dueDate < today ? { className: 'due', label: 'مستحق الدفع' } : { className: 'unpaid', label: 'غير مدفوع' }
+  return dueDate < today ? { className: 'unpaid', label: 'غير مدفوع' } : { className: 'unpaid', label: 'غير مدفوع' }
 }
 
 const brandProducts = computed(() => {
@@ -670,6 +674,7 @@ const navItems = [
 .inst-check { font-size: 18px; color: #81c784; font-variation-settings: 'FILL' 1; }
 .inst-next-badge { font-size: 10px; font-weight: 700; color: var(--primary); background: rgba(242, 202, 80, 0.15); padding: 2px 8px; border-radius: 6px; }
 .inst-pending { font-size: 11px; color: var(--on-surface-variant); }
+.inst-paid,.inst-late-paid,.inst-partial-paid,.inst-unpaid{display:inline-block;padding:3px 7px;border-radius:6px;font-size:9px;font-weight:700;white-space:nowrap}.inst-paid{background:rgba(52,211,153,.14);color:var(--success)}.inst-late-paid{background:rgba(251,146,60,.16);color:#fb923c}.inst-partial-paid{background:rgba(99,179,237,.16);color:#63b3ed}.inst-unpaid{background:rgba(242,202,80,.14);color:var(--primary)}
 
 /* Toast */
 .toast { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 8px; padding: 12px 20px; border-radius: 14px; font-size: 13px; font-weight: 600; z-index: 200; animation: slideUp 0.2s ease; white-space: nowrap; }
