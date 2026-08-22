@@ -117,6 +117,10 @@
       </section>
     </main>
 
+    <div v-if="showTermsDialog" class="terms-overlay">
+      <section class="terms-dialog"><span class="material-symbols-outlined">policy</span><h2>شروط الاستخدام وسياسة الخصوصية</h2><div><h3>شروط الاستخدام</h3><p>يُستخدم التطبيق لتقديم الطلبات والخدمات، ويجب إدخال بيانات صحيحة عند التسجيل.</p><h3>سياسة الخصوصية</h3><p>تُستخدم بياناتك لإدارة حسابك وطلباتك فقط، ولا تُشارك خارج نطاق الخدمة.</p></div><button @click="approveTerms">أوافق</button></section>
+    </div>
+
     <!-- Branches Sheet -->
     <div v-if="showBranchesSheet" class="sheet-overlay" @click.self="showBranchesSheet = false">
       <div class="sheet">
@@ -345,6 +349,7 @@ const showCloseSuccess = ref(false)
 const showStatementSheet = ref(false)
 const selectedBrand = ref(null)
 const toast = ref(null)
+const showTermsDialog = ref(false)
 const currentSlide = ref(0)
 let slideInterval = null
 
@@ -374,11 +379,13 @@ const slides = [
 ]
 
 onMounted(() => {
+  showTermsDialog.value = localStorage.getItem('golden_terms_pending') === 'true'
   slideInterval = setInterval(() => {
     currentSlide.value = (currentSlide.value + 1) % slides.length
   }, 3000)
 })
 onUnmounted(() => clearInterval(slideInterval))
+const approveTerms = () => { localStorage.setItem('golden_terms_pending', 'false'); localStorage.setItem('golden_terms_accepted', 'true'); showTermsDialog.value = false }
 
 const submitCloseInvoice = () => {
   showCloseSheet.value = false
@@ -624,6 +631,7 @@ const navItems = [
 .close-confirm-btn { width: 100%; padding: 14px; border-radius: 14px; background: var(--primary); border: none; color: #0a0f1d; font-size: 15px; font-weight: 700; font-family: inherit; cursor: pointer; }
 .close-cancel-btn { width: 100%; padding: 12px; border-radius: 14px; background: none; border: 1px solid var(--outline-variant); color: var(--on-surface-variant); font-size: 14px; font-weight: 600; font-family: inherit; cursor: pointer; text-align: center; }
 .success-overlay { position:fixed; inset:0; z-index:160; display:grid; place-items:center; padding:24px; background:rgba(0,0,0,.48); }.success-dialog{width:100%;max-width:330px;padding:26px 22px;text-align:center;border-radius:20px;background:var(--surface-container);border:1px solid var(--outline-variant)}.success-dialog .material-symbols-outlined{font-size:50px;color:var(--success)}.success-dialog h3{margin-top:10px;color:var(--on-surface);font-size:18px}.success-dialog p{margin-top:8px;color:var(--on-surface-variant);font-size:12px;line-height:1.8}.success-dialog button{width:100%;margin-top:18px;padding:12px;border:0;border-radius:12px;background:var(--primary);color:#0a0f1d;font:inherit;font-weight:800;cursor:pointer}
+.terms-overlay{position:fixed;inset:0;z-index:260;display:grid;place-items:center;padding:22px;background:rgba(0,0,0,.56)}.terms-dialog{width:100%;max-width:360px;max-height:80dvh;overflow:auto;padding:22px;border:1px solid rgba(196,154,59,.35);border-radius:20px;background:var(--surface-container);box-shadow:0 18px 45px rgba(0,0,0,.3)}.terms-dialog>.material-symbols-outlined{font-size:38px;color:var(--primary)}.terms-dialog h2{margin:7px 0 14px;color:var(--on-surface);font-size:17px}.terms-dialog h3{margin-top:12px;color:var(--primary);font-size:13px}.terms-dialog p{margin-top:4px;color:var(--on-surface-variant);font-size:11px;line-height:1.9}.terms-dialog button{width:100%;margin-top:18px;padding:13px;border:0;border-radius:12px;background:var(--primary);color:#0a0f1d;font:inherit;font-weight:800;cursor:pointer}
 
 @media (max-width: 370px) { .main-content{padding-left:12px;padding-right:12px}.quick-grid{gap:8px}.action-btn{height:82px;border-radius:15px}.action-label{font-size:9px;white-space:normal;line-height:1.45}.action-icon{font-size:24px} }
 
