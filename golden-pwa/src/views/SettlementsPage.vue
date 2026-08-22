@@ -31,7 +31,7 @@
               <span class="inv-id">#{{ inv.id }}</span>
               <span class="inv-name">{{ inv.name }}</span>
             </div>
-            <span class="inv-status active">جاري</span>
+            <span class="inv-status active">فعالة</span>
           </div>
           <div class="inv-products" v-if="inv.products.length > 1">
             <div class="inv-mini-prod" v-for="p in inv.products" :key="p.name">
@@ -79,7 +79,7 @@
               <span class="inv-id">#{{ inv.id }}</span>
               <span class="inv-name">{{ inv.name }}</span>
             </div>
-            <span class="inv-status paid">مسدد</span>
+            <span class="inv-status paid">منتهية</span>
           </div>
           <div class="inv-products" v-if="inv.products.length > 1">
             <div class="inv-mini-prod" v-for="p in inv.products" :key="p.name">
@@ -127,7 +127,7 @@
           <div class="sheet-header">
             <h2 class="sheet-title">#{{ selectedInv.id }}</h2>
             <span class="sheet-status" :class="selectedInv.paidMonths === selectedInv.totalMonths ? 'paid' : 'active'">
-              {{ selectedInv.paidMonths === selectedInv.totalMonths ? 'مسدد' : 'جاري' }}
+              {{ selectedInv.paidMonths === selectedInv.totalMonths ? 'منتهية' : 'فعالة' }}
             </span>
           </div>
 

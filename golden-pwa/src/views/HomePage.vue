@@ -51,7 +51,7 @@
           <div class="date-bar">
             <div class="date-left">
               <span class="material-symbols-outlined date-icon">calendar_today</span>
-              <span>تاريخ القسط {{ selectedInvoice.nextDate }}</span>
+              <span>تاريخ القسط القادم {{ selectedInvoice.nextDate }}</span>
             </div>
             <span class="date-badge">{{ selectedInvoice.duration }}</span>
           </div>
@@ -94,24 +94,24 @@
       <section>
         <div class="tx-header">
           <h2 class="section-heading">آخر الحركات</h2>
-          <button class="view-all">عرض الكل</button>
+          <button class="view-all" @click="goTo('/transactions')">عرض الكل</button>
         </div>
-        <div class="tx-card">
+        <div v-for="transaction in recentTransactions" :key="transaction.id" class="tx-card">
           <div class="tx-right">
             <div class="tx-icon">
               <span class="material-symbols-outlined">payments</span>
             </div>
             <div>
-              <h4 class="tx-name">تم تسديد قسط</h4>
-              <p class="tx-ref">فاتورة #10235</p>
+              <h4 class="tx-name">{{ transaction.name }}</h4>
+              <p class="tx-ref">فاتورة #{{ transaction.invoice }}</p>
             </div>
           </div>
           <div class="tx-left">
             <div class="tx-amount-row">
               <span class="material-symbols-outlined tx-check">check_circle</span>
-              <span class="tx-amount">250,000 د.ع</span>
+              <span class="tx-amount">{{ transaction.amount }} د.ع</span>
             </div>
-            <span class="tx-date">2024/05/20</span>
+            <span class="tx-date">{{ transaction.date }}</span>
           </div>
         </div>
       </section>
@@ -294,14 +294,10 @@
             <!-- Installment Breakdown -->
             <h4 class="stmt-sub-title">جدول الأقساط</h4>
             <div class="stmt-installments">
-              <div v-for="n in statementInv.totalInstallments" :key="n" class="inst-row" :class="{ paid: n <= (statementInv.totalInstallments - statementInv.remainingInstallments), next: n === (statementInv.totalInstallments - statementInv.remainingInstallments + 1) }">
+              <div v-for="n in statementInv.totalInstallments" :key="n" class="inst-row" :class="statementStatus(statementInv,n).className">
                 <span class="inst-num">قسط {{ n }}</span>
                 <span class="inst-amount">{{ statementInv.monthly }} د.ع</span>
-                <span class="inst-status">
-                  <span v-if="n <= (statementInv.totalInstallments - statementInv.remainingInstallments)" class="material-symbols-outlined inst-check">check_circle</span>
-                  <span v-else-if="n === (statementInv.totalInstallments - statementInv.remainingInstallments + 1)" class="inst-next-badge">القادم</span>
-                  <span v-else class="inst-pending">قريبًا</span>
-                </span>
+                <span class="inst-status"><span v-if="statementStatus(statementInv,n).className==='paid'" class="material-symbols-outlined inst-check">check_circle</span><span v-else :class="statementStatus(statementInv,n).className==='due'?'inst-next-badge':'inst-pending'">{{ statementStatus(statementInv,n).label }}</span></span>
               </div>
             </div>
           </div>
@@ -429,6 +425,12 @@ const dealers = [
   { name: 'وكالة الزهراء للأجهزة', address: 'الكاظمية، بغداد', img: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=800&h=400&fit=crop', phones: ['07702221100', '07802221100'] }
 ]
 
+const recentTransactions = [
+  { id: 1, name: 'تم تسديد قسط', invoice: 10235, amount: '250,000', date: '2026/08/20' },
+  { id: 2, name: 'تم تقديم طلب تقسيط', invoice: 10312, amount: '1,650,000', date: '2026/08/18' },
+  { id: 3, name: 'تمت إضافة دفعة', invoice: 10478, amount: '300,000', date: '2026/08/15' }
+]
+
 const brands = [
   { name: 'Apple', img: 'https://images.unsplash.com/photo-1611532736597-de2d4265fba3?w=200&h=200&fit=crop' },
   { name: 'Samsung', img: 'https://images.unsplash.com/photo-1610945415295-d9bbf067e59c?w=200&h=200&fit=crop' },
@@ -448,6 +450,15 @@ const brandProductsMap = {
   Hisense: [
     { name: 'Hisense 55 inch 4K', spec: 'Smart TV - ULED', price: '820,000', img: 'https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?w=400&h=300&fit=crop' }
   ]
+}
+
+const statementStatus = (invoice, installmentNumber) => {
+  const paidCount = invoice.totalInstallments - invoice.remainingInstallments
+  if (installmentNumber <= paidCount) return { className: 'paid', label: 'مدفوع' }
+  const [year, month, day] = invoice.nextDate.split('/').map(Number)
+  const dueDate = new Date(year, month - 1 + (installmentNumber - paidCount - 1), day)
+  const today = new Date(); today.setHours(0, 0, 0, 0)
+  return dueDate < today ? { className: 'due', label: 'مستحق الدفع' } : { className: 'unpaid', label: 'غير مدفوع' }
 }
 
 const brandProducts = computed(() => {
