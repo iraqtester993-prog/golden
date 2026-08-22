@@ -21,7 +21,7 @@
           <span class="cat-label">{{ cat.label }}</span>
         </button>
       </section>
-      <section v-else class="subcategories section-branch"><button class="main-back" @click="activeCat='الكل'"><span class="material-symbols-outlined">arrow_forward</span> الأقسام الرئيسية</button><button v-for="sub in activeCategory.subcategories" :key="sub" :class="{active:activeSub===sub}" @click="activeSub=sub">{{ sub }}</button></section>
+      <section v-if="activeCat !== 'الكل'" class="subcategories section-branch"><button class="main-back" @click="activeCat='الكل'"><span class="material-symbols-outlined">arrow_forward</span> الأقسام الرئيسية</button><button v-for="sub in activeCategory.subcategories" :key="sub" :class="{active:activeSub===sub}" @click="activeSub=sub">{{ sub }}</button></section>
 
       <!-- Image Slider -->
       <section class="slider-section">
