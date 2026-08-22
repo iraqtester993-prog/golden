@@ -13,7 +13,7 @@
       </div>
 
       <!-- Categories -->
-      <section class="categories">
+      <section v-if="activeCat === 'الكل'" class="categories">
         <button class="cat-item" v-for="cat in categories" :key="cat.label" :class="{ active: activeCat === cat.label }" @click="activeCat = cat.label">
           <div class="cat-icon-wrap">
             <img :src="cat.img" class="cat-img" />
@@ -21,7 +21,7 @@
           <span class="cat-label">{{ cat.label }}</span>
         </button>
       </section>
-      <section v-if="activeCat !== 'الكل'" class="subcategories"><button v-for="sub in activeCategory.subcategories" :key="sub" :class="{active:activeSub===sub}" @click="activeSub=sub">{{ sub }}</button></section>
+      <section v-else class="subcategories section-branch"><button class="main-back" @click="activeCat='الكل'"><span class="material-symbols-outlined">arrow_forward</span> الأقسام الرئيسية</button><button v-for="sub in activeCategory.subcategories" :key="sub" :class="{active:activeSub===sub}" @click="activeSub=sub">{{ sub }}</button></section>
 
       <!-- Image Slider -->
       <section class="slider-section">
@@ -225,7 +225,11 @@ const products = [
     ],
     desc: 'تلفزيون هيسينس ذكي 55 بوصة بتقنية ULED 4K، دعم HDR10+، نظام تشغيل سهل الاستخدام، صوت Dolby Atmos، مثالي للمشاهدة السينمائية في المنزل.',
     brand: 'Hisense', mainCat: 'إلكترونيات', subCat: 'تلفزيونات', specs: { 'الشاشة': '55 بوصة 4K ULED', 'الدقة': '3840 × 2160', ' HDR': 'HDR10+', 'الصوت': 'Dolby Atmos 30W', 'المنافذ': '3 × HDMI, 2 × USB', 'النظام': 'VIDAA U6' }
-  }
+  },
+  { name:'Toyota Camry 2024',spec:'GLE - أبيض',price:'38,000,000',img:'https://images.unsplash.com/photo-1549317661-bd32c8ce0afa?w=400&h=300&fit=crop',images:['https://images.unsplash.com/photo-1549317661-bd32c8ce0afa?w=800&h=800&fit=crop'],desc:'سيارة تويوتا كامري موديل 2024 بمواصفات عملية ومريحة.',brand:'Toyota',mainCat:'مركبات',subCat:'سيارات',offer:true,specs:{'الموديل':'2024','المحرك':'2.5L','اللون':'أبيض'} },
+  { name:'شاحنة JAC خفيفة',spec:'حمولة 3 طن',price:'45,000,000',img:'https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?w=400&h=300&fit=crop',images:['https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?w=800&h=800&fit=crop'],desc:'شاحنة خفيفة مناسبة للنقل والأعمال التجارية.',brand:'JAC',mainCat:'مركبات',subCat:'شاحنات',specs:{'الحمولة':'3 طن','الوقود':'ديزل','ناقل الحركة':'يدوي'} },
+  { name:'مكيف Gree سبليت',spec:'18000 وحدة',price:'1,250,000',img:'https://images.unsplash.com/photo-1631545806609-206480c4ca4d?w=400&h=300&fit=crop',images:['https://images.unsplash.com/photo-1631545806609-206480c4ca4d?w=800&h=800&fit=crop'],desc:'مكيف سبليت اقتصادي بتبريد قوي وهادئ.',brand:'Gree',mainCat:'المنزل',subCat:'مكيفات',specs:{'السعة':'18000 BTU','الطاقة':'موفر','الضمان':'سنة'} },
+  { name:'غسالة Samsung أوتوماتيك',spec:'9 كغم',price:'980,000',img:'https://images.unsplash.com/photo-1626806787461-102c1bfaaea1?w=400&h=300&fit=crop',images:['https://images.unsplash.com/photo-1626806787461-102c1bfaaea1?w=800&h=800&fit=crop'],desc:'غسالة أوتوماتيك بسعة 9 كغم للاستخدام العائلي.',brand:'Samsung',mainCat:'المنزل',subCat:'أجهزة منزلية',specs:{'السعة':'9 كغم','النوع':'أوتوماتيك','اللون':'فضي'} }
 ]
 
 const displayedProducts = computed(() => products.filter(p => (!route.query.brand || p.brand === route.query.brand) && (activeTab.value !== 'offers' || p.offer) && (activeCat.value === 'الكل' || p.mainCat === activeCat.value) && (activeSub.value === 'الكل' || p.subCat === activeSub.value)))
@@ -251,7 +255,7 @@ const navItems = [
   { icon: 'person', label: 'حسابي', route: '/account' }
 ]
 </script>
-<style scoped>.subcategories{display:flex;gap:7px;overflow:auto;padding:0 1px}.subcategories button{flex:none;padding:7px 12px;border:1px solid var(--outline-variant);border-radius:18px;background:var(--surface-container);color:var(--on-surface-variant);font:inherit;font-size:10px;cursor:pointer}.subcategories button.active{border-color:var(--primary);background:rgba(196,154,59,.12);color:var(--primary)}.installment-strip{display:flex;align-items:center;justify-content:center;gap:5px;margin-top:9px;padding:7px;border-radius:9px;background:rgba(196,154,59,.11);color:var(--primary);font-size:10px;font-weight:700}.installment-strip .material-symbols-outlined{font-size:15px}</style>
+<style scoped>.subcategories{display:flex;gap:7px;overflow:auto;padding:0 1px}.subcategories button{flex:none;padding:7px 12px;border:1px solid var(--outline-variant);border-radius:18px;background:var(--surface-container);color:var(--on-surface-variant);font:inherit;font-size:10px;cursor:pointer}.subcategories button.active{border-color:var(--primary);background:rgba(196,154,59,.12);color:var(--primary)}.main-back{display:flex;align-items:center;gap:3px;border-color:var(--primary)!important;color:var(--primary)!important}.main-back .material-symbols-outlined{font-size:15px}.installment-strip{display:flex;align-items:center;justify-content:center;gap:5px;margin-top:9px;padding:7px;border-radius:9px;background:rgba(196,154,59,.11);color:var(--primary);font-size:10px;font-weight:700}.installment-strip .material-symbols-outlined{font-size:15px}</style>
 
 <style scoped>
 .page { width: 100%; max-width:100%; height: 100dvh; background: var(--bg); display: flex; flex-direction: column; overflow: hidden; overscroll-behavior: none; }
