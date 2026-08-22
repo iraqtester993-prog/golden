@@ -87,7 +87,7 @@ const toggleTheme = () => {
 .brand-title { font-size: 18px; font-weight: 700; color: var(--primary); letter-spacing: 1px; }
 .brand-lockup { display: flex; align-items: center; gap: 7px; direction: ltr; height: 46px; }
 .brand-mark { width: 45px; height: 31px; flex: none; background-image: var(--brand-logo); background-size: 82px 82px; background-position: -20px -14px; background-repeat: no-repeat; filter: drop-shadow(0 2px 2px rgba(0,0,0,.4)); }
-.brand-copy { display: flex; flex-direction: column; align-items: flex-start; gap: 0; direction: rtl; }
+.brand-copy { display: flex; flex-direction: column; align-items: center; gap: 0; direction: rtl; }
 .brand-arabic { display: block; width: 118px; height: 18px; background-image: var(--brand-logo); background-size: 150px 150px; background-position: -16px -106px; background-repeat: no-repeat; filter: drop-shadow(0 1px 1px rgba(0,0,0,.35)); }
 .brand-divider { display: block; width: 132px; height: 5px; background-image: var(--brand-logo); background-size: 150px 150px; background-position: -9px -99px; background-repeat: no-repeat; }
 .brand-english { display: block; width: 145px; height: 15px; background-image: var(--brand-logo); background-size: 150px 150px; background-position: -6px -82px; background-repeat: no-repeat; filter: drop-shadow(0 1px 1px rgba(0,0,0,.35)); }
