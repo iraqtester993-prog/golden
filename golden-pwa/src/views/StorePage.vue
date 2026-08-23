@@ -13,7 +13,7 @@
       </div>
 
       <!-- Categories -->
-      <section class="categories">
+      <section v-if="activeCat === 'الكل'" class="categories">
         <button class="cat-item" v-for="cat in categories" :key="cat.label" :class="{ active: activeCat === cat.label }" @click="selectMainCategory(cat.label)">
           <div class="cat-icon-wrap">
             <img :src="cat.img" class="cat-img" />
@@ -21,7 +21,7 @@
           <span class="cat-label">{{ cat.label }}</span>
         </button>
       </section>
-      <section v-if="activeCat !== 'الكل'" class="subcategories section-branch"><button v-for="sub in activeCategory.subcategories" :key="sub" :class="{active:activeSub===sub}" @click="activeSub=sub">{{ sub }}</button></section>
+      <section v-else class="categories subcategory-grid"><button class="cat-item main-categories-btn" @click="selectMainCategory('الكل')"><div class="cat-icon-wrap"><span class="material-symbols-outlined">apps</span></div><span class="cat-label">الأقسام الرئيسية</span></button><button v-for="sub in activeCategory.subcategories" :key="sub.label" class="cat-item" :class="{active:activeSub===sub.label}" @click="selectSubCategory(sub.label)"><div class="cat-icon-wrap"><img :src="sub.img" class="cat-img"/></div><span class="cat-label">{{ sub.label }}</span></button></section>
 
       <!-- Image Slider -->
       <section class="slider-section">
@@ -134,6 +134,7 @@
     </nav>
   </div>
 </template>
+<style scoped>.subcategory-grid{min-height:92px}.main-categories-btn .cat-icon-wrap{background:rgba(196,154,59,.12);border-color:var(--primary)}.main-categories-btn .material-symbols-outlined{font-size:27px;color:var(--primary)}</style>
 <style scoped>
 .categories{position:relative;z-index:3;min-height:92px;padding:6px 0 8px;isolation:isolate}.cat-item{min-height:80px;justify-content:flex-start;flex-shrink:0}.cat-icon-wrap{position:relative;z-index:2;flex:none}.slider-section{position:relative;z-index:1;clear:both}
 </style>
@@ -174,12 +175,13 @@ watch(() => route.query.tab, tab => { if (tab) activeTab.value = tab }, { immedi
 
 const categories = [
   { img: 'https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=200&h=200&fit=crop', label: 'الكل', subcategories: [] },
-  { img: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=200&h=200&fit=crop', label: 'إلكترونيات', subcategories: ['الكل','هواتف','تلفزيونات'] },
-  { img: 'https://images.unsplash.com/photo-1549317661-bd32c8ce0afa?w=200&h=200&fit=crop', label: 'مركبات', subcategories: ['الكل','سيارات','شاحنات'] },
-  { img: 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=200&h=200&fit=crop', label: 'المنزل', subcategories: ['الكل','مكيفات','أجهزة منزلية'] }
+  { img: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=200&h=200&fit=crop', label: 'إلكترونيات', subcategories: [{label:'الكل',img:'https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=200&h=200&fit=crop'},{label:'هواتف',img:'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=200&h=200&fit=crop'},{label:'تلفزيونات',img:'https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?w=200&h=200&fit=crop'}] },
+  { img: 'https://images.unsplash.com/photo-1549317661-bd32c8ce0afa?w=200&h=200&fit=crop', label: 'مركبات', subcategories: [{label:'الكل',img:'https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=200&h=200&fit=crop'},{label:'سيارات',img:'https://images.unsplash.com/photo-1549317661-bd32c8ce0afa?w=200&h=200&fit=crop'},{label:'شاحنات',img:'https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?w=200&h=200&fit=crop'}] },
+  { img: 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=200&h=200&fit=crop', label: 'المنزل', subcategories: [{label:'الكل',img:'https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=200&h=200&fit=crop'},{label:'مكيفات',img:'https://images.unsplash.com/photo-1631545806609-206480c4ca4d?w=200&h=200&fit=crop'},{label:'أجهزة منزلية',img:'https://images.unsplash.com/photo-1626806787461-102c1bfaaea1?w=200&h=200&fit=crop'}] }
 ]
 const activeCategory = computed(() => categories.find(category => category.label === activeCat.value) || categories[0])
 const selectMainCategory = label => { activeCat.value = label; activeSub.value = 'الكل' }
+const selectSubCategory = label => { activeSub.value = label }
 
 const slides = [
   { img: 'https://images.unsplash.com/photo-1546868871-af0de0ae72be?w=800&h=400&fit=crop', title: 'عروض نهاية الأسبوع', sub: 'خصومات تصل إلى 50%' },
