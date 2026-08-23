@@ -134,6 +134,9 @@
     </nav>
   </div>
 </template>
+<style scoped>
+.categories{position:relative;z-index:3;min-height:92px;padding:6px 0 8px;isolation:isolate}.cat-item{min-height:80px;justify-content:flex-start;flex-shrink:0}.cat-icon-wrap{position:relative;z-index:2;flex:none}.slider-section{position:relative;z-index:1;clear:both}
+</style>
 
 <script setup>
 import { ref, watch, computed, onMounted, onUnmounted } from 'vue'
