@@ -13,7 +13,7 @@
       </div>
 
       <!-- Categories -->
-      <section v-show="activeCat === 'الكل'" class="categories">
+      <section class="categories">
         <button class="cat-item" v-for="cat in categories" :key="cat.label" :class="{ active: activeCat === cat.label }" @click="selectMainCategory(cat.label)">
           <div class="cat-icon-wrap">
             <img :src="cat.img" class="cat-img" />
@@ -21,7 +21,7 @@
           <span class="cat-label">{{ cat.label }}</span>
         </button>
       </section>
-      <section v-show="activeCat !== 'الكل'" class="subcategories section-branch"><button class="main-back" @click="selectMainCategory('الكل')"><span class="material-symbols-outlined">arrow_forward</span> الأقسام الرئيسية</button><button v-for="sub in activeCategory.subcategories" :key="sub" :class="{active:activeSub===sub}" @click="activeSub=sub">{{ sub }}</button></section>
+      <section v-if="activeCat !== 'الكل'" class="subcategories section-branch"><button v-for="sub in activeCategory.subcategories" :key="sub" :class="{active:activeSub===sub}" @click="activeSub=sub">{{ sub }}</button></section>
 
       <!-- Image Slider -->
       <section class="slider-section">
