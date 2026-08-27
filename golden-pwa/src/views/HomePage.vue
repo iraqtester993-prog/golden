@@ -369,7 +369,7 @@ const selectedBrand = ref(null)
 const toast = ref(null)
 const showTermsDialog = ref(false)
 const currentSlide = ref(0)
-const showInstallments = ref(false)
+const showInstallments = ref(true)
 let slideInterval = null
 
 const showToast = (msg, type = 'success') => {
@@ -528,7 +528,7 @@ const navItems = [
 /* Card */
 .card-wrap { border-radius:20px; border:1px solid rgba(196,154,59,.34); padding:14px; background:linear-gradient(135deg, var(--surface-container-high), var(--surface-container)); box-shadow:0 10px 24px rgba(0,0,0,.13); }
 .show-installments-btn { width:100%; min-height:54px; display:flex; align-items:center; justify-content:center; gap:9px; border:0; border-radius:12px; background:transparent; color:var(--primary); font:700 15px inherit; cursor:pointer; }.show-installments-btn .material-symbols-outlined { font-size:23px; }.show-installments-btn .show-arrow { margin-inline-start:auto; color:var(--on-surface-variant); }
-.hide-installments-btn { width:100%; display:flex; align-items:center; justify-content:center; gap:5px; margin-top:9px; padding:7px; border:0; background:transparent; color:var(--on-surface-variant); font:600 11px inherit; cursor:pointer; }.hide-installments-btn .material-symbols-outlined { font-size:18px; }
+.hide-installments-btn { display:none; }
 .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; position: relative; }
 .card-title { font-size: 16px; font-weight: 700; color: var(--primary); text-align: center; flex: 1; }
 .invoice-pill { display: flex; align-items: center; gap: 6px; background: var(--bg); border: 1px solid var(--outline-variant); border-radius: 20px; padding: 4px 12px; font-size: 11px; color: var(--on-surface-variant); cursor: pointer; transition: border-color 0.2s; }
