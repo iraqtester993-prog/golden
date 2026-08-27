@@ -6,14 +6,15 @@
       <!-- Status filters: always visible, including before the first order -->
       <div class="tabs-wrap" aria-label="حالات الطلبات">
         <div class="tabs">
-          <button class="tab" :class="{ active: activeTab === 'all' }" @click="activeTab = 'all'">الكل</button>
-          <button class="tab" :class="{ active: activeTab === 'pending' }" @click="activeTab = 'pending'">قيد المراجعة</button>
-          <button class="tab" :class="{ active: activeTab === 'inquiry' }" @click="activeTab = 'inquiry'">استعلام</button>
+          <button class="tab" :class="{ active: activeTab === 'all' }" @click="openStatus('all')">الكل</button>
+          <button class="tab" :class="{ active: activeTab === 'pending', attention: statusCount('pending') && !seenStatuses.pending }" @click="openStatus('pending')">قيد المراجعة</button>
+          <button class="tab" :class="{ active: activeTab === 'inquiry', attention: statusCount('inquiry') && !seenStatuses.inquiry }" @click="openStatus('inquiry')">استعلام</button>
         </div>
         <div class="tabs">
-          <button class="tab" :class="{ active: activeTab === 'approved' }" @click="activeTab = 'approved'">تم الموافقة</button>
-          <button class="tab" :class="{ active: activeTab === 'shipping' }" @click="activeTab = 'shipping'">قيد التوصيل</button>
-          <button class="tab" :class="{ active: activeTab === 'delivered' }" @click="activeTab = 'delivered'">تم التسليم</button>
+          <button class="tab" :class="{ active: activeTab === 'approved', attention: statusCount('approved') && !seenStatuses.approved }" @click="openStatus('approved')">تم الموافقة</button>
+          <button class="tab" :class="{ active: activeTab === 'shipping', attention: statusCount('shipping') && !seenStatuses.shipping }" @click="openStatus('shipping')">قيد التوصيل</button>
+          <button class="tab" :class="{ active: activeTab === 'delivered', attention: statusCount('delivered') && !seenStatuses.delivered }" @click="openStatus('delivered')">تم التسليم</button>
+          <button class="tab rejected-tab" :class="{ active: activeTab === 'rejected', attention: rejectedCount && !seenStatuses.rejected }" @click="openStatus('rejected')">مرفوض</button>
         </div>
       </div>
 
@@ -22,9 +23,9 @@
         <span class="material-symbols-outlined empty-icon">receipt_long</span>
         <span class="empty-text">لا توجد طلبات بعد</span>
         <span class="empty-sub">قم بتقديم طلب تقسيط وستظهر هنا</span>
-        <button class="empty-btn" @click="$router.push('/settlements')">
-          <span class="material-symbols-outlined">account_balance_wallet</span>
-          <span>تسديد قسط</span>
+        <button class="empty-btn" @click="$router.push('/store')">
+          <span class="material-symbols-outlined">shopping_bag</span>
+          <span>الذهاب إلى المتجر</span>
         </button>
       </div>
 
@@ -77,9 +78,13 @@
               </div>
             </template>
             <!-- Owner Note Preview -->
-            <div v-if="order.ownerNote" class="order-note-preview">
+            <div v-if="order.ownerNote && order.status !== 'rejected'" class="order-note-preview">
               <span class="material-symbols-outlined">chat</span>
               <span>{{ order.ownerNote }}</span>
+            </div>
+            <div v-if="order.status === 'rejected'" class="rejection-note-preview">
+              <span class="material-symbols-outlined">error</span>
+              <span>{{ rejectionReason(order) }}</span>
             </div>
           </div>
         </div>
@@ -92,7 +97,7 @@
         <div class="sheet-handle"><div class="handle-bar"></div><button class="sheet-close" @click="detailOrder = null"><span class="material-symbols-outlined">close</span></button></div>
         <div class="sheet-scroll">
           <!-- Status Timeline -->
-          <div class="detail-timeline">
+          <div v-if="detailOrder.status !== 'rejected'" class="detail-timeline">
             <div v-for="(step, i) in statusSteps" :key="i" class="timeline-step" :class="{ active: i <= statusIndex(detailOrder.status), done: i < statusIndex(detailOrder.status) }">
               <div class="timeline-dot">
                 <span class="material-symbols-outlined" v-if="i < statusIndex(detailOrder.status)">check</span>
@@ -182,6 +187,13 @@
             <h3 class="detail-heading"><span class="material-symbols-outlined">payments</span>تفاصيل الشراء</h3>
             <div class="detail-row highlight"><span class="detail-key">إجمالي الشراء النقدي</span><span class="detail-val">{{ formatNum(detailOrder.totalAmount) }} د.ع</span></div>
           </div>
+          <div v-if="detailOrder.status === 'rejected'" class="rejection-detail">
+            <span class="material-symbols-outlined">cancel</span>
+            <div><strong>تم رفض الطلب</strong><p>{{ rejectionReason(detailOrder) }}</p></div>
+          </div>
+          <button v-if="detailOrder.status === 'rejected'" class="contact-admin-btn" @click="contactOrder = detailOrder">
+            <span class="material-symbols-outlined">support_agent</span><span>التواصل مع الإدارة</span>
+          </button>
 
           <!-- Owner Notes -->
           <div v-if="detailOrder.ownerNote" class="detail-section owner-note-section">
@@ -206,6 +218,17 @@
             </button>
           </div>
         </div>
+      </div>
+    </div>
+
+    <div v-if="contactOrder" class="dialog-overlay" @click.self="contactOrder = null">
+      <div class="dialog contact-dialog">
+        <button class="dialog-close" @click="contactOrder = null"><span class="material-symbols-outlined">close</span></button>
+        <span class="material-symbols-outlined dialog-icon">support_agent</span>
+        <h3 class="dialog-title">التواصل مع الإدارة</h3>
+        <p class="dialog-text">اكتب استفسارك بخصوص الطلب #{{ contactOrder.id }} وسيُرسل إلى الإدارة.</p>
+        <textarea v-model="managementMessage" class="management-message" placeholder="اكتب رسالتك هنا..."></textarea>
+        <button class="dialog-confirm" :disabled="!managementMessage.trim()" @click="sendManagementMessage">إرسال الرسالة</button>
       </div>
     </div>
 
@@ -283,6 +306,7 @@
       <button class="nav-item" v-for="item in navItems" :key="item.label" :class="{ active: item.route === '/orders' }" @click="goTo(item.route)">
         <div class="nav-icon-wrap">
           <span class="material-symbols-outlined nav-icon">{{ item.icon }}</span>
+          <span v-if="item.route === '/orders'" class="nav-order-badge">{{ ordersCount }}</span>
         </div>
         <span class="nav-label">{{ item.label }}</span>
       </button>
@@ -294,16 +318,21 @@
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import TopBar from '../components/TopBar.vue'
+import { useOrdersBadge } from '../composables/useOrdersBadge'
 
 const router = useRouter()
+const { ordersCount } = useOrdersBadge()
 const goTo = (r) => { if (r) router.push(r) }
 
 const activeTab = ref('all')
+const seenStatuses = ref({})
 const detailOrder = ref(null)
 const editingOrder = ref(null)
 const editForm = ref({})
 const cancelTarget = ref(null)
 const toast = ref(null)
+const contactOrder = ref(null)
+const managementMessage = ref('')
 const durations = [10, 16, 18, 24, 36]
 
 const statusSteps = [
@@ -323,12 +352,54 @@ const statusLabel = (s) => {
     approved: 'تم الموافقة',
     shipping: 'قيد التوصيل',
     delivered: 'تم التسليم',
+    rejected: 'مرفوض',
     cancelled: 'ملغي'
   }
   return map[s] || s
 }
 
-const orders = ref(JSON.parse(localStorage.getItem('golden_orders') || '[]'))
+const demoRejectedOrders = [
+  {
+    id: 21004, date: '2026/08/25', status: 'pending', type: 'installment', fullName: 'محمد كريم', phone: '07700000004', address: 'بغداد', salary: 1200000, clientType: 'employee', months: 18, downPayment: 150000, totalPrice: 1850000, netAmount: 1700000, monthlyInstallment: 94445, totalAmount: 1700000,
+    products: [{ name: 'iPhone 16 Pro Max', spec: '256GB - Titanium', price: '1,850,000', img: 'https://images.unsplash.com/photo-1695048133142-1a20484d2569?w=200&h=120&fit=crop' }], ownerNote: 'الحالة: قيد المراجعة — يجري تدقيق بيانات الطلب والمستمسكات.'
+  },
+  {
+    id: 21005, date: '2026/08/24', status: 'inquiry', type: 'installment', fullName: 'زينب سالم', phone: '07700000005', address: 'النجف', salary: 1000000, clientType: 'employee', months: 16, downPayment: 100000, totalPrice: 1650000, netAmount: 1550000, monthlyInstallment: 96875, totalAmount: 1550000,
+    products: [{ name: 'Samsung S24 Ultra', spec: '512GB - Black', price: '1,650,000', img: 'https://images.unsplash.com/photo-1610945415295-d9bbf067e59c?w=200&h=120&fit=crop' }], ownerNote: 'الحالة: استعلام — بانتظار التحقق من جهة العمل.'
+  },
+  {
+    id: 21006, date: '2026/08/23', status: 'approved', type: 'installment', fullName: 'حسن قاسم', phone: '07700000006', address: 'كربلاء', salary: 1400000, clientType: 'employee', months: 12, downPayment: 200000, totalPrice: 1250000, netAmount: 1050000, monthlyInstallment: 87500, totalAmount: 1050000,
+    products: [{ name: 'Gree Split Air Conditioner', spec: '18000 BTU', price: '1,250,000', img: 'https://images.unsplash.com/photo-1631545806609-206480c4ca4d?w=200&h=120&fit=crop' }], ownerNote: 'الحالة: تمت الموافقة — طلبك مؤهل للتقسيط.'
+  },
+  {
+    id: 21007, date: '2026/08/22', status: 'shipping', type: 'installment', fullName: 'نور عباس', phone: '07700000007', address: 'البصرة', salary: 1100000, clientType: 'employee', months: 18, downPayment: 0, totalPrice: 820000, netAmount: 820000, monthlyInstallment: 45556, totalAmount: 820000,
+    products: [{ name: 'Hisense 55 inch 4K', spec: 'Smart TV - ULED', price: '820,000', img: 'https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?w=200&h=120&fit=crop' }], ownerNote: 'الحالة: قيد التوصيل — المنتج في طريقه إلى عنوانك.'
+  },
+  {
+    id: 21008, date: '2026/08/20', status: 'delivered', type: 'installment', fullName: 'عمر سعد', phone: '07700000008', address: 'بغداد', salary: 1300000, clientType: 'employee', months: 24, downPayment: 180000, totalPrice: 980000, netAmount: 800000, monthlyInstallment: 33334, totalAmount: 800000,
+    products: [{ name: 'Samsung Automatic Washing Machine', spec: '9kg', price: '980,000', img: 'https://images.unsplash.com/photo-1626806787461-102c1bfaaea1?w=200&h=120&fit=crop' }], ownerNote: 'الحالة: تم التسليم — تم تسليم المنتج بنجاح.'
+  },
+  {
+    id: 21001, date: '2026/08/22', status: 'rejected', type: 'installment', fullName: 'أحمد محمد', phone: '07700000001', address: 'بغداد', salary: 750000, clientType: 'employee', months: 18, downPayment: 0, totalPrice: 1650000, netAmount: 1650000, monthlyInstallment: 91667, totalAmount: 1650000,
+    products: [{ name: 'Samsung S24 Ultra', spec: '512GB - Black', price: '1,650,000', img: 'https://images.unsplash.com/photo-1610945415295-d9bbf067e59c?w=200&h=120&fit=crop' }],
+    rejectionReason: 'يرجى إرفاق تأييد راتب لآخر شهرين.'
+  },
+  {
+    id: 21002, date: '2026/08/21', status: 'rejected', type: 'installment', fullName: 'سارة علي', phone: '07700000002', address: 'بغداد', salary: 900000, clientType: 'employee', months: 16, downPayment: 100000, totalPrice: 1850000, netAmount: 1750000, monthlyInstallment: 109375, totalAmount: 1750000,
+    products: [{ name: 'iPhone 16 Pro Max', spec: '256GB - Titanium', price: '1,850,000', img: 'https://images.unsplash.com/photo-1695048133142-1a20484d2569?w=200&h=120&fit=crop' }],
+    rejectionReason: 'يرجى إرفاق المستمسك الأصلي بصورة واضحة.'
+  },
+  {
+    id: 21003, date: '2026/08/20', status: 'rejected', type: 'installment', fullName: 'علي حسن', phone: '07700000003', address: 'البصرة', salary: 450000, clientType: 'employee', months: 24, downPayment: 0, totalPrice: 3500000, netAmount: 3500000, monthlyInstallment: 145834, totalAmount: 3500000,
+    products: [{ name: 'Hisense 55 inch 4K', spec: 'Smart TV - ULED', price: '820,000', img: 'https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?w=200&h=120&fit=crop' }],
+    rejectionReason: 'رفض بسبب عدم كفاية الراتب.'
+  }
+]
+const savedOrders = JSON.parse(localStorage.getItem('golden_orders') || '[]')
+const orders = ref(savedOrders.length ? savedOrders : demoRejectedOrders)
+const rejectedCount = computed(() => orders.value.filter(order => order.status === 'rejected').length)
+const statusCount = status => status === 'all' ? orders.value.length : orders.value.filter(order => order.status === status).length
+const openStatus = status => { activeTab.value = status; if (status !== 'all') seenStatuses.value[status] = true }
 
 const saveOrders = () => {
   localStorage.setItem('golden_orders', JSON.stringify(orders.value))
@@ -340,6 +411,16 @@ const filteredOrders = computed(() => {
 })
 
 const openDetail = (order) => { detailOrder.value = order }
+const rejectionReason = (order) => order.rejectionReason || order.ownerNote || 'تم رفض الطلب. يرجى مراجعة الإدارة لمعرفة السبب.'
+const sendManagementMessage = () => {
+  if (!managementMessage.value.trim()) return
+  const messages = JSON.parse(localStorage.getItem('golden_support') || '[]')
+  messages.push({ id: messages.length + 1, subject: `استفسار عن طلب مرفوض #${contactOrder.value.id}`, message: managementMessage.value.trim(), date: new Date().toLocaleDateString('ar-EG') })
+  localStorage.setItem('golden_support', JSON.stringify(messages))
+  managementMessage.value = ''
+  contactOrder.value = null
+  showToast('تم إرسال رسالتك إلى الإدارة', 'success')
+}
 
 const orderDate = (order, stepIdx) => {
   if (stepIdx === 0) return order.date
@@ -423,14 +504,17 @@ const navItems = [
 .empty-btn .material-symbols-outlined { font-size: 20px; }
 
 /* Tabs */
-.tabs-wrap { display: flex; flex-direction: column; gap: 0; }
-.tabs { display: flex; }
-.tab { flex: 1; background: none; border: none; border-bottom: 2px solid transparent; padding: 10px 0; font-size: 12px; font-weight: 600; color: var(--on-surface-variant); cursor: pointer; font-family: inherit; transition: all 0.2s; white-space: nowrap; }
-.tab.active { color: var(--primary); border-bottom-color: var(--primary); }
+.tabs-wrap { display: flex; flex-direction: column; gap: 8px; padding: 10px; background: var(--surface-container); border: 1px solid var(--outline-variant); border-radius: 18px; }
+.tabs { display: flex; gap: 7px; }
+.tab { flex: 1; min-height: 38px; background: var(--bg); border: 1px solid transparent; border-radius: 11px; padding: 7px 6px; font-size: 11px; font-weight: 700; color: var(--on-surface-variant); cursor: pointer; font-family: inherit; transition: all 0.2s; white-space: nowrap; }
+.tab.active { color: #17130b; background: var(--primary); border-color: var(--primary); box-shadow: 0 4px 10px rgba(196,154,59,.18); }
+.rejected-tab { color: #ff9a9a; }.rejected-tab.active { color: #fff5f5; background: #b84444; border-color: #d85a5a; }
+.tab.attention { border-color:rgba(196,154,59,.65); box-shadow:0 0 0 1px rgba(196,154,59,.25), 0 0 14px rgba(196,154,59,.38); animation:status-pulse 1.25s ease-in-out infinite; }.rejected-tab.attention { border-color:rgba(239,83,80,.75); box-shadow:0 0 0 1px rgba(239,83,80,.25), 0 0 14px rgba(239,83,80,.42); }@keyframes status-pulse { 0%,100%{opacity:1}50%{opacity:.62;transform:translateY(-1px)} }
+.nav-order-badge { position:absolute; top:-7px; right:-10px; min-width:18px; height:18px; padding:0 4px; display:grid; place-items:center; border:2px solid var(--surface-container); border-radius:50%; background:var(--error); color:#fff; font-size:9px; font-weight:800; line-height:1; }
 
 /* Orders List */
 .orders-list { display: flex; flex-direction: column; gap: 10px; }
-.order-card { background: var(--surface-container); border: 1px solid var(--outline-variant); border-radius: 16px; padding: 14px; cursor: pointer; transition: border-color 0.2s; }
+.order-card { background: var(--surface-container); border: 1px solid var(--outline-variant); border-radius: 16px; padding: 14px; overflow:hidden; cursor: pointer; transition: border-color 0.2s; }
 .order-card:active { border-color: var(--primary); }
 .order-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
 .order-id-wrap { display: flex; flex-direction: column; gap: 2px; }
@@ -445,6 +529,7 @@ const navItems = [
 .status-shipping { background: rgba(186, 104, 200, 0.15); color: #ba68c8; }
 .status-delivered { background: rgba(242, 202, 80, 0.15); color: #f2ca50; }
 .status-cancelled { background: rgba(239, 83, 80, 0.15); color: #ef5350; }
+.status-rejected { background: rgba(239, 83, 80, 0.18); color: #ff7777; }
 
 /* Order Products */
 .close-inv-info { display: flex; align-items: center; gap: 12px; padding: 8px 0; }
@@ -466,6 +551,12 @@ const navItems = [
 
 /* Order Note Preview */
 .order-note-preview { display: flex; align-items: center; gap: 6px; margin-top: 8px; padding: 8px 10px; background: rgba(99, 179, 237, 0.08); border: 1px solid rgba(99, 179, 237, 0.2); border-radius: 10px; font-size: 12px; color: #63b3ed; }
+.rejection-note-preview { display:flex; align-items:flex-start; gap:7px; margin-top:8px; padding:9px 10px; border:1px solid rgba(239,83,80,.32); background:rgba(239,83,80,.09); border-radius:10px; font-size:12px; line-height:1.7; color:#ff8d8d; }
+.rejection-note-preview .material-symbols-outlined { font-size:18px; flex-shrink:0; }
+.rejection-detail { display:flex; gap:10px; align-items:flex-start; margin:4px 0 16px; padding:14px; border:1px solid rgba(239,83,80,.35); background:rgba(239,83,80,.09); border-radius:14px; color:#ff9a9a; }
+.rejection-detail .material-symbols-outlined { font-size:26px; }.rejection-detail strong { display:block; font-size:15px; margin-bottom:4px; }.rejection-detail p { font-size:13px; line-height:1.7; color:var(--on-surface); }
+.contact-admin-btn { width:100%; display:flex; justify-content:center; align-items:center; gap:8px; padding:13px; margin:-4px 0 16px; border:1px solid rgba(99,179,237,.35); border-radius:13px; background:rgba(99,179,237,.1); color:#7fc5f4; font:700 13px inherit; cursor:pointer; }
+.management-message { width:100%; min-height:100px; resize:none; margin:4px 0 12px; padding:12px; border:1px solid var(--outline-variant); border-radius:12px; background:var(--surface-container); color:var(--on-surface); font:13px inherit; outline:none; }.management-message:focus { border-color:var(--primary); }
 .order-note-preview .material-symbols-outlined { font-size: 16px; }
 
 /* Detail Sheet */
@@ -475,7 +566,7 @@ const navItems = [
 .sheet-handle { display: flex; justify-content: center; padding: 10px 0 4px; cursor: pointer; position:relative; }
 .sheet-close,.dialog-close { position:absolute; left:12px; top:5px; border:0; background:transparent; color:var(--on-surface-variant); cursor:pointer; }.sheet-close .material-symbols-outlined,.dialog-close .material-symbols-outlined{font-size:20px}
 .handle-bar { width: 40px; height: 4px; border-radius: 2px; background: var(--outline-variant); }
-.sheet-scroll { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 0 16px 20px; }
+.sheet-scroll { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 0 16px 104px; }
 
 /* Timeline */
 .detail-timeline { padding: 16px 0; }

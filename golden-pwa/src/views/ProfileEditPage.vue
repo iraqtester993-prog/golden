@@ -107,7 +107,7 @@
         </div>
 
         <div class="upload-section" v-if="form.type === 'employee'">
-          <h3 class="upload-title">هوية الدائرة</h3>
+          <h3 class="upload-title">هوية الدائرة <small>(اختيارية)</small></h3>
           <div class="upload-row">
             <label class="upload-box full" :class="{ uploaded: form.departmentId }">
               <input type="file" accept="image/*" class="file-input" @change="e => handleFile(e, 'departmentId')" />

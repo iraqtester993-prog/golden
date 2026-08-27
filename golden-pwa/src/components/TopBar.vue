@@ -17,12 +17,21 @@
       </div>
       <h1 v-else class="brand-title">{{ title || 'العصر الذهبي' }}</h1>
     </div>
-    <button v-if="!showBack" class="icon-btn relative">
+    <button v-if="!showBack" class="icon-btn relative" @click="showNotifications = true" aria-label="الإشعارات">
       <span class="material-symbols-outlined">notifications</span>
-      <span class="notif-badge">2</span>
+      <span class="notif-badge">3</span>
     </button>
     <span v-else style="width:40px;"></span>
   </header>
+  <div v-if="showNotifications" class="notifications-overlay" @click.self="showNotifications = false">
+    <section class="notifications-panel">
+      <div class="notifications-head"><div><h2>الإشعارات</h2><span>آخر التحديثات</span></div><button @click="showNotifications = false" aria-label="إغلاق"><span class="material-symbols-outlined">close</span></button></div>
+      <article v-for="notification in notifications" :key="notification.id" class="notification-item">
+        <span class="material-symbols-outlined notification-icon" :class="notification.type">{{ notification.icon }}</span>
+        <div><strong>{{ notification.title }}</strong><p>{{ notification.text }}</p><small>{{ notification.time }}</small></div>
+      </article>
+    </section>
+  </div>
 </template>
 
 <script setup>
@@ -35,6 +44,12 @@ defineProps({
 })
 
 const isDark = ref(document.documentElement.classList.contains('dark'))
+const showNotifications = ref(false)
+const notifications = [
+  { id: 1, icon: 'event', type: 'gold', title: 'تذكير بالقسط القادم', text: 'موعد القسط القادم للفاتورة #10235 خلال 5 أيام.', time: 'منذ ساعتين' },
+  { id: 2, icon: 'shopping_bag', type: 'blue', title: 'عروض جديدة', text: 'اكتشف العروض الجديدة المتاحة بالتقسيط.', time: 'أمس' },
+  { id: 3, icon: 'description', type: 'red', title: 'تحديث حالة طلب', text: 'تمت إضافة ملاحظة جديدة إلى أحد طلباتك.', time: 'منذ يومين' }
+]
 
 const toggleTheme = () => {
   isDark.value = !isDark.value
@@ -91,4 +106,8 @@ const toggleTheme = () => {
 .brand-arabic { display: block; width: 118px; height: 18px; background-image: var(--brand-logo); background-size: 150px 150px; background-position: -16px -106px; background-repeat: no-repeat; filter: drop-shadow(0 1px 1px rgba(0,0,0,.35)); }
 .brand-divider { display: block; width: 132px; height: 5px; background-image: var(--brand-logo); background-size: 150px 150px; background-position: -9px -99px; background-repeat: no-repeat; }
 .brand-english { display: block; width: 145px; height: 15px; background-image: var(--brand-logo); background-size: 150px 150px; background-position: -6px -82px; background-repeat: no-repeat; filter: drop-shadow(0 1px 1px rgba(0,0,0,.35)); }
+.notifications-overlay { position:fixed; inset:0; z-index:240; background:rgba(5,8,15,.42); display:flex; align-items:flex-start; justify-content:center; padding:64px 12px 0; }
+.notifications-panel { width:min(100%,480px); max-height:72vh; overflow:auto; background:var(--surface-container); border:1px solid var(--outline-variant); border-radius:18px; box-shadow:0 16px 42px rgba(0,0,0,.36); padding:12px; }
+.notifications-head { display:flex; align-items:center; justify-content:space-between; padding:3px 4px 10px; border-bottom:1px solid var(--outline-variant); }.notifications-head h2 { color:var(--on-surface); font-size:16px; }.notifications-head span { color:var(--on-surface-variant); font-size:11px; }.notifications-head button { width:30px; height:30px; border:0; border-radius:50%; color:var(--on-surface-variant); background:var(--bg); cursor:pointer; }
+.notification-item { display:flex; gap:10px; padding:12px 5px; border-bottom:1px solid rgba(77,70,53,.55); }.notification-item:last-child { border-bottom:0; }.notification-icon { width:36px; height:36px; display:flex; align-items:center; justify-content:center; flex:none; border-radius:11px; background:rgba(196,154,59,.13); color:var(--primary); }.notification-icon.blue { background:rgba(99,179,237,.13); color:#63b3ed; }.notification-icon.red { background:rgba(239,83,80,.13); color:#ff8585; }.notification-item strong { display:block; font-size:13px; color:var(--on-surface); }.notification-item p { margin:2px 0; color:var(--on-surface-variant); font-size:11px; line-height:1.65; }.notification-item small { color:var(--primary); font-size:10px; }
 </style>

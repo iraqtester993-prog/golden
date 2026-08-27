@@ -5,6 +5,13 @@
     <main class="main-content">
       <!-- Installment Card -->
       <section class="card-wrap">
+        <button v-if="!showInstallments" class="show-installments-btn" @click="showInstallments = true">
+          <span class="material-symbols-outlined">account_balance_wallet</span>
+          <span>شاهد أقساطي</span>
+          <span class="material-symbols-outlined show-arrow">keyboard_arrow_down</span>
+        </button>
+
+        <template v-else>
         <div class="card-header">
             <div class="invoice-pill" @click="showInvoices = !showInvoices">
               <span>اختر الفاتورة</span>
@@ -28,22 +35,22 @@
           <div class="stats-panel">
             <div class="stats-grid">
               <div class="stat-col border-l">
-                <span class="stat-label">المبلغ المتبقي</span>
-                <div class="stat-row"><span class="stat-num gold">{{ selectedInvoice.remaining }}</span><span class="stat-unit">د.ع</span></div>
-              </div>
-              <div class="stat-col pr-2">
                 <span class="stat-label">المبلغ الكلي</span>
                 <div class="stat-row"><span class="stat-num">{{ selectedInvoice.total }}</span><span class="stat-unit">د.ع</span></div>
+              </div>
+              <div class="stat-col pr-2">
+                <span class="stat-label">المبلغ المتبقي</span>
+                <div class="stat-row"><span class="stat-num gold">{{ selectedInvoice.remaining }}</span><span class="stat-unit">د.ع</span></div>
               </div>
             </div>
             <div class="stats-grid border-t">
               <div class="stat-col border-l">
-                <span class="stat-label">عدد الأقساط المتبقية</span>
-                <div class="stat-row"><span class="stat-num">{{ selectedInvoice.remainingInstallments }}</span><span class="stat-unit">قسط</span></div>
-              </div>
-              <div class="stat-col pr-2">
                 <span class="stat-label">عدد الأقساط الكلية</span>
                 <div class="stat-row"><span class="stat-num">{{ selectedInvoice.totalInstallments }}</span><span class="stat-unit">قسط</span></div>
+              </div>
+              <div class="stat-col pr-2">
+                <span class="stat-label">عدد الأقساط المتبقية</span>
+                <div class="stat-row"><span class="stat-num">{{ selectedInvoice.remainingInstallments }}</span><span class="stat-unit">قسط</span></div>
               </div>
             </div>
           </div>
@@ -55,6 +62,11 @@
             </div>
             <span class="date-badge">{{ selectedInvoice.duration }}</span>
           </div>
+          <button class="hide-installments-btn" @click="showInstallments = false">
+            <span class="material-symbols-outlined">keyboard_arrow_up</span>
+            <span>إخفاء أقساطي</span>
+          </button>
+        </template>
       </section>
 
       <!-- Quick Actions -->
@@ -76,6 +88,15 @@
           <div class="slider-dots">
             <span v-for="(_, i) in slides" :key="i" class="s-dot" :class="{ active: currentSlide === i }" @click="currentSlide = i"></span>
           </div>
+        </div>
+      </section>
+
+      <section class="branches-home">
+        <div class="branches-heading"><h2 class="section-heading">فروعنا</h2><button @click="goTo('/branches')">عرض الكل <span class="material-symbols-outlined">arrow_back</span></button></div>
+        <div class="branch-preview-list">
+          <button v-for="branch in branches.slice(0, 3)" :key="branch.name" class="branch-preview" @click="goTo('/branches?branch=' + encodeURIComponent(branch.name))">
+            <img :src="branch.img" :alt="branch.name"/><span class="branch-preview-overlay"><strong>{{ branch.name }}</strong><small>تصفح منتجات الفرع</small></span>
+          </button>
         </div>
       </section>
 
@@ -347,6 +368,7 @@ const selectedBrand = ref(null)
 const toast = ref(null)
 const showTermsDialog = ref(false)
 const currentSlide = ref(0)
+const showInstallments = ref(false)
 let slideInterval = null
 
 const showToast = (msg, type = 'success') => {
@@ -355,7 +377,7 @@ const showToast = (msg, type = 'success') => {
 }
 
 const invoices = [
-  { id: 10235, name: 'سوناتا 2024', remaining: '250,000,000', total: '400,000,000', remainingInstallments: 17, totalInstallments: 24, nextDate: '2026/09/01', duration: 'بعد 14 يوم', monthly: '10,416,667' },
+  { id: 10235, name: 'سوناتا 2024', remaining: '250,000,000', total: '400,000,000', remainingInstallments: 17, totalInstallments: 24, nextDate: '2026/08/10', duration: 'متأخر 15 يوم', monthly: '10,416,667' },
   { id: 10312, name: 'كيا سبورتاج', remaining: '180,000,000', total: '350,000,000', remainingInstallments: 12, totalInstallments: 18, nextDate: '2026/09/05', duration: 'بعد 18 يوم', monthly: '19,444,444' },
   { id: 10478, name: 'هونداي تكسس', remaining: '95,000,000', total: '300,000,000', remainingInstallments: 8, totalInstallments: 36, nextDate: '2026/08/28', duration: 'بعد 10 أيام', monthly: '8,333,333' }
 ]
@@ -455,14 +477,13 @@ const brandProductsMap = {
 const statementStatus = (invoice, installmentNumber) => {
   const paidCount = invoice.totalInstallments - invoice.remainingInstallments
   if (installmentNumber <= paidCount) {
-    if (installmentNumber === 3) return { className: 'late-paid', label: 'مدفوع متلكئ' }
     if (installmentNumber === 6) return { className: 'partial-paid', label: 'مدفوع جزئي' }
     return { className: 'paid', label: 'مدفوع' }
   }
   const [year, month, day] = invoice.nextDate.split('/').map(Number)
   const dueDate = new Date(year, month - 1 + (installmentNumber - paidCount - 1), day)
   const today = new Date(); today.setHours(0, 0, 0, 0)
-  return dueDate < today ? { className: 'unpaid', label: 'غير مدفوع' } : { className: 'unpaid', label: 'غير مدفوع' }
+  return dueDate < today ? { className: 'late', label: 'متلكئ' } : { className: 'unpaid', label: 'غير مدفوع' }
 }
 
 const brandProducts = computed(() => {
@@ -502,7 +523,9 @@ const navItems = [
 .main-content { flex: 1; overflow-y: auto; overscroll-behavior-y: contain; padding: 16px 16px 90px; display: flex; flex-direction: column; gap: 16px; width: 100%; margin: 0 auto; }
 
 /* Card */
-.card-wrap { border-radius: 16px; border: 1px solid var(--outline-variant); padding: 14px; background: var(--surface-container-high); }
+.card-wrap { border-radius:20px; border:1px solid rgba(196,154,59,.34); padding:14px; background:linear-gradient(135deg, var(--surface-container-high), var(--surface-container)); box-shadow:0 10px 24px rgba(0,0,0,.13); }
+.show-installments-btn { width:100%; min-height:54px; display:flex; align-items:center; justify-content:center; gap:9px; border:0; border-radius:12px; background:transparent; color:var(--primary); font:700 15px inherit; cursor:pointer; }.show-installments-btn .material-symbols-outlined { font-size:23px; }.show-installments-btn .show-arrow { margin-inline-start:auto; color:var(--on-surface-variant); }
+.hide-installments-btn { width:100%; display:flex; align-items:center; justify-content:center; gap:5px; margin-top:9px; padding:7px; border:0; background:transparent; color:var(--on-surface-variant); font:600 11px inherit; cursor:pointer; }.hide-installments-btn .material-symbols-outlined { font-size:18px; }
 .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; position: relative; }
 .card-title { font-size: 16px; font-weight: 700; color: var(--primary); text-align: center; flex: 1; }
 .invoice-pill { display: flex; align-items: center; gap: 6px; background: var(--bg); border: 1px solid var(--outline-variant); border-radius: 20px; padding: 4px 12px; font-size: 11px; color: var(--on-surface-variant); cursor: pointer; transition: border-color 0.2s; }
@@ -532,6 +555,7 @@ const navItems = [
 .stat-num { font-size: 16px; font-weight: 700; color: var(--on-surface); }
 .stat-num.gold { font-size: 18px; color: var(--primary); }
 .stat-unit { font-size: 13px; color: var(--on-surface-variant); }
+.branches-home { display:flex; flex-direction:column; gap:10px; }.branches-heading { display:flex; align-items:center; justify-content:space-between; }.branches-heading .section-heading { margin:0; }.branches-heading button { display:flex; align-items:center; gap:3px; border:0; background:transparent; color:var(--primary); font:700 11px inherit; cursor:pointer; }.branches-heading .material-symbols-outlined { font-size:16px; }.branch-preview-list { display:grid; grid-template-columns:repeat(3,1fr); gap:9px; }.branch-preview { position:relative; min-width:0; height:116px; overflow:hidden; border:1px solid var(--outline-variant); border-radius:14px; background:var(--surface-container); padding:0; cursor:pointer; text-align:right; }.branch-preview img { width:100%; height:100%; object-fit:cover; transition:transform .25s; }.branch-preview:active img { transform:scale(1.06); }.branch-preview-overlay { position:absolute; inset:0; display:flex; flex-direction:column; justify-content:flex-end; padding:8px; background:linear-gradient(transparent 30%, rgba(6,10,19,.88)); color:#fff; }.branch-preview-overlay strong { font-size:10px; line-height:1.5; }.branch-preview-overlay small { color:var(--primary); font-size:8px; margin-top:2px; }
 
 /* Date Bar */
 .date-bar { display: flex; justify-content: space-between; align-items: center; background: var(--surface-container); border: 1px solid var(--outline-variant); border-radius: 12px; padding: 8px 12px; }
@@ -674,7 +698,7 @@ const navItems = [
 .inst-check { font-size: 18px; color: #81c784; font-variation-settings: 'FILL' 1; }
 .inst-next-badge { font-size: 10px; font-weight: 700; color: var(--primary); background: rgba(242, 202, 80, 0.15); padding: 2px 8px; border-radius: 6px; }
 .inst-pending { font-size: 11px; color: var(--on-surface-variant); }
-.inst-paid,.inst-late-paid,.inst-partial-paid,.inst-unpaid{display:inline-block;padding:3px 7px;border-radius:6px;font-size:9px;font-weight:700;white-space:nowrap}.inst-paid{background:rgba(52,211,153,.14);color:var(--success)}.inst-late-paid{background:rgba(251,146,60,.16);color:#fb923c}.inst-partial-paid{background:rgba(99,179,237,.16);color:#63b3ed}.inst-unpaid{background:rgba(242,202,80,.14);color:var(--primary)}
+.inst-paid,.inst-late,.inst-partial-paid,.inst-unpaid{display:inline-block;padding:3px 7px;border-radius:6px;font-size:9px;font-weight:700;white-space:nowrap}.inst-paid{background:rgba(52,211,153,.14);color:var(--success)}.inst-late{background:rgba(251,146,60,.16);color:#fb923c}.inst-partial-paid{background:rgba(99,179,237,.16);color:#63b3ed}.inst-unpaid{background:rgba(242,202,80,.14);color:var(--primary)}
 
 /* Toast */
 .toast { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 8px; padding: 12px 20px; border-radius: 14px; font-size: 13px; font-weight: 600; z-index: 200; animation: slideUp 0.2s ease; white-space: nowrap; }

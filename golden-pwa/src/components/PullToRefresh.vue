@@ -37,6 +37,9 @@ const findScroller = target => {
 }
 const onStart = event => {
   if (!enabled.value || refreshing.value) return
+  // Sheets and dialogs own their downward swipe gesture; never show the page
+  // refresh indicator while one of them is open.
+  if (event.target.closest?.('.sheet-overlay, .dialog-overlay, .notifications-overlay')) return
   activeScroller = findScroller(event.target)
   if (!activeScroller || activeScroller.scrollTop > 0) { activeScroller = null; return }
   startY.value = event.touches ? event.touches[0].clientY : event.clientY

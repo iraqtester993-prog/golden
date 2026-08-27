@@ -180,7 +180,7 @@
               </div>
               <div class="month-right">
                 <span class="month-amount">{{ m.amount }} د.ع</span>
-                <span class="month-badge" :class="m.status">{{ m.status === 'paid' ? 'مدفوع' : m.status === 'latePaid' ? 'مدفوع متلكئ' : m.status === 'partialPaid' ? 'مدفوع جزئي' : m.status === 'next' ? 'القادم' : 'غير مدفوع' }}</span>
+                <span class="month-badge" :class="m.status">{{ m.status === 'paid' ? 'مدفوع' : m.status === 'late' ? 'متلكئ' : m.status === 'partialPaid' ? 'مدفوع جزئي' : m.status === 'next' ? 'القادم' : 'غير مدفوع' }}</span>
               </div>
             </div>
           </div>
@@ -232,7 +232,7 @@ const currentInstallments = [
       { date: '15 فبراير 2025', amount: '833,000', status: 'paid' },
       { date: '15 مارس 2025', amount: '833,000', status: 'paid' },
       { date: '15 أبريل 2025', amount: '833,000', status: 'paid' },
-      { date: '15 مايو 2025', amount: '833,000', status: 'latePaid' },
+      { date: '15 مايو 2025', amount: '833,000', status: 'late' },
       { date: '15 يونيو 2025', amount: '833,000', status: 'paid' },
       { date: '15 يوليو 2025', amount: '833,000', status: 'paid' },
       { date: '15 أغسطس 2025', amount: '833,000', status: 'partialPaid' },
@@ -243,7 +243,7 @@ const currentInstallments = [
       { date: '15 يناير 2026', amount: '833,000', status: 'paid' },
       { date: '15 فبراير 2026', amount: '833,000', status: 'paid' },
       { date: '15 مارس 2026', amount: '833,000', status: 'next' },
-      { date: '15 أبريل 2026', amount: '833,000', status: 'pending' },
+      { date: '15 أبريل 2026', amount: '833,000', status: 'late' },
       { date: '15 مايو 2026', amount: '833,000', status: 'pending' },
       { date: '15 يونيو 2026', amount: '833,000', status: 'pending' },
       { date: '15 يوليو 2026', amount: '833,000', status: 'pending' },
@@ -569,7 +569,7 @@ const navItems = [
 }
 
 .month-badge.paid { background: rgba(52, 211, 153, 0.15); color: var(--success); }
-.month-badge.latePaid { background: rgba(251, 146, 60, 0.16); color: #fb923c; }
+.month-badge.late { background: rgba(251, 146, 60, 0.16); color: #fb923c; }
 .month-badge.partialPaid { background: rgba(99, 179, 237, 0.16); color: #63b3ed; }
 .month-badge.next { background: rgba(242, 202, 80, 0.15); color: var(--primary); }
 .month-badge.pending { background: var(--surface-container); color: var(--on-surface-variant); }

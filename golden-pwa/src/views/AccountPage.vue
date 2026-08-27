@@ -40,6 +40,16 @@
           </div>
           <span class="material-symbols-outlined arrow">chevron_left</span>
         </div>
+        <div class="menu-row language-row">
+          <div class="menu-left">
+            <div class="menu-icon-wrap"><span class="material-symbols-outlined mi">language</span></div>
+            <span class="menu-label">{{ t('اللغة') }}</span>
+          </div>
+          <div class="language-options" @click.stop>
+            <button :class="{ active: language === 'ar' }" @click="setLanguage('ar')">العربية</button>
+            <button :class="{ active: language === 'en' }" @click="setLanguage('en')">English</button>
+          </div>
+        </div>
       </div>
 
       <!-- Support Card -->
@@ -137,8 +147,10 @@
 import { ref, reactive, onMounted, onActivated } from 'vue'
 import { useRouter } from 'vue-router'
 import TopBar from '../components/TopBar.vue'
+import { useLanguage } from '../composables/useLanguage'
 
 const router = useRouter()
+const { language, setLanguage, t } = useLanguage()
 const goTo = (r) => { if (r) router.push(r) }
 
 const showSupportSheet = ref(false)
@@ -210,6 +222,10 @@ const navItems = [
 .mi { font-size: 20px; color: var(--primary); }
 .menu-label { font-size: 14px; color: var(--on-surface); }
 .arrow { font-size: 20px; color: var(--on-surface-variant); }
+.language-row { cursor: default; }
+.language-options { display:flex; gap:4px; padding:3px; border:1px solid var(--outline-variant); border-radius:10px; background:var(--bg); direction:ltr; }
+.language-options button { border:0; border-radius:7px; padding:6px 9px; color:var(--on-surface-variant); background:transparent; font:600 11px inherit; cursor:pointer; }
+.language-options button.active { color:#111827; background:var(--primary); }
 
 .support-card { min-height: 68px; background: var(--surface-container-high); display: flex; align-items: center; justify-content: space-between; padding: 0 16px; cursor: pointer; }
 .support-card:active { background: var(--surface-container); }

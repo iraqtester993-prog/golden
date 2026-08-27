@@ -11,6 +11,7 @@
         <input type="text" placeholder="ابحث عن منتج..." class="search-input" />
         <span class="material-symbols-outlined search-icon">search</span>
       </div>
+      <div v-if="route.query.branch" class="branch-store-banner"><span class="material-symbols-outlined">storefront</span><div><small>تتسوق من</small><strong>{{ route.query.branch }}</strong></div><button @click="router.push('/store')"><span class="material-symbols-outlined">close</span></button></div>
 
       <!-- Categories -->
       <section v-if="activeCat === 'الكل'" class="categories">
@@ -91,6 +92,7 @@
             <h2 class="detail-name">{{ selectedProduct.name }}</h2>
             <div class="detail-price">{{ selectedProduct.price }} د.ع</div>
             <span class="detail-spec">{{ selectedProduct.spec }}</span>
+            <div v-if="route.query.branch" class="product-branch-name"><span class="material-symbols-outlined">location_on</span> متوفر في {{ route.query.branch }}</div>
           </div>
 
           <div class="detail-section">
@@ -237,7 +239,8 @@ const products = [
   { name:'غسالة Samsung أوتوماتيك',spec:'9 كغم',price:'980,000',img:'https://images.unsplash.com/photo-1626806787461-102c1bfaaea1?w=400&h=300&fit=crop',images:['https://images.unsplash.com/photo-1626806787461-102c1bfaaea1?w=800&h=800&fit=crop'],desc:'غسالة أوتوماتيك بسعة 9 كغم للاستخدام العائلي.',brand:'Samsung',mainCat:'المنزل',subCat:'أجهزة منزلية',specs:{'السعة':'9 كغم','النوع':'أوتوماتيك','اللون':'فضي'} }
 ]
 
-const displayedProducts = computed(() => products.filter(p => (!route.query.brand || p.brand === route.query.brand) && (activeTab.value !== 'offers' || p.offer) && (activeCat.value === 'الكل' || p.mainCat === activeCat.value) && (activeSub.value === 'الكل' || p.subCat === activeSub.value)))
+const branchProducts = { 'الفرع الرئيسي - بغداد': ['iPhone 16 Pro Max', 'Samsung S24 Ultra', 'Hisense 55 inch 4K', 'Toyota Camry 2024'], 'فرع الأعظمية': ['Samsung S24 Ultra', 'شاحنة JAC خفيفة', 'مكيف Gree سبليت'], 'فرع البصرة': ['Hisense 55 inch 4K', 'مكيف Gree سبليت', 'غسالة Samsung أوتوماتيك'] }
+const displayedProducts = computed(() => products.filter(p => (!route.query.brand || p.brand === route.query.brand) && (!route.query.branch || branchProducts[route.query.branch]?.includes(p.name)) && (activeTab.value !== 'offers' || p.offer) && (activeCat.value === 'الكل' || p.mainCat === activeCat.value) && (activeSub.value === 'الكل' || p.subCat === activeSub.value)))
 const cashPurchase = source => {
   const selected = Array.isArray(source) ? source : [source]
   if (!selected.length) return
@@ -264,6 +267,7 @@ const navItems = [
 
 <style scoped>
 .page { width: 100%; max-width:100%; height: 100dvh; background: var(--bg); display: flex; flex-direction: column; overflow: hidden; overscroll-behavior: none; }
+.branch-store-banner{display:flex;align-items:center;gap:9px;padding:10px 12px;border:1px solid rgba(196,154,59,.35);border-radius:13px;background:rgba(196,154,59,.1);color:var(--primary)}.branch-store-banner>span{font-size:22px}.branch-store-banner div{display:flex;flex:1;flex-direction:column;gap:1px}.branch-store-banner small{font-size:9px;color:var(--on-surface-variant)}.branch-store-banner strong{font-size:12px}.branch-store-banner button{width:30px;height:30px;border:0;border-radius:9px;background:var(--surface-container);color:var(--on-surface-variant);cursor:pointer}.branch-store-banner button .material-symbols-outlined{font-size:18px}
 
 .page-content {
   flex: 1; min-width:0; max-width:100%; overflow-y: auto; overflow-x:hidden; overscroll-behavior-y: contain; padding: 12px 16px 90px;
@@ -444,6 +448,7 @@ const navItems = [
 .detail-name { font-size: 18px; font-weight: 700; color: var(--on-surface); margin-bottom: 4px; }
 .detail-price { font-size: 20px; font-weight: 700; color: var(--primary); direction: rtl; margin-bottom: 4px; }
 .detail-spec { font-size: 12px; color: var(--on-surface-variant); }
+.product-branch-name{display:flex;align-items:center;gap:4px;margin-top:9px;color:var(--primary);font-size:11px;font-weight:700}.product-branch-name .material-symbols-outlined{font-size:16px}
 
 .detail-heading { font-size: 14px; font-weight: 700; color: var(--on-surface); margin-bottom: 8px; }
 .detail-desc { font-size: 13px; color: var(--on-surface-variant); line-height: 1.7; }
