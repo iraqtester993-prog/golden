@@ -239,7 +239,7 @@ const products = [
   { name:'غسالة Samsung أوتوماتيك',spec:'9 كغم',price:'980,000',img:'https://images.unsplash.com/photo-1626806787461-102c1bfaaea1?w=400&h=300&fit=crop',images:['https://images.unsplash.com/photo-1626806787461-102c1bfaaea1?w=800&h=800&fit=crop'],desc:'غسالة أوتوماتيك بسعة 9 كغم للاستخدام العائلي.',brand:'Samsung',mainCat:'المنزل',subCat:'أجهزة منزلية',specs:{'السعة':'9 كغم','النوع':'أوتوماتيك','اللون':'فضي'} }
 ]
 
-const branchProducts = { 'الفرع الرئيسي - بغداد': ['iPhone 16 Pro Max', 'Samsung S24 Ultra', 'Hisense 55 inch 4K', 'Toyota Camry 2024'], 'فرع الأعظمية': ['Samsung S24 Ultra', 'شاحنة JAC خفيفة', 'مكيف Gree سبليت'], 'فرع البصرة': ['Hisense 55 inch 4K', 'مكيف Gree سبليت', 'غسالة Samsung أوتوماتيك'] }
+const branchProducts = { 'الفرع الرئيسي - بغداد': ['iPhone 16 Pro Max', 'Samsung S24 Ultra', 'Hisense 55 inch 4K', 'Toyota Camry 2024'], 'فرع الأعظمية': ['Samsung S24 Ultra', 'شاحنة JAC خفيفة', 'مكيف Gree سبليت'], 'فرع البصرة': ['Hisense 55 inch 4K', 'مكيف Gree سبليت', 'غسالة Samsung أوتوماتيك'], 'فرع كربلاء': ['iPhone 16 Pro Max', 'Toyota Camry 2024', 'غسالة Samsung أوتوماتيك'], 'فرع النجف': ['Samsung S24 Ultra', 'Hisense 55 inch 4K', 'شاحنة JAC خفيفة'] }
 const displayedProducts = computed(() => products.filter(p => (!route.query.brand || p.brand === route.query.brand) && (!route.query.branch || branchProducts[route.query.branch]?.includes(p.name)) && (activeTab.value !== 'offers' || p.offer) && (activeCat.value === 'الكل' || p.mainCat === activeCat.value) && (activeSub.value === 'الكل' || p.subCat === activeSub.value)))
 const cashPurchase = source => {
   const selected = Array.isArray(source) ? source : [source]

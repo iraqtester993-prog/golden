@@ -92,11 +92,12 @@
       </section>
 
       <section class="branches-home">
-        <div class="branches-heading"><h2 class="section-heading">فروعنا</h2><button @click="goTo('/branches')">عرض الكل <span class="material-symbols-outlined">arrow_back</span></button></div>
+        <div class="branches-heading"><h2 class="section-heading">فروعنا</h2></div>
         <div class="branch-preview-list">
-          <button v-for="branch in branches.slice(0, 3)" :key="branch.name" class="branch-preview" @click="goTo('/branches?branch=' + encodeURIComponent(branch.name))">
+          <button v-for="branch in branches.slice(0, 5)" :key="branch.name" class="branch-preview" @click="goTo('/store?branch=' + encodeURIComponent(branch.name))">
             <img :src="branch.img" :alt="branch.name"/><span class="branch-preview-overlay"><strong>{{ branch.name }}</strong><small>تصفح منتجات الفرع</small></span>
           </button>
+          <button class="branch-preview branch-more" @click="goTo('/branches')"><span class="material-symbols-outlined">apps</span><strong>المزيد</strong><small>كل الفروع</small></button>
         </div>
       </section>
 
@@ -439,6 +440,8 @@ const branches = [
   { name: 'الفرع الرئيسي - بغداد', address: 'شارع الرشيد،وسط البلد، بغداد', img: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&h=400&fit=crop', phones: ['07701234567', '07801234567'] },
   { name: 'فرع الأعظمية', address: 'شارع حسين خليل، الأعظمية، بغداد', img: 'https://images.unsplash.com/photo-1497366811353-6870744d04b2?w=800&h=400&fit=crop', phones: ['07709876543', '07809876543'] },
   { name: 'فرع البصرة', address: 'شارع الع╢abi، البصرة', img: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800&h=400&fit=crop', phones: ['07801112233', '07701112233'] }
+  ,{ name: 'فرع كربلاء', address: 'شارع الجمهورية، كربلاء', img: 'https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=800&h=400&fit=crop', phones: ['07802223344'] }
+  ,{ name: 'فرع النجف', address: 'شارع المدينة، النجف', img: 'https://images.unsplash.com/photo-1497366811353-6870744d04b2?w=800&h=400&fit=crop', phones: ['07803334455'] }
 ]
 
 const dealers = [
@@ -556,6 +559,7 @@ const navItems = [
 .stat-num.gold { font-size: 18px; color: var(--primary); }
 .stat-unit { font-size: 13px; color: var(--on-surface-variant); }
 .branches-home { display:flex; flex-direction:column; gap:10px; }.branches-heading { display:flex; align-items:center; justify-content:space-between; }.branches-heading .section-heading { margin:0; }.branches-heading button { display:flex; align-items:center; gap:3px; border:0; background:transparent; color:var(--primary); font:700 11px inherit; cursor:pointer; }.branches-heading .material-symbols-outlined { font-size:16px; }.branch-preview-list { display:grid; grid-template-columns:repeat(3,1fr); gap:9px; }.branch-preview { position:relative; min-width:0; height:116px; overflow:hidden; border:1px solid var(--outline-variant); border-radius:14px; background:var(--surface-container); padding:0; cursor:pointer; text-align:right; }.branch-preview img { width:100%; height:100%; object-fit:cover; transition:transform .25s; }.branch-preview:active img { transform:scale(1.06); }.branch-preview-overlay { position:absolute; inset:0; display:flex; flex-direction:column; justify-content:flex-end; padding:8px; background:linear-gradient(transparent 30%, rgba(6,10,19,.88)); color:#fff; }.branch-preview-overlay strong { font-size:10px; line-height:1.5; }.branch-preview-overlay small { color:var(--primary); font-size:8px; margin-top:2px; }
+.branch-more { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:5px; border-color:rgba(196,154,59,.42); background:rgba(196,154,59,.09); color:var(--primary); }.branch-more .material-symbols-outlined { font-size:30px; }.branch-more strong { font-size:13px; }.branch-more small { font-size:9px; color:var(--on-surface-variant); }
 
 /* Date Bar */
 .date-bar { display: flex; justify-content: space-between; align-items: center; background: var(--surface-container); border: 1px solid var(--outline-variant); border-radius: 12px; padding: 8px 12px; }
