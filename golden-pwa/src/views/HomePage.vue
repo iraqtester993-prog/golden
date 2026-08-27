@@ -94,7 +94,7 @@
       <section class="branches-home">
         <div class="branches-heading"><h2 class="section-heading">فروعنا</h2></div>
         <div class="branch-preview-list">
-          <button v-for="branch in branches.slice(0, 5)" :key="branch.name" class="branch-preview" @click="goTo('/store?branch=' + encodeURIComponent(branch.name))">
+          <button v-for="branch in branches.slice(0, 5)" :key="branch.name" class="branch-preview" @click="goTo('/branches?branch=' + encodeURIComponent(branch.name))">
             <img :src="branch.img" :alt="branch.name"/><span class="branch-preview-overlay"><strong>{{ branch.name }}</strong><small>تصفح منتجات الفرع</small></span>
           </button>
           <button class="branch-preview branch-more" @click="goTo('/branches')"><span class="material-symbols-outlined">apps</span><strong>المزيد</strong><small>كل الفروع</small></button>
