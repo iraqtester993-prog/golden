@@ -12,7 +12,7 @@
         <!-- Profile Photo -->
         <div class="profile-photo-section">
           <label class="profile-photo-label">
-            <input type="file" accept="image/*" class="file-input" @change="handleProfilePhoto" />
+            <input type="file" accept="image/*" capture="user" class="file-input" @change="handleProfilePhoto" />
             <div class="profile-circle" :class="{ uploaded: profilePreview }">
               <img v-if="profilePreview" :src="profilePreview" class="profile-img" />
               <span v-else class="material-symbols-outlined profile-icon">person</span>
@@ -21,7 +21,7 @@
               </div>
             </div>
           </label>
-          <span class="profile-hint">تعديل الصورة الشخصية</span>
+          <span class="profile-hint">التقاط حي بالكامرة</span>
         </div>
 
         <div class="input-group">
@@ -80,15 +80,15 @@
           <h3 class="upload-title">البطاقة الوطنية</h3>
           <div class="upload-row">
             <label class="upload-box" :class="{ uploaded: form.nationalFront }">
-              <input type="file" accept="image/*" class="file-input" @change="e => handleFile(e, 'nationalFront')" />
+              <input type="file" accept="image/*" capture="environment" class="file-input" @change="e => handleFile(e, 'nationalFront')" />
               <span class="material-symbols-outlined upload-icon">credit_card</span>
-              <span class="upload-label">الوجه الأمامي</span>
+              <span class="upload-label">التقاط الوجه الأمامي</span>
               <span v-if="form.nationalFront" class="material-symbols-outlined check-upload">check_circle</span>
             </label>
             <label class="upload-box" :class="{ uploaded: form.nationalBack }">
-              <input type="file" accept="image/*" class="file-input" @change="e => handleFile(e, 'nationalBack')" />
+              <input type="file" accept="image/*" capture="environment" class="file-input" @change="e => handleFile(e, 'nationalBack')" />
               <span class="material-symbols-outlined upload-icon">credit_card</span>
-              <span class="upload-label">الوجه الخلفي</span>
+              <span class="upload-label">التقاط الوجه الخلفي</span>
               <span v-if="form.nationalBack" class="material-symbols-outlined check-upload">check_circle</span>
             </label>
           </div>
@@ -98,9 +98,9 @@
           <h3 class="upload-title">بطاقة السكن</h3>
           <div class="upload-row">
             <label class="upload-box full" :class="{ uploaded: form.residenceCard }">
-              <input type="file" accept="image/*" class="file-input" @change="e => handleFile(e, 'residenceCard')" />
+              <input type="file" accept="image/*" capture="environment" class="file-input" @change="e => handleFile(e, 'residenceCard')" />
               <span class="material-symbols-outlined upload-icon">home</span>
-              <span class="upload-label">ارفع صورة البطاقة</span>
+              <span class="upload-label">التقاط صورة البطاقة</span>
               <span v-if="form.residenceCard" class="material-symbols-outlined check-upload">check_circle</span>
             </label>
           </div>
@@ -110,9 +110,9 @@
           <h3 class="upload-title">هوية الدائرة <small>(اختيارية)</small></h3>
           <div class="upload-row">
             <label class="upload-box full" :class="{ uploaded: form.departmentId }">
-              <input type="file" accept="image/*" class="file-input" @change="e => handleFile(e, 'departmentId')" />
+              <input type="file" accept="image/*" capture="environment" class="file-input" @change="e => handleFile(e, 'departmentId')" />
               <span class="material-symbols-outlined upload-icon">badge</span>
-              <span class="upload-label">ارفع صورة الهوية</span>
+              <span class="upload-label">التقاط صورة الهوية</span>
               <span v-if="form.departmentId" class="material-symbols-outlined check-upload">check_circle</span>
             </label>
           </div>
