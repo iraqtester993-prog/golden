@@ -46,16 +46,12 @@
         <div class="product-card" v-for="product in sectionProducts(section.key)" :key="product.name" role="button" tabindex="0" @click="openDetails(product)" @keydown.enter="openDetails(product)">
           <div class="product-img-wrap">
             <img :src="product.img" class="product-img" />
-            <button class="fav-btn" :class="{ 'fav-active': isFav(product) }" @click.stop="toggleFav(product)">
-              <span class="material-symbols-outlined">favorite</span>
-            </button>
           </div>
           <div class="product-info">
             <h3 class="product-name">{{ product.name }}</h3>
-            <span class="product-spec">{{ product.spec }}</span>
             <div class="product-price"><small>السعر النقدي</small>{{ product.price }} د.ع</div>
             <div class="installment-strip"><span class="material-symbols-outlined">account_balance_wallet</span>يدعم التقسيط</div>
-            <div class="product-cart-control" @click.stop><button v-if="cartQty(product)" aria-label="تقليل الكمية" @click="decrease(product.name)">−</button><b v-if="cartQty(product)">{{ cartQty(product) }}</b><button class="add-product" :aria-label="cartQty(product) ? 'زيادة الكمية' : 'إضافة إلى السلة'" @click="addToCart(product)"><span class="material-symbols-outlined">{{ cartQty(product) ? 'add' : 'add_shopping_cart' }}</span>{{ cartQty(product) ? 'زيادة' : 'إضافة للسلة' }}</button></div>
+            <div class="product-cart-control" @click.stop><button class="add-product" aria-label="إضافة إلى السلة" @click="addToCart(product)"><span class="material-symbols-outlined">add_shopping_cart</span>إضافة للسلة</button></div>
           </div>
         </div>
         </div>
@@ -340,11 +336,11 @@ const navItems = [
 .brands-store .cat-icon-wrap, .brands-store .cat-img { width:56px; height:56px; }
 .product-card { cursor:pointer; transition:border-color .2s,transform .2s; }
 .product-card:active { transform:scale(.99); border-color:var(--primary); }
-.product-cart-control { display:flex; align-items:center; gap:6px; margin-top:8px; }
+.product-cart-control { display:flex; align-items:center; justify-content:center; gap:6px; margin-top:8px; }
 .product-cart-control > button { min-height:29px; display:flex; align-items:center; justify-content:center; border:1px solid rgba(196,154,59,.3); border-radius:9px; background:rgba(196,154,59,.12); color:var(--primary); font:700 10px inherit; cursor:pointer; }
 .product-cart-control > button:first-child { width:30px; font-size:18px; }
 .product-cart-control > b { min-width:18px; color:var(--on-surface); text-align:center; font-size:12px; }
-.add-product { flex:1; gap:4px; padding:0 8px; white-space:nowrap; }
+.add-product { flex:0 0 auto; min-width:128px; gap:4px; padding:0 12px; white-space:nowrap; }
 .add-product .material-symbols-outlined { font-size:16px; }
 
 /* Slider */
