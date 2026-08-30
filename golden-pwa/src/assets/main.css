@@ -119,6 +119,9 @@ html:not(.dark) .stats-panel { background:linear-gradient(135deg, #e0dbd3 0%, #f
 #app .directory-search input::placeholder { color:var(--on-surface-variant); }
 #app .page:has(.directory-search) .content article { min-height:88px; margin:10px 0; padding:8px; border-radius:16px; }
 #app .page:has(.directory-search) .content article img { width:82px; height:70px; border-radius:12px; }
+#app .page:has(.add-cart) .content { padding-bottom:calc(156px + env(safe-area-inset-bottom)) !important; }
+#app .page:has(.section-head) .cart-control { justify-content:center; }
+#app .page:has(.section-head) .cart-control button { flex:0 0 auto; min-width:120px; padding:0 9px; white-space:nowrap; }
 
 /* The fixed navigation must never cover the last action in a branch profile. */
 #app .page:has(.browse-branch) .content { padding-bottom: calc(108px + env(safe-area-inset-bottom)) !important; }
