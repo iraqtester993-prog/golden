@@ -166,12 +166,7 @@ const toggleFav = (p) => {
 watch(selectedProduct, () => { galleryIndex.value = 0 })
 watch(() => route.query.tab, tab => { if (tab) activeTab.value = tab }, { immediate: true })
 watch(() => route.query.section, section => { showAllTab.value = section || null }, { immediate: true })
-const openSection = section => {
-  const query = { ...route.query }
-  if (showAllTab.value === section) delete query.section
-  else query.section = section
-  router.push({ path: '/store', query })
-}
+const openSection = section => router.push('/store-section/' + section)
 
 const categories = [
   { img: 'https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=200&h=200&fit=crop', label: 'الكل', subcategories: [] },
@@ -390,7 +385,7 @@ const navItems = [
 .tab.active { color: var(--primary); border-bottom-color: var(--primary); }
 
 /* Products */
-.product-section { display:flex; flex-direction:column; gap:8px; }.section-title-row{display:flex;align-items:center;justify-content:space-between}.section-title-row h2{margin:0;color:var(--on-surface);font-size:16px}.section-title-row button{border:0;background:transparent;color:var(--primary);font:700 11px inherit;cursor:pointer}div.products-list.product-carousel{flex-direction:row;overflow-x:auto;scroll-snap-type:x mandatory;padding:1px 1px 8px;scrollbar-width:none}.product-carousel::-webkit-scrollbar{display:none}.product-carousel .product-card{flex:0 0 254px;scroll-snap-align:start}.product-carousel.show-all-products{flex-wrap:wrap;overflow:visible}.product-carousel.show-all-products .product-card{flex:1 1 100%}
+.product-section { display:flex; flex-direction:column; gap:8px; }.section-title-row{display:flex;align-items:center;justify-content:space-between}.section-title-row h2{margin:0;color:var(--on-surface);font-size:16px}.section-title-row button{border:0;background:transparent;color:var(--primary);font:700 11px inherit;cursor:pointer}div.products-list.product-carousel{flex-direction:row;overflow-x:auto;scroll-snap-type:x mandatory;padding:1px 1px 8px;scrollbar-width:none}.product-carousel::-webkit-scrollbar{display:none}.product-carousel .product-card{flex:0 0 222px;scroll-snap-align:start}.product-carousel.show-all-products{flex-wrap:wrap;overflow:visible}.product-carousel.show-all-products .product-card{flex:0 0 222px}
 .products-list { display: flex; flex-direction: column; gap: 12px; }
 
 .product-card {

@@ -26,6 +26,7 @@ const routes = [
     name: 'Store',
     component: () => import('../views/StorePage.vue')
   },
+  { path: '/store-section/:section', name: 'StoreSection', component: () => import('../views/ProductSectionPage.vue') },
   { path: '/cart', name: 'Cart', component: () => import('../views/CartPage.vue') },
   { path: '/product', name: 'ProductDetails', component: () => import('../views/ProductDetailsPage.vue') },
   { path: '/brands', name: 'Brands', component: () => import('../views/BrandsPage.vue') },

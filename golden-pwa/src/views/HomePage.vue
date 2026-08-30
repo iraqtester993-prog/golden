@@ -581,10 +581,10 @@ const navItems = [
 
 /* Services */
 .section-heading { font-size: 16px; font-weight: 700; color: var(--on-surface); margin-bottom: 12px; }
-.services-grid { display:flex; gap:12px; overflow-x:auto; padding:3px 1px 7px; scrollbar-width:none; }.services-grid::-webkit-scrollbar{display:none}
-.svc-item { flex:0 0 76px; background: var(--surface-container); border: 1px solid var(--outline-variant); border-radius:50%; aspect-ratio:1; padding:8px 4px; display: flex; flex-direction: column; align-items: center; justify-content:center; gap:5px; cursor: pointer; transition: border-color .2s,transform .2s; }
-.svc-item:active { border-color: var(--primary); transform:scale(.96); }
-.svc-icon { font-size:25px; color: var(--primary); }
+.services-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; }
+.svc-item { min-height:82px; background: var(--surface-container); border: 1px solid var(--outline-variant); border-radius:13px; padding:10px 4px; display: flex; flex-direction: column; align-items: center; justify-content:center; gap:6px; cursor: pointer; transition: border-color .2s,transform .2s; }
+.svc-item:active { border-color: var(--primary); transform:scale(.97); }
+.svc-icon { font-size:24px; color: var(--primary); }
 .svc-icon.filled { font-variation-settings: 'FILL' 1; }
 .svc-label { font-size: 10px; color: var(--on-surface); text-align: center; }
 
