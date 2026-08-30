@@ -114,5 +114,11 @@ html:not(.dark) .stats-panel { background:linear-gradient(135deg, #e0dbd3 0%, #f
 .quantity-control button { width:25px; height:25px; display:grid; place-items:center; border:0; border-radius:7px; background:rgba(196,154,59,.15); color:var(--primary); font-size:18px; line-height:1; cursor:pointer; }
 .quantity-control b { min-width:17px; color:var(--on-surface); text-align:center; font-size:12px; }
 
+#app .directory-search { display:flex; align-items:center; gap:9px; height:48px; margin:12px 0 14px; padding:0 13px; border:1px solid var(--outline-variant); border-radius:14px; background:var(--surface-container); color:var(--primary); }
+#app .directory-search input { flex:1; min-width:0; border:0; outline:0; background:transparent; color:var(--on-surface); font:inherit; font-size:12px; }
+#app .directory-search input::placeholder { color:var(--on-surface-variant); }
+#app .page:has(.directory-search) .content article { min-height:88px; margin:10px 0; padding:8px; border-radius:16px; }
+#app .page:has(.directory-search) .content article img { width:82px; height:70px; border-radius:12px; }
+
 /* The fixed navigation must never cover the last action in a branch profile. */
 #app .page:has(.browse-branch) .content { padding-bottom: calc(108px + env(safe-area-inset-bottom)) !important; }

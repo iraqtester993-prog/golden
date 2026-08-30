@@ -39,16 +39,11 @@
         </div>
       </section>
 
-      <!-- Tabs -->
-      <div class="tabs">
-        <button class="tab" :class="{ active: activeTab === 'popular' }" @click="activeTab = 'popular'">الأكثر مبيعاً</button>
-        <button class="tab" :class="{ active: activeTab === 'new' }" @click="activeTab = 'new'">الجديد</button>
-        <button class="tab" :class="{ active: activeTab === 'offers' }" @click="activeTab = 'offers'">العروض</button>
-      </div>
-
-      <!-- Products -->
-      <div class="products-list">
-        <div class="product-card" v-for="product in displayedProducts" :key="product.name" role="button" tabindex="0" @click="openDetails(product)" @keydown.enter="openDetails(product)">
+      <!-- Product sections -->
+      <section v-for="section in productSections" :key="section.key" class="product-section">
+        <div class="section-title-row"><h2>{{ section.label }}</h2><button @click="showAllTab = showAllTab === section.key ? null : section.key">{{ showAllTab === section.key ? 'عرض أقل' : 'عرض الكل' }}</button></div>
+        <div class="products-list product-carousel" :class="{ 'show-all-products': showAllTab === section.key }">
+        <div class="product-card" v-for="product in sectionProducts(section.key)" :key="product.name" role="button" tabindex="0" @click="openDetails(product)" @keydown.enter="openDetails(product)">
           <div class="product-img-wrap">
             <img :src="product.img" class="product-img" />
             <button class="fav-btn" :class="{ 'fav-active': isFav(product) }" @click.stop="toggleFav(product)">
@@ -63,7 +58,8 @@
             <div class="product-cart-control" @click.stop><button v-if="cartQty(product)" aria-label="تقليل الكمية" @click="decrease(product.name)">−</button><b v-if="cartQty(product)">{{ cartQty(product) }}</b><button class="add-product" :aria-label="cartQty(product) ? 'زيادة الكمية' : 'إضافة إلى السلة'" @click="addToCart(product)"><span class="material-symbols-outlined">{{ cartQty(product) ? 'add' : 'add_shopping_cart' }}</span>{{ cartQty(product) ? 'زيادة' : 'إضافة للسلة' }}</button></div>
           </div>
         </div>
-      </div>
+        </div>
+      </section>
     </main>
 
     <!-- Product Details Bottom Sheet -->
@@ -146,6 +142,7 @@ const activeCat = ref('الكل')
 const activeSub = ref('الكل')
 const activeBrand = ref('الكل')
 const activeTab = ref('popular')
+const showAllTab = ref(null)
 const currentSlide = ref(0)
 const selectedProduct = ref(null)
 const galleryIndex = ref(0)
@@ -245,7 +242,15 @@ const branchAvailableProducts = computed(() => route.query.branch ? products.fil
 const availableCategories = computed(() => categories.filter(category => category.label === 'الكل' || branchAvailableProducts.value.some(product => product.mainCat === category.label)))
 const availableSubcategories = computed(() => activeCategory.value.subcategories.filter(subcategory => subcategory.label === 'الكل' || branchAvailableProducts.value.some(product => product.mainCat === activeCat.value && product.subCat === subcategory.label)))
 const availableBrands = computed(() => brands.filter(brand => branchAvailableProducts.value.some(product => product.brand === brand.name)))
-const displayedProducts = computed(() => products.filter(p => (!route.query.brand || p.brand === route.query.brand) && (activeBrand.value === 'الكل' || p.brand === activeBrand.value) && (!route.query.branch || branchProducts[route.query.branch]?.includes(p.name)) && (activeTab.value !== 'offers' || p.offer) && (activeCat.value === 'الكل' || p.mainCat === activeCat.value) && (activeSub.value === 'الكل' || p.subCat === activeSub.value)))
+const baseProducts = computed(() => products.filter(p => (!route.query.brand || p.brand === route.query.brand) && (activeBrand.value === 'الكل' || p.brand === activeBrand.value) && (!route.query.branch || branchProducts[route.query.branch]?.includes(p.name)) && (activeCat.value === 'الكل' || p.mainCat === activeCat.value) && (activeSub.value === 'الكل' || p.subCat === activeSub.value)))
+const displayedProducts = computed(() => baseProducts.value.filter(product => activeTab.value !== 'offers' || product.offer))
+const productSections = [{ key:'popular', label:'الأكثر مبيعاً' }, { key:'new', label:'الجديد' }, { key:'offers', label:'العروض' }]
+const sectionProducts = key => {
+  let list = baseProducts.value
+  if (key === 'offers') list = list.filter(product => product.offer)
+  if (key === 'new') list = list.slice(-4)
+  return showAllTab.value === key ? list : list.slice(0, 4)
+}
 const cartQty = product => cart.value.find(item => item.name === product.name)?.quantity || 0
 const cashPurchase = source => {
   const selected = Array.isArray(source) ? source : [source]
@@ -378,6 +383,7 @@ const navItems = [
 .tab.active { color: var(--primary); border-bottom-color: var(--primary); }
 
 /* Products */
+.product-section { display:flex; flex-direction:column; gap:8px; }.section-title-row{display:flex;align-items:center;justify-content:space-between}.section-title-row h2{margin:0;color:var(--on-surface);font-size:16px}.section-title-row button{border:0;background:transparent;color:var(--primary);font:700 11px inherit;cursor:pointer}div.products-list.product-carousel{flex-direction:row;overflow-x:auto;scroll-snap-type:x mandatory;padding:1px 1px 8px;scrollbar-width:none}.product-carousel::-webkit-scrollbar{display:none}.product-carousel .product-card{flex:0 0 254px;scroll-snap-align:start}.product-carousel.show-all-products{flex-wrap:wrap;overflow:visible}.product-carousel.show-all-products .product-card{flex:1 1 100%}
 .products-list { display: flex; flex-direction: column; gap: 12px; }
 
 .product-card {

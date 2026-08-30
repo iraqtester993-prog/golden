@@ -124,16 +124,9 @@
 
         <!-- Result -->
         <div class="result-card" v-if="selectedMonths > 0">
-          <div class="result-row">
+          <div class="result-row cash-price-row">
             <span class="result-label">السعر النقدي للمنتجات</span>
             <span class="result-value-sm">{{ formatNum(totalPrice) }} د.ع</span>
-          </div>
-          <div class="result-row installment-total-row">
-            <span class="result-label">إجمالي سعر التقسيط <small>زيادة {{ installmentRate }}%</small></span>
-            <div class="result-value-wrap">
-              <span class="result-value">{{ formatNum(installmentPrice) }}</span>
-              <span class="result-unit">د.ع</span>
-            </div>
           </div>
           <div class="result-row">
             <span class="result-label">القسط الشهري</span>
@@ -169,7 +162,6 @@
             <span class="calc-total-label">{{ selectedProducts.length }} منتجات - {{ selectedMonths }} شهر</span>
             <span class="calc-total-value">{{ formatNum(monthlyInstallment) }} د.ع/شهر</span>
           </div>
-          <div class="calc-total-row"><span class="calc-total-label">إجمالي سعر التقسيط</span><span class="calc-total-value">{{ formatNum(installmentPrice) }} د.ع</span></div>
         </div>
 
         <!-- Personal Info -->
@@ -211,11 +203,6 @@
 
         <!-- Final Summary -->
         <div class="result-card">
-          <div class="result-row">
-            <span class="result-label">إجمالي سعر التقسيط</span>
-            <span class="result-value-sm">{{ formatNum(installmentPrice) }} د.ع</span>
-          </div>
-          <div class="result-divider"></div>
           <div class="result-row">
             <span class="result-label">مدة التقسيط</span>
             <span class="result-value-sm">{{ selectedMonths }} شهر</span>
@@ -595,6 +582,7 @@ const navItems = [
 .result-card { background: linear-gradient(135deg, rgba(242, 202, 80, 0.08), rgba(242, 202, 80, 0.03)); border: 1px solid var(--primary); border-radius: 16px; padding: 16px; }
 .result-row { display: flex; align-items: center; justify-content: space-between; padding: 4px 0; }
 .result-label { font-size: 13px; color: var(--on-surface-variant); }
+.cash-price-row .result-label { font-size:15px; font-weight:700; color:var(--on-surface); }.cash-price-row .result-value-sm { font-size:18px; color:var(--primary); }
 .result-label small { display:block; margin-top:3px; color:var(--primary); font-size:10px; font-weight:700; }
 .installment-total-row { margin:7px 0; padding:10px 0; border-top:1px solid var(--outline-variant); border-bottom:1px solid var(--outline-variant); }
 .result-value-wrap { display: flex; align-items: baseline; gap: 4px; }

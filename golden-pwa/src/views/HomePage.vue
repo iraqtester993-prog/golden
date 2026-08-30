@@ -506,10 +506,7 @@ const services = [
   { icon: 'local_offer', label: 'العروض', handler: () => goTo('/store?tab=offers') },
   { icon: 'account_balance_wallet', label: 'أقساطي', handler: () => goTo('/settlements') },
   { icon: 'store', label: 'الماركات', handler: () => goTo('/brands') },
-  { icon: 'location_on', label: 'الفروع', handler: () => goTo('/branches') },
-  { icon: 'support_agent', label: 'الوكلاء', handler: () => goTo('/dealers') },
-  { icon: 'account_balance_wallet', label: 'تسديد قسط', handler: () => goTo('/settlements') },
-  { icon: 'more_horiz', label: 'المزيد', handler: () => {} }
+  { icon: 'location_on', label: 'الفروع والوكالات', handler: () => goTo('/branches') }
 ]
 
 const navItems = [
