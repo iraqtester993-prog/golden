@@ -2,7 +2,7 @@
   <div class="page"><TopBar /><main class="content">
     <div class="title-row"><h2>سلة المنتجات</h2><button v-if="cart.length" class="clear" @click="clear">إلغاء الكل</button></div>
     <div v-if="!cart.length" class="empty"><span class="material-symbols-outlined">shopping_cart</span><p>السلة فارغة حالياً</p><button @click="router.push('/store')">الذهاب إلى المتجر</button></div>
-    <template v-else><article v-for="item in cart" :key="item.name" class="item"><img :src="item.img"/><div><h3>{{ item.name }}</h3><p>{{ item.spec }}</p><strong>{{ formatPrice(item.price) }} د.ع</strong></div><button class="remove" aria-label="حذف المنتج" @click="remove(item.name)"><span class="material-symbols-outlined">close</span></button></article><div class="total"><span>الإجمالي</span><strong>{{ formatPrice(total) }} د.ع</strong></div><div class="actions"><button class="cash" @click="cashPurchase">شراء نقد</button><button class="installment" @click="buyInstallment">شراء بالقسط</button></div></template>
+    <template v-else><article v-for="item in cart" :key="item.name" class="item"><img :src="item.img"/><div><h3>{{ item.name }}</h3><p>{{ item.spec }}</p><strong>{{ formatPrice(item.price) }} د.ع</strong><div class="quantity-control"><button aria-label="تقليل الكمية" @click="decrease(item.name)">−</button><b>{{ item.quantity || 1 }}</b><button aria-label="زيادة الكمية" @click="add(item)">+</button></div></div><button class="remove" aria-label="حذف المنتج" @click="remove(item.name)"><span class="material-symbols-outlined">close</span></button></article><div class="total"><span>الإجمالي</span><strong>{{ formatPrice(total) }} د.ع</strong></div><div class="actions"><button class="cash" @click="cashPurchase">شراء نقد</button><button class="installment" @click="buyInstallment">شراء بالقسط</button></div></template>
   </main><BottomNav /></div>
 </template>
 
@@ -11,7 +11,7 @@ import { useRouter } from 'vue-router'
 import TopBar from '../components/TopBar.vue'
 import BottomNav from '../components/BottomNav.vue'
 import { useCart } from '../composables/useCart'
-const router = useRouter(); const { cart, total, remove, clear } = useCart()
+const router = useRouter(); const { cart, total, add, decrease, remove, clear } = useCart()
 const formatPrice = value => Number(String(value).replace(/,/g, '')).toLocaleString('en')
 const cashPurchase = () => { const selected = [...cart.value]; if (!selected.length) return; const orders = JSON.parse(localStorage.getItem('golden_orders') || '[]'); const orderTotal = total.value; orders.push({ id: orders.length ? Math.max(...orders.map(order => order.id)) + 1 : 1001, date: new Date().toLocaleDateString('ar-EG', { year:'numeric', month:'short', day:'numeric' }), status:'pending', type:'cash', products:selected, totalPrice:orderTotal, totalAmount:orderTotal, monthlyInstallment:orderTotal, fullName:'', phone:'', address:'', ownerNote:'' }); localStorage.setItem('golden_orders', JSON.stringify(orders)); clear(); router.push('/orders') }
 const buyInstallment = () => router.push('/calculator?products=' + encodeURIComponent(JSON.stringify(cart.value.map(product => ({ name:product.name })))))

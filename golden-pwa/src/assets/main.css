@@ -97,7 +97,7 @@ html:not(.dark) .stats-panel { background:linear-gradient(135deg, #e0dbd3 0%, #f
 /* Large, high-contrast close targets across every bottom sheet and dialog. */
 #app .sheet-close, #app .dialog-close { width:42px !important; height:42px !important; display:grid !important; place-items:center !important; padding:0 !important; border:1px solid rgba(196,154,59,.45) !important; border-radius:13px !important; background:var(--surface-container-high) !important; color:var(--primary) !important; box-shadow:0 4px 12px rgba(0,0,0,.24) !important; z-index:3 !important; }
 #app .sheet-close .material-symbols-outlined, #app .dialog-close .material-symbols-outlined { font-size:25px !important; font-weight:700 !important; }
-#app .browse-branch { width:100%; display:flex; align-items:center; justify-content:center; gap:7px; margin:14px 0 18px; padding:13px; border:1px solid var(--primary); border-radius:13px; background:rgba(196,154,59,.12); color:var(--primary); font:700 14px inherit; cursor:pointer; }
+#app .browse-branch { width:100%; display:flex; align-items:center; justify-content:center; gap:8px; margin:14px 0 18px; padding:15px; border:1px solid var(--primary); border-radius:13px; background:rgba(196,154,59,.12); color:var(--primary); font:800 16px inherit; cursor:pointer; }
 #app .branch-social { display:flex; align-items:center; gap:9px; margin:13px 0 4px; direction:ltr; }
 #app .branch-social a { width:40px; height:40px; display:grid; place-items:center; border:1px solid var(--outline-variant); border-radius:12px; background:var(--surface-container); color:var(--on-surface); text-decoration:none; font-family:Arial,sans-serif; font-size:22px; font-weight:800; transition:transform .2s,border-color .2s; }
 #app .branch-social a:active { transform:scale(.93); border-color:var(--primary); }
@@ -107,6 +107,10 @@ html:not(.dark) .stats-panel { background:linear-gradient(135deg, #e0dbd3 0%, #f
 #app .branch-social-card { margin:10px 0 14px; padding:20px 16px; text-align:center; border:1px solid var(--outline-variant); border-radius:16px; background:var(--surface-container); }.branch-social-title { display:block; margin-bottom:14px; color:var(--on-surface-variant); font-size:14px; font-weight:600; }.branch-social-card .branch-social{justify-content:center;gap:16px;margin:0}.branch-social-card .branch-social a{width:48px;height:48px;border:0;border-radius:14px;font-size:24px;box-shadow:none}.branch-social-card .social-facebook{order:1;background:rgba(24,119,242,.15);color:#1877F2}.branch-social-card .social-instagram{order:2;background:linear-gradient(135deg,rgba(225,48,108,.15),rgba(131,58,180,.15));color:#E1306C}.branch-social-card .social-whatsapp{order:3;background:rgba(37,211,102,.15);color:#25D366}.branch-social-card .social-tiktok{order:4;background:var(--surface-variant);color:var(--on-surface)}.branch-social-card .social-whatsapp .material-symbols-outlined{font-size:24px}
 #app .branch-social-title { font-size:0; } #app .branch-social-title::after { content:'تواصل معنا'; font-size:13px; }
 #app .browse-branch ~ h3, #app .browse-branch ~ a { display:none !important; }
+
+.quantity-control { display:flex; align-items:center; gap:9px; width:max-content; margin-top:8px; padding:3px; border:1px solid var(--outline-variant); border-radius:10px; background:var(--surface-container-high); }
+.quantity-control button { width:25px; height:25px; display:grid; place-items:center; border:0; border-radius:7px; background:rgba(196,154,59,.15); color:var(--primary); font-size:18px; line-height:1; cursor:pointer; }
+.quantity-control b { min-width:17px; color:var(--on-surface); text-align:center; font-size:12px; }
 
 /* The fixed navigation must never cover the last action in a branch profile. */
 #app .page:has(.browse-branch) .content { padding-bottom: calc(108px + env(safe-area-inset-bottom)) !important; }

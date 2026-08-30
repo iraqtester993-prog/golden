@@ -24,6 +24,11 @@
       </section>
       <section v-else class="categories subcategory-grid"><button class="cat-item main-categories-btn" @click="selectMainCategory('الكل')"><div class="cat-icon-wrap"><span class="material-symbols-outlined">apps</span></div><span class="cat-label">الأقسام الرئيسية</span></button><button v-for="sub in activeCategory.subcategories" :key="sub.label" class="cat-item" :class="{active:activeSub===sub.label}" @click="selectSubCategory(sub.label)"><div class="cat-icon-wrap"><img :src="sub.img" class="cat-img"/></div><span class="cat-label">{{ sub.label }}</span></button></section>
 
+      <section class="brands-store" aria-label="الماركات التجارية">
+        <button class="cat-item" :class="{ active: activeBrand === 'الكل' }" @click="activeBrand = 'الكل'"><div class="cat-icon-wrap"><span class="material-symbols-outlined">apps</span></div><span class="cat-label">كل الماركات</span></button>
+        <button class="cat-item" v-for="brand in brands" :key="brand.name" :class="{ active: activeBrand === brand.name }" @click="activeBrand = brand.name"><div class="cat-icon-wrap"><img :src="brand.img" class="cat-img" /></div><span class="cat-label">{{ brand.name }}</span></button>
+      </section>
+
       <!-- Image Slider -->
       <section class="slider-section">
         <div class="slider-container">
@@ -51,7 +56,7 @@
 
       <!-- Products -->
       <div class="products-list">
-        <div class="product-card" v-for="product in displayedProducts" :key="product.name">
+        <div class="product-card" v-for="product in displayedProducts" :key="product.name" role="button" tabindex="0" @click="openDetails(product)" @keydown.enter="openDetails(product)">
           <div class="product-img-wrap">
             <img :src="product.img" class="product-img" />
             <button class="fav-btn" :class="{ 'fav-active': isFav(product) }" @click.stop="toggleFav(product)">
@@ -62,8 +67,8 @@
             <h3 class="product-name">{{ product.name }}</h3>
             <span class="product-spec">{{ product.spec }}</span>
             <div class="product-price">{{ product.price }} د.ع</div>
-            <button class="btn-details" @click="openDetails(product)">عرض التفاصيل</button>
             <div class="installment-strip"><span class="material-symbols-outlined">account_balance_wallet</span>يدعم التقسيط</div>
+            <div class="product-cart-control" @click.stop><button v-if="cartQty(product)" aria-label="تقليل الكمية" @click="decrease(product.name)">−</button><b v-if="cartQty(product)">{{ cartQty(product) }}</b><button class="add-product" :aria-label="cartQty(product) ? 'زيادة الكمية' : 'إضافة إلى السلة'" @click="addToCart(product)"><span class="material-symbols-outlined">{{ cartQty(product) ? 'add' : 'add_shopping_cart' }}</span>{{ cartQty(product) ? 'زيادة' : 'إضافة للسلة' }}</button></div>
           </div>
         </div>
       </div>
@@ -110,11 +115,7 @@
         </div>
 
         <!-- Bottom Actions -->
-        <div class="sheet-actions">
-          <button class="action-cash" @click="cashPurchase(selectedProduct)">شراء نقد</button>
-          <button class="action-installment" @click="buyInstallment(selectedProduct)">شراء بالقسط</button>
-          <button class="action-calc" @click="selectedProduct && goTo('/calculator?product=' + encodeURIComponent(JSON.stringify({ name: selectedProduct.name })))">حساب الأقساط</button>
-        </div>
+        <div class="sheet-actions"><button class="action-calc" @click="selectedProduct && goTo('/calculator?product=' + encodeURIComponent(JSON.stringify({ name: selectedProduct.name })))">حساب الأقساط</button></div>
       </div>
     </div>
 
@@ -151,13 +152,14 @@ const router = useRouter()
 const route = useRoute()
 const activeCat = ref('الكل')
 const activeSub = ref('الكل')
+const activeBrand = ref('الكل')
 const activeTab = ref('popular')
 const currentSlide = ref(0)
 const selectedProduct = ref(null)
 const galleryIndex = ref(0)
 const fullscreenImg = ref(null)
 const galleryRef = ref(null)
-const { cart, add: addToCart, clear: clearCart } = useCart()
+const { cart, add: addToCart, decrease, clear: clearCart } = useCart()
 
 const goTo = (route) => { if (route) router.push(route) }
 
@@ -180,6 +182,13 @@ const categories = [
   { img: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=200&h=200&fit=crop', label: 'إلكترونيات', subcategories: [{label:'الكل',img:'https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=200&h=200&fit=crop'},{label:'هواتف',img:'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=200&h=200&fit=crop'},{label:'تلفزيونات',img:'https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?w=200&h=200&fit=crop'}] },
   { img: 'https://images.unsplash.com/photo-1549317661-bd32c8ce0afa?w=200&h=200&fit=crop', label: 'مركبات', subcategories: [{label:'الكل',img:'https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=200&h=200&fit=crop'},{label:'سيارات',img:'https://images.unsplash.com/photo-1549317661-bd32c8ce0afa?w=200&h=200&fit=crop'},{label:'شاحنات',img:'https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?w=200&h=200&fit=crop'}] },
   { img: 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=200&h=200&fit=crop', label: 'المنزل', subcategories: [{label:'الكل',img:'https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=200&h=200&fit=crop'},{label:'مكيفات',img:'https://images.unsplash.com/photo-1631545806609-206480c4ca4d?w=200&h=200&fit=crop'},{label:'أجهزة منزلية',img:'https://images.unsplash.com/photo-1626806787461-102c1bfaaea1?w=200&h=200&fit=crop'}] }
+]
+const brands = [
+  { name: 'Apple', img: 'https://images.unsplash.com/photo-1611532736597-de2d4265fba3?w=200&h=200&fit=crop' },
+  { name: 'Samsung', img: 'https://images.unsplash.com/photo-1610945415295-d9bbf067e59c?w=200&h=200&fit=crop' },
+  { name: 'Hisense', img: 'https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?w=200&h=200&fit=crop' },
+  { name: 'Toyota', img: 'https://images.unsplash.com/photo-1549317661-bd32c8ce0afa?w=200&h=200&fit=crop' },
+  { name: 'Gree', img: 'https://images.unsplash.com/photo-1631545806609-206480c4ca4d?w=200&h=200&fit=crop' }
 ]
 const activeCategory = computed(() => categories.find(category => category.label === activeCat.value) || categories[0])
 const selectMainCategory = label => { activeCat.value = label; activeSub.value = 'الكل' }
@@ -240,7 +249,8 @@ const products = [
 ]
 
 const branchProducts = { 'الفرع الرئيسي - بغداد': ['iPhone 16 Pro Max', 'Samsung S24 Ultra', 'Hisense 55 inch 4K', 'Toyota Camry 2024'], 'فرع الأعظمية': ['Samsung S24 Ultra', 'شاحنة JAC خفيفة', 'مكيف Gree سبليت'], 'فرع البصرة': ['Hisense 55 inch 4K', 'مكيف Gree سبليت', 'غسالة Samsung أوتوماتيك'], 'فرع كربلاء': ['iPhone 16 Pro Max', 'Toyota Camry 2024', 'غسالة Samsung أوتوماتيك'], 'فرع النجف': ['Samsung S24 Ultra', 'Hisense 55 inch 4K', 'شاحنة JAC خفيفة'] }
-const displayedProducts = computed(() => products.filter(p => (!route.query.brand || p.brand === route.query.brand) && (!route.query.branch || branchProducts[route.query.branch]?.includes(p.name)) && (activeTab.value !== 'offers' || p.offer) && (activeCat.value === 'الكل' || p.mainCat === activeCat.value) && (activeSub.value === 'الكل' || p.subCat === activeSub.value)))
+const displayedProducts = computed(() => products.filter(p => (!route.query.brand || p.brand === route.query.brand) && (activeBrand.value === 'الكل' || p.brand === activeBrand.value) && (!route.query.branch || branchProducts[route.query.branch]?.includes(p.name)) && (activeTab.value !== 'offers' || p.offer) && (activeCat.value === 'الكل' || p.mainCat === activeCat.value) && (activeSub.value === 'الكل' || p.subCat === activeSub.value)))
+const cartQty = product => cart.value.find(item => item.name === product.name)?.quantity || 0
 const cashPurchase = source => {
   const selected = Array.isArray(source) ? source : [source]
   if (!selected.length) return
@@ -317,6 +327,22 @@ const navItems = [
 
 .cat-label { font-size: 11px; color: var(--on-surface-variant); white-space: nowrap; font-weight: 500; }
 .cat-item.active .cat-label { color: var(--primary); font-weight: 700; }
+
+/* The store starts with discovery: slider, departments, then brands. */
+.slider-section { order:-3; }
+.categories { order:-2; }
+.brands-store { order:-1; display:flex; justify-content:space-between; gap:4px; overflow-x:auto; padding:4px 0; flex-shrink:0; scrollbar-width:none; }
+.brands-store::-webkit-scrollbar { display:none; }
+.brands-store .cat-item { flex:0 0 70px; }
+.brands-store .cat-icon-wrap, .brands-store .cat-img { width:56px; height:56px; }
+.product-card { cursor:pointer; transition:border-color .2s,transform .2s; }
+.product-card:active { transform:scale(.99); border-color:var(--primary); }
+.product-cart-control { display:flex; align-items:center; gap:6px; margin-top:8px; }
+.product-cart-control > button { min-height:29px; display:flex; align-items:center; justify-content:center; border:1px solid rgba(196,154,59,.3); border-radius:9px; background:rgba(196,154,59,.12); color:var(--primary); font:700 10px inherit; cursor:pointer; }
+.product-cart-control > button:first-child { width:30px; font-size:18px; }
+.product-cart-control > b { min-width:18px; color:var(--on-surface); text-align:center; font-size:12px; }
+.add-product { flex:1; gap:4px; padding:0 8px; white-space:nowrap; }
+.add-product .material-symbols-outlined { font-size:16px; }
 
 /* Slider */
 .slider-section { position: relative; flex-shrink: 0; }

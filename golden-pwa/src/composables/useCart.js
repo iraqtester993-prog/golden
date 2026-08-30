@@ -12,17 +12,24 @@ const persist = () => {
 }
 
 export const useCart = () => {
-  const total = computed(() => cart.value.reduce((sum, item) => sum + Number(String(item.price).replace(/,/g, '')), 0))
+  const total = computed(() => cart.value.reduce((sum, item) => sum + Number(String(item.price).replace(/,/g, '')) * (item.quantity || 1), 0))
   const add = product => {
-    if (!cart.value.some(item => item.name === product.name)) {
-      cart.value.push(product)
-      persist()
-    }
+    const found = cart.value.find(item => item.name === product.name)
+    if (found) found.quantity = (found.quantity || 1) + 1
+    else cart.value.push({ ...product, quantity: 1 })
+    persist()
+  }
+  const decrease = name => {
+    const found = cart.value.find(item => item.name === name)
+    if (!found) return
+    if ((found.quantity || 1) > 1) found.quantity -= 1
+    else cart.value = cart.value.filter(item => item.name !== name)
+    persist()
   }
   const remove = name => {
     cart.value = cart.value.filter(item => item.name !== name)
     persist()
   }
   const clear = () => { cart.value = []; persist() }
-  return { cart, total, add, remove, clear, persist }
+  return { cart, total, add, decrease, remove, clear, persist }
 }

@@ -1,6 +1,6 @@
 <template>
   <button v-if="cart.length && isAppPage" class="floating-cart" aria-label="فتح السلة" @click="router.push('/cart')">
-    <span class="cart-count">{{ cart.length }}</span>
+    <span class="cart-count">{{ itemCount }}</span>
     <span class="material-symbols-outlined">shopping_cart</span>
   </button>
 </template>
@@ -13,6 +13,7 @@ import { useCart } from '../composables/useCart'
 const router = useRouter()
 const route = useRoute()
 const { cart } = useCart()
+const itemCount = computed(() => cart.value.reduce((count, item) => count + (item.quantity || 1), 0))
 const tick = ref(0)
 const isAppPage = computed(() => {
   tick.value

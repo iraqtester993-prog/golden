@@ -92,7 +92,7 @@
       </section>
 
       <section class="branches-home">
-        <div class="branches-heading"><h2 class="section-heading">فروعنا</h2></div>
+        <div class="branches-heading"><h2 class="section-heading">الفروع والوكالات</h2></div>
         <div class="branch-preview-list">
           <button v-for="branch in branches.slice(0, 5)" :key="branch.name" class="branch-preview" @click="goTo('/branches?branch=' + encodeURIComponent(branch.name))">
             <img :src="branch.img" :alt="branch.name"/><span class="branch-preview-overlay"><strong>{{ branch.name }}</strong><small>تصفح منتجات الفرع</small></span>
