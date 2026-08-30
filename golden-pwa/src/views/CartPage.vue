@@ -14,7 +14,7 @@ import { useCart } from '../composables/useCart'
 const router = useRouter(); const { cart, total, add, decrease, remove, clear } = useCart()
 const formatPrice = value => Number(String(value).replace(/,/g, '')).toLocaleString('en')
 const cashPurchase = () => { const selected = [...cart.value]; if (!selected.length) return; const orders = JSON.parse(localStorage.getItem('golden_orders') || '[]'); const orderTotal = total.value; orders.push({ id: orders.length ? Math.max(...orders.map(order => order.id)) + 1 : 1001, date: new Date().toLocaleDateString('ar-EG', { year:'numeric', month:'short', day:'numeric' }), status:'pending', type:'cash', products:selected, totalPrice:orderTotal, totalAmount:orderTotal, monthlyInstallment:orderTotal, fullName:'', phone:'', address:'', ownerNote:'' }); localStorage.setItem('golden_orders', JSON.stringify(orders)); clear(); router.push('/orders') }
-const buyInstallment = () => router.push('/calculator?products=' + encodeURIComponent(JSON.stringify(cart.value.map(product => ({ name:product.name })))))
+const buyInstallment = () => router.push('/calculator?products=' + encodeURIComponent(JSON.stringify(cart.value.map(product => ({ name:product.name, quantity:product.quantity || 1 })))))
 </script>
 
 <style scoped>

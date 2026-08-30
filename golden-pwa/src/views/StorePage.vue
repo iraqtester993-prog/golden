@@ -58,7 +58,7 @@
           <div class="product-info">
             <h3 class="product-name">{{ product.name }}</h3>
             <span class="product-spec">{{ product.spec }}</span>
-            <div class="product-price">{{ product.price }} د.ع</div>
+            <div class="product-price"><small>السعر النقدي</small>{{ product.price }} د.ع</div>
             <div class="installment-strip"><span class="material-symbols-outlined">account_balance_wallet</span>يدعم التقسيط</div>
             <div class="product-cart-control" @click.stop><button v-if="cartQty(product)" aria-label="تقليل الكمية" @click="decrease(product.name)">−</button><b v-if="cartQty(product)">{{ cartQty(product) }}</b><button class="add-product" :aria-label="cartQty(product) ? 'زيادة الكمية' : 'إضافة إلى السلة'" @click="addToCart(product)"><span class="material-symbols-outlined">{{ cartQty(product) ? 'add' : 'add_shopping_cart' }}</span>{{ cartQty(product) ? 'زيادة' : 'إضافة للسلة' }}</button></div>
           </div>
@@ -407,7 +407,7 @@ const navItems = [
 .product-info { flex: 1; min-width:0; display: flex; flex-direction: column; gap: 3px; }
 .product-name { font-size: 14px; font-weight: 700; color: var(--on-surface); }
 .product-spec { font-size: 11px; color: var(--on-surface-variant); }
-.product-price { font-size: 15px; font-weight: 700; color: var(--primary); direction: rtl; }
+.product-price { font-size: 15px; font-weight: 700; color: var(--primary); direction: rtl; }.product-price small{display:block;margin-bottom:1px;color:var(--on-surface-variant);font-size:9px;font-weight:600;}
 
 .btn-details {
   margin-top: auto; background: var(--bg); border: 1px solid var(--outline-variant);

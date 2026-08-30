@@ -125,6 +125,17 @@
         <!-- Result -->
         <div class="result-card" v-if="selectedMonths > 0">
           <div class="result-row">
+            <span class="result-label">السعر النقدي للمنتجات</span>
+            <span class="result-value-sm">{{ formatNum(totalPrice) }} د.ع</span>
+          </div>
+          <div class="result-row installment-total-row">
+            <span class="result-label">إجمالي سعر التقسيط <small>زيادة {{ installmentRate }}%</small></span>
+            <div class="result-value-wrap">
+              <span class="result-value">{{ formatNum(installmentPrice) }}</span>
+              <span class="result-unit">د.ع</span>
+            </div>
+          </div>
+          <div class="result-row">
             <span class="result-label">القسط الشهري</span>
             <div class="result-value-wrap">
               <span class="result-value">{{ formatNum(monthlyInstallment) }}</span>
@@ -158,6 +169,7 @@
             <span class="calc-total-label">{{ selectedProducts.length }} منتجات - {{ selectedMonths }} شهر</span>
             <span class="calc-total-value">{{ formatNum(monthlyInstallment) }} د.ع/شهر</span>
           </div>
+          <div class="calc-total-row"><span class="calc-total-label">إجمالي سعر التقسيط</span><span class="calc-total-value">{{ formatNum(installmentPrice) }} د.ع</span></div>
         </div>
 
         <!-- Personal Info -->
@@ -199,6 +211,11 @@
 
         <!-- Final Summary -->
         <div class="result-card">
+          <div class="result-row">
+            <span class="result-label">إجمالي سعر التقسيط</span>
+            <span class="result-value-sm">{{ formatNum(installmentPrice) }} د.ع</span>
+          </div>
+          <div class="result-divider"></div>
           <div class="result-row">
             <span class="result-label">مدة التقسيط</span>
             <span class="result-value-sm">{{ selectedMonths }} شهر</span>
@@ -292,6 +309,7 @@ const clientType = ref('employee')
 const salary = ref('')
 const salaryProof = ref(null)
 const durations = [10, 16, 18, 24, 36]
+const installmentRates = { 10: 5, 16: 8, 18: 10, 24: 14, 36: 22 }
 
 const openDetails = (p) => { detailProduct.value = p }
 
@@ -353,7 +371,11 @@ const products = [
     img: 'https://images.unsplash.com/photo-1606220945770-b5b6c2c55bf1?w=800&h=800&fit=crop',
     desc: 'إيربودز برو 2 مع تقنية إلغاء الضوضاء النشط، صوت مكاني، وشحن عبر USB-C.',
     specs: { 'النوع': 'In-Ear Wireless', 'الإلغاء': 'Active Noise Cancellation', 'المدة': 'حتى 6 ساعات', 'الحالة': 'حتى 30 ساعة', 'الشحن': 'USB-C + MagSafe', 'المقاومة': 'IP54' }
-  }
+  },
+  { name:'Toyota Camry 2024', spec:'GLE - أبيض', price:'38,000,000', priceRaw:38000000, cat:'الكل', img:'https://images.unsplash.com/photo-1549317661-bd32c8ce0afa?w=800&h=800&fit=crop', desc:'سيارة تويوتا كامري موديل 2024.', specs:{'الموديل':'2024','المحرك':'2.5L'} },
+  { name:'شاحنة JAC خفيفة', spec:'حمولة 3 طن', price:'45,000,000', priceRaw:45000000, cat:'الكل', img:'https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?w=800&h=800&fit=crop', desc:'شاحنة خفيفة مناسبة للنقل والأعمال.', specs:{'الحمولة':'3 طن','الوقود':'ديزل'} },
+  { name:'مكيف Gree سبليت', spec:'18000 وحدة', price:'1,250,000', priceRaw:1250000, cat:'الكل', img:'https://images.unsplash.com/photo-1631545806609-206480c4ca4d?w=800&h=800&fit=crop', desc:'مكيف سبليت اقتصادي بتبريد قوي.', specs:{'السعة':'18000 BTU','الضمان':'سنة'} },
+  { name:'غسالة Samsung أوتوماتيك', spec:'9 كغم', price:'980,000', priceRaw:980000, cat:'الكل', img:'https://images.unsplash.com/photo-1626806787461-102c1bfaaea1?w=800&h=800&fit=crop', desc:'غسالة أوتوماتيك للاستخدام العائلي.', specs:{'السعة':'9 كغم','النوع':'أوتوماتيك'} }
 ]
 
 const filteredProducts = computed(() => {
@@ -383,11 +405,13 @@ const removeProduct = (i) => {
   if (selectedProducts.value.length === 0) { showCalculator.value = false; showStep3.value = false }
 }
 
-const totalPrice = computed(() => selectedProducts.value.reduce((sum, p) => sum + p.priceRaw, 0))
+const totalPrice = computed(() => selectedProducts.value.reduce((sum, p) => sum + p.priceRaw * (p.quantity || 1), 0))
+const installmentRate = computed(() => installmentRates[selectedMonths.value] || 0)
+const installmentPrice = computed(() => Math.ceil(totalPrice.value * (1 + installmentRate.value / 100)))
 
 const netAmount = computed(() => {
   const down = Number(downPayment.value) || 0
-  return Math.max(0, totalPrice.value - down)
+  return Math.max(0, installmentPrice.value - down)
 })
 
 const monthlyInstallment = computed(() => {
@@ -412,13 +436,15 @@ const submitRequest = () => {
     id: newId,
     date: dateStr,
     status: 'pending',
-    products: selectedProducts.value.map(p => ({ name: p.name, spec: p.spec, price: p.price, priceRaw: p.priceRaw, img: p.img })),
+    products: selectedProducts.value.map(p => ({ name: p.name, spec: p.spec, price: p.price, priceRaw: p.priceRaw, quantity: p.quantity || 1, img: p.img })),
     fullName: fullName.value,
     phone: phone.value,
     address: address.value,
     clientType: clientType.value,
     salary: Number(salary.value),
     totalPrice: totalPrice.value,
+    installmentRate: installmentRate.value,
+    installmentPrice: installmentPrice.value,
     downPayment: Number(downPayment.value) || 0,
     netAmount: netAmount.value,
     months: selectedMonths.value,
@@ -453,7 +479,10 @@ onMounted(() => {
   if (route.query.products) {
     try {
       const requested = JSON.parse(route.query.products)
-      selectedProducts.value = products.filter(product => requested.some(item => item.name === product.name))
+      selectedProducts.value = requested.map(item => {
+        const product = products.find(candidate => candidate.name === item.name)
+        return product ? { ...product, quantity: item.quantity || 1 } : null
+      }).filter(Boolean)
       showCalculator.value = selectedProducts.value.length > 0
     } catch (e) { /* ignore */ }
   }
@@ -566,6 +595,8 @@ const navItems = [
 .result-card { background: linear-gradient(135deg, rgba(242, 202, 80, 0.08), rgba(242, 202, 80, 0.03)); border: 1px solid var(--primary); border-radius: 16px; padding: 16px; }
 .result-row { display: flex; align-items: center; justify-content: space-between; padding: 4px 0; }
 .result-label { font-size: 13px; color: var(--on-surface-variant); }
+.result-label small { display:block; margin-top:3px; color:var(--primary); font-size:10px; font-weight:700; }
+.installment-total-row { margin:7px 0; padding:10px 0; border-top:1px solid var(--outline-variant); border-bottom:1px solid var(--outline-variant); }
 .result-value-wrap { display: flex; align-items: baseline; gap: 4px; }
 .result-value { font-size: 28px; font-weight: 800; color: var(--primary); }
 .result-unit { font-size: 14px; font-weight: 600; color: var(--primary); }
