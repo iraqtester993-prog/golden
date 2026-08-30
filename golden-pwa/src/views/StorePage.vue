@@ -3,30 +3,22 @@
     <TopBar />
 
     <main class="page-content">
-      <!-- Search -->
-      <div class="search-bar">
-        <button class="filter-btn">
-          <span class="material-symbols-outlined">tune</span>
-        </button>
-        <input type="text" placeholder="ابحث عن منتج..." class="search-input" />
-        <span class="material-symbols-outlined search-icon">search</span>
-      </div>
       <div v-if="route.query.branch" class="branch-store-banner"><span class="material-symbols-outlined">storefront</span><div><small>تتسوق من</small><strong>{{ route.query.branch }}</strong></div><button @click="router.push('/store')"><span class="material-symbols-outlined">close</span></button></div>
 
       <!-- Categories -->
       <section v-if="activeCat === 'الكل'" class="categories">
-        <button class="cat-item" v-for="cat in categories" :key="cat.label" :class="{ active: activeCat === cat.label }" @click="selectMainCategory(cat.label)">
+        <button class="cat-item" v-for="cat in availableCategories" :key="cat.label" :class="{ active: activeCat === cat.label }" @click="selectMainCategory(cat.label)">
           <div class="cat-icon-wrap">
             <img :src="cat.img" class="cat-img" />
           </div>
           <span class="cat-label">{{ cat.label }}</span>
         </button>
       </section>
-      <section v-else class="categories subcategory-grid"><button class="cat-item main-categories-btn" @click="selectMainCategory('الكل')"><div class="cat-icon-wrap"><span class="material-symbols-outlined">apps</span></div><span class="cat-label">الأقسام الرئيسية</span></button><button v-for="sub in activeCategory.subcategories" :key="sub.label" class="cat-item" :class="{active:activeSub===sub.label}" @click="selectSubCategory(sub.label)"><div class="cat-icon-wrap"><img :src="sub.img" class="cat-img"/></div><span class="cat-label">{{ sub.label }}</span></button></section>
+      <section v-else class="categories subcategory-grid"><button class="cat-item main-categories-btn" @click="selectMainCategory('الكل')"><div class="cat-icon-wrap"><span class="material-symbols-outlined">apps</span></div><span class="cat-label">الأقسام الرئيسية</span></button><button v-for="sub in availableSubcategories" :key="sub.label" class="cat-item" :class="{active:activeSub===sub.label}" @click="selectSubCategory(sub.label)"><div class="cat-icon-wrap"><img :src="sub.img" class="cat-img"/></div><span class="cat-label">{{ sub.label }}</span></button></section>
 
       <section class="brands-store" aria-label="الماركات التجارية">
         <button class="cat-item" :class="{ active: activeBrand === 'الكل' }" @click="activeBrand = 'الكل'"><div class="cat-icon-wrap"><span class="material-symbols-outlined">apps</span></div><span class="cat-label">كل الماركات</span></button>
-        <button class="cat-item" v-for="brand in brands" :key="brand.name" :class="{ active: activeBrand === brand.name }" @click="activeBrand = brand.name"><div class="cat-icon-wrap"><img :src="brand.img" class="cat-img" /></div><span class="cat-label">{{ brand.name }}</span></button>
+        <button class="cat-item" v-for="brand in availableBrands" :key="brand.name" :class="{ active: activeBrand === brand.name }" @click="activeBrand = brand.name"><div class="cat-icon-wrap"><img :src="brand.img" class="cat-img" /></div><span class="cat-label">{{ brand.name }}</span></button>
       </section>
 
       <!-- Image Slider -->
@@ -248,7 +240,11 @@ const products = [
   { name:'غسالة Samsung أوتوماتيك',spec:'9 كغم',price:'980,000',img:'https://images.unsplash.com/photo-1626806787461-102c1bfaaea1?w=400&h=300&fit=crop',images:['https://images.unsplash.com/photo-1626806787461-102c1bfaaea1?w=800&h=800&fit=crop'],desc:'غسالة أوتوماتيك بسعة 9 كغم للاستخدام العائلي.',brand:'Samsung',mainCat:'المنزل',subCat:'أجهزة منزلية',specs:{'السعة':'9 كغم','النوع':'أوتوماتيك','اللون':'فضي'} }
 ]
 
-const branchProducts = { 'الفرع الرئيسي - بغداد': ['iPhone 16 Pro Max', 'Samsung S24 Ultra', 'Hisense 55 inch 4K', 'Toyota Camry 2024'], 'فرع الأعظمية': ['Samsung S24 Ultra', 'شاحنة JAC خفيفة', 'مكيف Gree سبليت'], 'فرع البصرة': ['Hisense 55 inch 4K', 'مكيف Gree سبليت', 'غسالة Samsung أوتوماتيك'], 'فرع كربلاء': ['iPhone 16 Pro Max', 'Toyota Camry 2024', 'غسالة Samsung أوتوماتيك'], 'فرع النجف': ['Samsung S24 Ultra', 'Hisense 55 inch 4K', 'شاحنة JAC خفيفة'] }
+const branchProducts = { 'الفرع الرئيسي - بغداد': ['iPhone 16 Pro Max', 'Samsung S24 Ultra', 'Hisense 55 inch 4K', 'Toyota Camry 2024'], 'فرع الأعظمية': ['Samsung S24 Ultra', 'شاحنة JAC خفيفة', 'مكيف Gree سبليت'], 'فرع البصرة': ['Hisense 55 inch 4K', 'مكيف Gree سبليت', 'غسالة Samsung أوتوماتيك'], 'فرع كربلاء': ['iPhone 16 Pro Max', 'Toyota Camry 2024', 'غسالة Samsung أوتوماتيك'], 'فرع النجف': ['Samsung S24 Ultra', 'Hisense 55 inch 4K', 'شاحنة JAC خفيفة'], 'وكالة الأمل للسيارات': ['Toyota Camry 2024', 'شاحنة JAC خفيفة'], 'وكالة النور للإلكترونيات': ['iPhone 16 Pro Max', 'Samsung S24 Ultra', 'Hisense 55 inch 4K', 'غسالة Samsung أوتوماتيك'] }
+const branchAvailableProducts = computed(() => route.query.branch ? products.filter(product => branchProducts[route.query.branch]?.includes(product.name)) : products)
+const availableCategories = computed(() => categories.filter(category => category.label === 'الكل' || branchAvailableProducts.value.some(product => product.mainCat === category.label)))
+const availableSubcategories = computed(() => activeCategory.value.subcategories.filter(subcategory => subcategory.label === 'الكل' || branchAvailableProducts.value.some(product => product.mainCat === activeCat.value && product.subCat === subcategory.label)))
+const availableBrands = computed(() => brands.filter(brand => branchAvailableProducts.value.some(product => product.brand === brand.name)))
 const displayedProducts = computed(() => products.filter(p => (!route.query.brand || p.brand === route.query.brand) && (activeBrand.value === 'الكل' || p.brand === activeBrand.value) && (!route.query.branch || branchProducts[route.query.branch]?.includes(p.name)) && (activeTab.value !== 'offers' || p.offer) && (activeCat.value === 'الكل' || p.mainCat === activeCat.value) && (activeSub.value === 'الكل' || p.subCat === activeSub.value)))
 const cartQty = product => cart.value.find(item => item.name === product.name)?.quantity || 0
 const cashPurchase = source => {
