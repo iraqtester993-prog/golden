@@ -40,8 +40,8 @@
       </section>
 
       <!-- Product sections -->
-      <section v-for="section in productSections" :key="section.key" class="product-section">
-        <div class="section-title-row"><h2>{{ section.label }}</h2><button @click="showAllTab = showAllTab === section.key ? null : section.key">{{ showAllTab === section.key ? 'عرض أقل' : 'عرض الكل' }}</button></div>
+      <section v-for="section in productSections" v-show="!showAllTab || showAllTab === section.key" :key="section.key" class="product-section">
+        <div class="section-title-row"><h2>{{ section.label }}</h2><button @click="openSection(section.key)">{{ showAllTab === section.key ? 'رجوع للمتجر' : 'عرض الكل' }}</button></div>
         <div class="products-list product-carousel" :class="{ 'show-all-products': showAllTab === section.key }">
         <div class="product-card" v-for="product in sectionProducts(section.key)" :key="product.name" role="button" tabindex="0" @click="openDetails(product)" @keydown.enter="openDetails(product)">
           <div class="product-img-wrap">
@@ -165,6 +165,13 @@ const toggleFav = (p) => {
 
 watch(selectedProduct, () => { galleryIndex.value = 0 })
 watch(() => route.query.tab, tab => { if (tab) activeTab.value = tab }, { immediate: true })
+watch(() => route.query.section, section => { showAllTab.value = section || null }, { immediate: true })
+const openSection = section => {
+  const query = { ...route.query }
+  if (showAllTab.value === section) delete query.section
+  else query.section = section
+  router.push({ path: '/store', query })
+}
 
 const categories = [
   { img: 'https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=200&h=200&fit=crop', label: 'الكل', subcategories: [] },
@@ -387,14 +394,14 @@ const navItems = [
 .products-list { display: flex; flex-direction: column; gap: 12px; }
 
 .product-card {
-  display: flex; gap: 12px; background: var(--surface-container);
-  border: 1px solid var(--outline-variant); border-radius: 14px; padding: 12px;
-  overflow: hidden;
+  display: flex; gap: 12px; background: linear-gradient(145deg,var(--surface-container-high),var(--surface-container));
+  border: 1px solid rgba(196,154,59,.28); border-radius: 18px; padding: 10px;
+  overflow: hidden; box-shadow:0 8px 18px rgba(0,0,0,.12);
 }
 
 .product-img-wrap {
   position: relative; width: 100px; min-width: 100px; height: 100px;
-  border-radius: 10px; overflow: hidden; background: var(--bg);
+  border-radius: 14px; overflow: hidden; background: var(--bg);
 }
 
 .product-img { width: 100%; height: 100%; object-fit: cover; }
@@ -411,7 +418,7 @@ const navItems = [
 .fav-btn.fav-active .material-symbols-outlined { font-variation-settings: 'FILL' 1; color: #fff; }
 
 .product-info { flex: 1; min-width:0; display: flex; flex-direction: column; gap: 3px; }
-.product-name { font-size: 14px; font-weight: 700; color: var(--on-surface); }
+.product-name { font-size: 14px; font-weight: 800; color: var(--on-surface); line-height:1.45; }
 .product-spec { font-size: 11px; color: var(--on-surface-variant); }
 .product-price { font-size: 15px; font-weight: 700; color: var(--primary); direction: rtl; }.product-price small{display:block;margin-bottom:1px;color:var(--on-surface-variant);font-size:9px;font-weight:600;}
 
