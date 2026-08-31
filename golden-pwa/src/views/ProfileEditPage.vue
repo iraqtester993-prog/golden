@@ -10,18 +10,9 @@
 
       <div class="form-area">
         <!-- Profile Photo -->
-        <div class="profile-photo-section">
-          <label class="profile-photo-label">
-            <input type="file" accept="image/*" class="file-input" @change="handleProfilePhoto" />
-            <div class="profile-circle" :class="{ uploaded: profilePreview }">
-              <img v-if="profilePreview" :src="profilePreview" class="profile-img" />
-              <span v-else class="material-symbols-outlined profile-icon">person</span>
-              <div class="camera-badge">
-                <span class="material-symbols-outlined">photo_camera</span>
-              </div>
-            </div>
-          </label>
-          <span class="profile-hint">التقاط حي أو من الهاتف</span>
+        <div class="profile-photo-section profile-photo-card">
+          <div class="profile-circle" :class="{ uploaded: profilePreview }"><img v-if="profilePreview" :src="profilePreview" class="profile-img" /><span v-else class="material-symbols-outlined profile-icon">person</span></div>
+          <div class="profile-photo-options"><b>الصورة الشخصية</b><small>التقاط حي أو من الهاتف</small><div class="choice-row"><label><input type="file" accept="image/*" capture="user" class="file-input" @change="handleProfilePhoto"/><span class="material-symbols-outlined">photo_camera</span>التقاط</label><label><input type="file" accept="image/*" class="file-input" @change="handleProfilePhoto"/><span class="material-symbols-outlined">upload</span>من الهاتف</label></div></div>
         </div>
 
         <div class="input-group">
@@ -76,47 +67,12 @@
           </div>
         </template>
 
-        <div class="upload-section">
-          <h3 class="upload-title">البطاقة الوطنية</h3>
-          <div class="upload-row">
-            <label class="upload-box" :class="{ uploaded: form.nationalFront }">
-              <input type="file" accept="image/*" class="file-input" @change="e => handleFile(e, 'nationalFront')" />
-              <span class="material-symbols-outlined upload-icon">credit_card</span>
-              <span class="upload-label">التقاط حي أو من الهاتف</span>
-              <span v-if="form.nationalFront" class="material-symbols-outlined check-upload">check_circle</span>
-            </label>
-            <label class="upload-box" :class="{ uploaded: form.nationalBack }">
-              <input type="file" accept="image/*" class="file-input" @change="e => handleFile(e, 'nationalBack')" />
-              <span class="material-symbols-outlined upload-icon">credit_card</span>
-              <span class="upload-label">التقاط حي أو من الهاتف</span>
-              <span v-if="form.nationalBack" class="material-symbols-outlined check-upload">check_circle</span>
-            </label>
-          </div>
-        </div>
+        <RegistrationDocumentCard title="البطاقة الوطنية - الوجه الأمامي" icon="credit_card" :file="form.nationalFront" @change="file => handleCapturedFile(file, 'nationalFront')" />
+        <RegistrationDocumentCard title="البطاقة الوطنية - الوجه الخلفي" icon="credit_card" :file="form.nationalBack" @change="file => handleCapturedFile(file, 'nationalBack')" />
 
-        <div class="upload-section">
-          <h3 class="upload-title">بطاقة السكن</h3>
-          <div class="upload-row">
-            <label class="upload-box full" :class="{ uploaded: form.residenceCard }">
-              <input type="file" accept="image/*" class="file-input" @change="e => handleFile(e, 'residenceCard')" />
-              <span class="material-symbols-outlined upload-icon">home</span>
-              <span class="upload-label">التقاط حي أو من الهاتف</span>
-              <span v-if="form.residenceCard" class="material-symbols-outlined check-upload">check_circle</span>
-            </label>
-          </div>
-        </div>
+        <RegistrationDocumentCard title="بطاقة السكن" icon="home" :file="form.residenceCard" @change="file => handleCapturedFile(file, 'residenceCard')" />
 
-        <div class="upload-section" v-if="form.type === 'employee'">
-          <h3 class="upload-title">هوية الدائرة <small>(اختيارية)</small></h3>
-          <div class="upload-row">
-            <label class="upload-box full" :class="{ uploaded: form.departmentId }">
-              <input type="file" accept="image/*" class="file-input" @change="e => handleFile(e, 'departmentId')" />
-              <span class="material-symbols-outlined upload-icon">badge</span>
-              <span class="upload-label">التقاط حي أو من الهاتف</span>
-              <span v-if="form.departmentId" class="material-symbols-outlined check-upload">check_circle</span>
-            </label>
-          </div>
-        </div>
+        <RegistrationDocumentCard v-if="form.type === 'employee'" title="هوية الدائرة (اختيارية)" icon="badge" :file="form.departmentId" @change="file => handleCapturedFile(file, 'departmentId')" />
 
         <button class="register-btn" @click="save">
           <span class="material-symbols-outlined">save</span>
@@ -136,6 +92,7 @@
 <script setup>
 import { ref, reactive, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
+import RegistrationDocumentCard from '../components/RegistrationDocumentCard.vue'
 
 const router = useRouter()
 const showPass = ref(false)
@@ -189,6 +146,7 @@ const handleFile = (event, field) => {
     form[field] = { name: file.name, size: file.size }
   }
 }
+const handleCapturedFile = (file, field) => { form[field] = { name: file.name, size: file.size } }
 
 const save = () => {
   const saved = JSON.parse(localStorage.getItem('golden_user') || '{}')
@@ -273,6 +231,7 @@ const save = () => {
   gap: 6px;
   margin-bottom: 8px;
 }
+.profile-photo-section.profile-photo-card{flex-direction:row;align-items:center;gap:13px;padding:13px;border:1px solid rgba(196,154,59,.28);border-radius:17px;background:linear-gradient(135deg,rgba(196,154,59,.08),var(--surface-container))}.profile-photo-card .profile-circle{flex:none;width:72px;height:72px;border:0;box-shadow:none}.profile-photo-options{flex:1}.profile-photo-options b{display:block;color:var(--on-surface);font-size:12px}.profile-photo-options small{display:block;margin-top:3px;color:var(--on-surface-variant);font-size:10px}.profile-photo-options .choice-row{display:flex;gap:7px;margin-top:8px}.profile-photo-options .choice-row label{display:flex;align-items:center;gap:4px;padding:6px 8px;border:1px solid rgba(196,154,59,.36);border-radius:9px;background:rgba(196,154,59,.07);color:var(--primary);font-size:10px;cursor:pointer}.profile-photo-options .material-symbols-outlined{font-size:16px}
 .profile-photo-label { cursor: pointer; }
 .profile-circle {
   width: 90px;
